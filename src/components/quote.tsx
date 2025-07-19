@@ -9,11 +9,12 @@ type QuoteProps = {
 };
 
 export function Quote(props: QuoteProps) {
+  const { author, sender, content, context, dateAdded } = props;
+
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
-  const { author, sender, content, context, dateAdded } = props;
   return (
-    <div>
+    <div className="border rounded border-gray-300 p-2">
       <div className="flex justify-between">
         <span>{author}</span>
         <span>{dateAdded.toDateString()}</span>
