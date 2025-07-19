@@ -7,7 +7,7 @@ export type Quote = {
   sender: string;
   content: string;
   context: string;
-  dateAdded: Date;
+  dateAdded: string;
 };
 
 export type QuoteProps = Quote & {
@@ -23,7 +23,7 @@ export function Quote(props: QuoteProps) {
     <div className="flex flex-col gap-3 border rounded border-gray-300 p-2">
       <div className="flex justify-between">
         <span>{author}</span>
-        <span>{dateAdded.toDateString()}</span>
+        <span>{dateAdded}</span>
       </div>
       <div className="flex justify-between">
         <p>{content}</p>
