@@ -10,8 +10,12 @@ export type Quote = {
   dateAdded: Date;
 };
 
-export function Quote(props: Quote) {
-  const { author, sender, content, context, dateAdded } = props;
+export type QuoteProps = Quote & {
+  onEdit: () => void;
+};
+
+export function Quote(props: QuoteProps) {
+  const { author, sender, content, context, dateAdded, onEdit } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
@@ -23,7 +27,8 @@ export function Quote(props: Quote) {
       </div>
       <div className="flex justify-between">
         <p>{content}</p>
-        <div>
+        <div className="flex gap-1 items-start">
+          <Button onClick={onEdit}>Edit</Button>
           <Button onClick={() => setIsDetailsOpen((prev) => !prev)}>
             Details
           </Button>

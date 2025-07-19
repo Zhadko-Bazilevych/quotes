@@ -1,11 +1,18 @@
+import { useState } from "react";
 import { Quote } from "./quote";
+import { QuoteForm } from "./quote-form";
 
-const quotes: Quote[] = [
+type QuoteItem = Quote & {
+  isEditing?: boolean;
+};
+
+const initialQuotes: QuoteItem[] = [
   {
     id: 1,
     author: "James",
     sender: "Mike",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    content:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     context: "Said during a random team meeting with no clear agenda.",
     dateAdded: new Date(),
   },
@@ -77,10 +84,48 @@ const quotes: Quote[] = [
 ];
 
 export function QuoteList() {
+  const [quotes, setQuotes] = useState(initialQuotes);
+
+  function toggleEdit(id: number) {
+    setQuotes((prev) => {
+      const idx = prev.findIndex((quote) => quote.id === id);
+      if (idx === undefined) {
+        return prev;
+      }
+      const quote = prev[idx];
+      const newQuoteList = [
+        ...prev.slice(0, idx),
+        { ...quote, isEditing: !quote.isEditing },
+        ...prev.slice(idx + 1),
+      ];
+      return newQuoteList;
+    });
+  }
+
   return (
     <section className="flex flex-col gap-3">
       {quotes.map((quote) => {
-        return <Quote {...quote} key={quote.id} />;
+        return quote.isEditing ? (
+          <QuoteForm
+            id={quote.id}
+            author={quote.author}
+            content={quote.content}
+            sender={quote.sender}
+            context={quote.context}
+            key={quote.id}
+          />
+        ) : (
+          <Quote
+            id={quote.id}
+            author={quote.author}
+            content={quote.content}
+            sender={quote.sender}
+            context={quote.context}
+            key={quote.id}
+            dateAdded={quote.dateAdded}
+            onEdit={() => toggleEdit(quote.id)}
+          />
+        );
       })}
     </section>
   );
