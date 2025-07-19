@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-type QuoteProps = {
+export type Quote = {
+  id: number;
   author: string;
   sender: string;
   content: string;
@@ -8,7 +9,7 @@ type QuoteProps = {
   dateAdded: Date;
 };
 
-export function Quote(props: QuoteProps) {
+export function Quote(props: Quote) {
   const { author, sender, content, context, dateAdded } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
