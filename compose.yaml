@@ -7,7 +7,7 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
-      - ./quotes-client/dist:/srv/quotes-client
+      - ./client/dist:/srv/client
       - caddy_data:/data
       - caddy_config:/config
     restart: unless-stopped

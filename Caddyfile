@@ -1,0 +1,4 @@
+that-one-quotes.duckdns.org {
+  root * /srv/client
+  file_server
+}
