@@ -7,6 +7,7 @@ type QuoteFormProps = {
   sender: string;
   content: string;
   context: string;
+  onEdit: () => void;
 };
 
 export function QuoteForm(props: QuoteFormProps) {
