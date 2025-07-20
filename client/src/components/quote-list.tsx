@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Quote } from "./quote";
 import { QuoteForm } from "./quote-form";
 
@@ -6,20 +6,27 @@ type QuoteItem = Quote & {
   isEditing?: boolean;
 };
 
-const initialQuotes: QuoteItem[] = [];
+const initialQuotes: QuoteItem[] = [{
+  id: 1,
+  author: 'Test',
+  sender: 'test',
+  content: 'testing context',
+  context: 'test',
+  dateAdded: 'now',
+}];
 
 export function QuoteList() {
   const [quotes, setQuotes] = useState(initialQuotes);
 
-  useEffect(() => {
-    fetch("http://localhost:3000/quotes")
-      .then((response) => {
-        return response.json();
-      })
-      .then((result) => {
-        setQuotes(result);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:3000/quotes")
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((result) => {
+  //       setQuotes(result);
+  //     });
+  // }, []);
 
   function toggleEdit(id: number) {
     setQuotes((prev) => {

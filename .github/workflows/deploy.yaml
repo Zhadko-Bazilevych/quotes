@@ -27,4 +27,3 @@ jobs:
           source: "./client/dist/*"
           target: "~/quotes/client/dist/"
           strip_components: 2
-          rm: true
