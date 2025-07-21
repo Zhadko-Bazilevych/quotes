@@ -1,4 +1,9 @@
 that-one-quotes.duckdns.org {
-  root * /srv/client
-  file_server
+    encode gzip
+
+    handle {
+		root * /srv/client
+		try_files {path} /index.html
+		file_server
+	}
 }
