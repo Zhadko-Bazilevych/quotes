@@ -1,0 +1,3 @@
+that-one-quotes.duckdns.org {
+    reverse_proxy quotes-client:80
+}

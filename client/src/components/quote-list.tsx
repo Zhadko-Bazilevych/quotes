@@ -8,7 +8,7 @@ type QuoteItem = Quote & {
 
 const initialQuotes: QuoteItem[] = [{
   id: 1,
-  author: 'Test',
+  author: 'Test from docker stack',
   sender: 'test',
   content: 'testing context',
   context: 'test',

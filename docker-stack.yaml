@@ -1,0 +1,18 @@
+services:
+  quotes-client:
+    image: ghcr.io/zhadko-bazilevych/quotes/client:${GIT_COMMIT_HASH:-latest}
+
+  quotes-caddy:
+    image: ghcr.io/zhadko-bazilevych/quotes/caddy:${GIT_COMMIT_HASH:-latest}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - quotes-client
+
+volumes:
+  caddy-data:
+  caddy-config:

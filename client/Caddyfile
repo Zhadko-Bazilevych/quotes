@@ -1,8 +1,8 @@
-that-one-quotes.duckdns.org {
-    encode gzip
+:80 {
+    encode gzip zstd
 
     handle {
-		root * /srv/client
+		root * /srv
 		try_files {path} /index.html
 		file_server
 	}
