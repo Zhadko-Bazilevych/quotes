@@ -1,12 +1,13 @@
 {
   "name": "quotes",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start:dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint . && tsc --noEmit",
+    "code:lint": "eslint .",
+    "code:lint:autofix": "eslint . --fix",
+    "code:check": "eslint . && tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {

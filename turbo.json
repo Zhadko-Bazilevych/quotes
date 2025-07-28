@@ -1,0 +1,22 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["./dist"]
+    },
+    "code:lint": {
+      "dependsOn": ["^code:lint"]
+    },
+    "code:lint:autofix": {
+      "dependsOn": ["^code:lint:autofix"]
+    },
+    "code:check": {
+      "dependsOn": ["^code:check"]
+    },
+    "start:dev": {
+      "persistent": true,
+      "cache": false
+    }
+  }
+}

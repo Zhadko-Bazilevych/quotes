@@ -15,11 +15,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.17.x"
-      # todo: use turborepo for deps and lint
       - name: Install dependencies
-        run: cd client && npm ci
+        run: npm ci
       - name: Lint
-        run: cd client && npm run lint
+        run: npm run code:check
 
   build-and-push-image:
     runs-on: ubuntu-latest
@@ -39,7 +38,7 @@ jobs:
       - name: Build and push client image
         uses: docker/build-push-action@v6
         with:
-          context: ./client
+          file: ./apps/client/Dockerfile
           push: true
           tags: |
             ghcr.io/zhadko-bazilevych/quotes/client:latest
@@ -48,7 +47,7 @@ jobs:
       - name: Build and push caddy image
         uses: docker/build-push-action@v6
         with:
-          context: ./caddy
+          file: ./apps/caddy/Dockerfile
           push: true
           tags: |
             ghcr.io/zhadko-bazilevych/quotes/caddy:latest
