@@ -11,8 +11,11 @@
     "code:lint:autofix": {
       "dependsOn": ["^code:lint:autofix"]
     },
+    "check-types": {
+      "dependsOn": ["^check-typeps"]
+    },
     "code:check": {
-      "dependsOn": ["^code:check"]
+      "dependsOn": ["code:lint", "check-types"]
     },
     "start:dev": {
       "persistent": true,

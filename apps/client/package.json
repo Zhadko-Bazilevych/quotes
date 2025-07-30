@@ -7,7 +7,7 @@
     "build": "tsc -b && vite build",
     "code:lint": "eslint .",
     "code:lint:autofix": "eslint . --fix",
-    "code:check": "eslint . && tsc --noEmit",
+    "check-types": "tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
