@@ -2,6 +2,9 @@ services:
   quotes-client:
     image: ghcr.io/zhadko-bazilevych/quotes/client:${GIT_COMMIT_HASH:-latest}
 
+  quotes-server:
+    image: ghcr.io/zhadko-bazilevych/quotes/server:${GIT_COMMIT_HASH:-latest}
+
   quotes-caddy:
     image: ghcr.io/zhadko-bazilevych/quotes/caddy:${GIT_COMMIT_HASH:-latest}
     ports:
