@@ -1,6 +1,7 @@
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { useForm } from "./hooks/use-form";
+import { Button } from "./ui/button";
 
 type QuoteFormProps = {
   id: number;
@@ -19,22 +20,37 @@ type QuoteFormState = {
 };
 
 export function QuoteForm(props: QuoteFormProps) {
-  const { author, content, context, sender } = props;
-  const { formValues: quote, register } = useForm<QuoteFormState>({
+  const { author, content, context, sender, onEdit: toggleEdit } = props;
+  const { formState, isValid, register, handleSubmit } = useForm<QuoteFormState>({
     initialValues: { author, content, context, sender },
   });
-  
+  const submit = () => {
+    console.log(formState);
+    toggleEdit();
+  };
+
   return (
-    <form className="flex flex-col gap-3 border rounded border-gray-300 p-2">
+    <form
+      className="flex flex-col gap-3 border rounded border-gray-300 p-2"
+      onSubmit={(e) => handleSubmit(submit, e)}
+    >
       <div className="flex justify-between">
-        <Input {...register("author")} />
+        <Input {...register("author", { required: true })} />
       </div>
       <div className="flex justify-between">
-        <Textarea {...register("content")} />
+        <Textarea {...register("content", { required: true })} />
       </div>
       <div>
-        <Textarea {...register("context")} />
-        <Input {...register("sender")} />
+        <Textarea {...register("context", { required: true })} />
+        <div className="flex justify-between">
+          <Input {...register("sender", { required: true })} />
+          <div className="flex gap-2">
+            <Button type="button" onClick={toggleEdit}>
+              Cancel
+            </Button>
+            <Button disabled={!isValid} type="submit">Submit</Button>
+          </div>
+        </div>
       </div>
     </form>
   );
