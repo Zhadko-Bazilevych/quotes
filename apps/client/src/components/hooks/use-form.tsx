@@ -72,15 +72,18 @@ export function useForm<T extends BaseRecord>(params?: UseFormParams<T>) {
   const [formValues, setFormValues] = useState<Partial<T>>(initialValues);
   const [formState, setFormState] = useState<Partial<UseFormState<T>>>({});
   const isValid = useMemo(() => {
-    let isValid = true;
-    for (const key in formState) {
-      isValid = isValid && formState[key]!.isValid;
+    const isValid = true;
+    for (const key in formState.keys) {
+      const state = formState[key];
+      if (state) {
+        return false;
+      }
     }
     return isValid;
   }, [formState]);
 
   const register: RegisterFunc<T> = (field, validationOptions) => {
-    if (!(field in formState)) {
+    if (formState.keys && !(field in formState.keys)) {
       const validaionState = validateField(
         formValues[field] ?? "",
         validationOptions

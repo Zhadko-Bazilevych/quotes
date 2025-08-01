@@ -21,11 +21,11 @@ type QuoteFormState = {
 
 export function QuoteForm(props: QuoteFormProps) {
   const { author, content, context, sender, onEdit: toggleEdit } = props;
-  const { formState, isValid, register, handleSubmit } = useForm<QuoteFormState>({
+  const { isValid, register, handleSubmit } = useForm<QuoteFormState>({
     initialValues: { author, content, context, sender },
   });
-  const submit = () => {
-    console.log(formState);
+  const submit = (data: Partial<QuoteFormState>) => {
+    alert(JSON.stringify(data));
     toggleEdit();
   };
 
