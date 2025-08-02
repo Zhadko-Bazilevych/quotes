@@ -6,14 +6,40 @@ type QuoteItem = Quote & {
   isEditing?: boolean;
 };
 
-const initialQuotes: QuoteItem[] = [{
-  id: 1,
-  author: 'Test from docker stack using turborepo',
-  sender: 'test',
-  content: 'testing context',
-  context: 'test',
-  dateAdded: 'now',
-}];
+const initialQuotes: QuoteItem[] = [
+  {
+    id: 1,
+    author: "Test from docker stack using turborepo",
+    sender: "test",
+    content: "testing context",
+    context: "test",
+    dateAdded: "now",
+  },
+  {
+    id: 2,
+    author: "Test 2",
+    sender: "test",
+    content: "testing context",
+    context: "test",
+    dateAdded: "now",
+  },
+  {
+    id: 3,
+    author: "Test 3",
+    sender: "test",
+    content: "testing context",
+    context: "test",
+    dateAdded: "now",
+  },
+  {
+    id: 4,
+    author: "Test 4",
+    sender: "test",
+    content: "testing context",
+    context: "test",
+    dateAdded: "now",
+  },
+];
 
 export function QuoteList() {
   const [quotes, setQuotes] = useState(initialQuotes);
