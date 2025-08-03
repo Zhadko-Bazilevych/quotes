@@ -67,6 +67,7 @@ export function QuoteForm(props: QuoteFormProps) {
         <div className="w-20 text-right p-1">Context: </div>
         <div className="flex flex-col w-1/2">
           <Textarea
+            className="flex-1"
             {...register("context", { required: "Field is required" })}
           />
           {errors.context ? (
