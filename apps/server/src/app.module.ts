@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from 'src/app.controller';
 import { AppService } from 'src/app.service';
 import { KyselyModule } from 'src/database/kysely.module';
+import { MigratorModule } from 'src/database/migrator/migrator.module';
 
 @Module({
-  imports: [KyselyModule],
+  imports: [KyselyModule, MigratorModule],
   controllers: [AppController],
   providers: [AppService],
 })

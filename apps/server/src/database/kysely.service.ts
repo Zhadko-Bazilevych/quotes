@@ -8,7 +8,7 @@ import {
   Selectable,
   Updateable,
 } from 'kysely';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleDestroy } from '@nestjs/common';
 
 const dialect = new PostgresDialect({
   pool: new Pool({
@@ -21,7 +21,7 @@ const dialect = new PostgresDialect({
   }),
 });
 
-interface Database {
+export interface Database {
   quote: QuoteTable;
 }
 
@@ -40,8 +40,12 @@ export type NewQuote = Insertable<QuoteTable>;
 export type UpdateQuote = Updateable<QuoteTable>;
 
 @Injectable()
-export class KyselyService extends Kysely<Database> {
+export class KyselyService extends Kysely<Database> implements OnModuleDestroy {
   constructor() {
     super({ dialect });
+  }
+
+  async onModuleDestroy() {
+    await this.destroy();
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { KyselyService } from './database/database.service';
+import { KyselyService } from 'src/database/kysely.service';
 import { CompiledQuery } from 'kysely';
 
 @Injectable()
