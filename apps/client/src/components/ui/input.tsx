@@ -1,12 +1,13 @@
 import type { InputHTMLAttributes } from "react";
+import { twMerge } from "tailwind-merge";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement>;
 
-export function Input(props: InputProps) {
+export function Input({ className, ...rest }: InputProps) {
   return (
     <input
-      className="border rounded border-gray-300 p-1 cursor-pointer hover:bg-neutral-900"
-      {...props}
+      className={twMerge("border rounded border-gray-300 p-1", className)}
+      {...rest}
     />
   );
 }
