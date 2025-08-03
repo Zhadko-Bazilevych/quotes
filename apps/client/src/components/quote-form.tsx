@@ -22,7 +22,7 @@ type QuoteFormState = {
 export function QuoteForm(props: QuoteFormProps) {
   const { author, content, context, sender, onEdit: toggleEdit } = props;
   const {
-    formState: { isValid, errors },
+    formState: { isValid },
     register,
     handleSubmit,
   } = useForm<QuoteFormState>({
