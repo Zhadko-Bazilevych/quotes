@@ -8,7 +8,7 @@ import { Injectable } from '@nestjs/common';
 export class MigratorService {
   constructor(private readonly db: KyselyService) {}
 
-  async migrate() {
+  async migrate(): Promise<void> {
     const { rows } = await this.db.executeQuery<{ test: 1 }>(
       CompiledQuery.raw('select 1 as test', []),
     );
