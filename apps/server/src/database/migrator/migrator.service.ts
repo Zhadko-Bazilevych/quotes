@@ -1,18 +1,16 @@
 import path from 'node:path';
 import { promises as fs } from 'fs';
-import { Migrator, FileMigrationProvider, CompiledQuery } from 'kysely';
+import { Migrator, FileMigrationProvider } from 'kysely';
 import { KyselyService } from 'src/database/kysely.service';
 import { Injectable } from '@nestjs/common';
+
+const LATEST_MIGRATION = '001_initial';
 
 @Injectable()
 export class MigratorService {
   constructor(private readonly db: KyselyService) {}
 
   async migrate(): Promise<void> {
-    const { rows } = await this.db.executeQuery<{ test: 1 }>(
-      CompiledQuery.raw('select 1 as test', []),
-    );
-    console.log(rows);
     const migrator = new Migrator({
       db: this.db,
       provider: new FileMigrationProvider({
@@ -21,8 +19,7 @@ export class MigratorService {
         migrationFolder: path.join(__dirname, 'migrations'),
       }),
     });
-
-    const { error, results } = await migrator.migrateToLatest();
+    const { error, results } = await migrator.migrateTo(LATEST_MIGRATION);
 
     results?.forEach((it) => {
       if (it.status === 'Success') {
