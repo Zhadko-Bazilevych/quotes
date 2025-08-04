@@ -1,7 +1,7 @@
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
-import { useForm } from "react-hook-form";
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Button } from './ui/button';
+import { useForm } from 'react-hook-form';
 
 type QuoteFormProps = {
   id: number;
@@ -27,7 +27,7 @@ export function QuoteForm(props: QuoteFormProps) {
     handleSubmit,
   } = useForm<QuoteFormState>({
     values: { author, content, context, sender },
-    mode: "all",
+    mode: 'all',
   });
   const onSubmit = (data: QuoteFormState) => {
     alert(JSON.stringify(data));
@@ -42,7 +42,7 @@ export function QuoteForm(props: QuoteFormProps) {
       <div className="flex">
         <div className="w-20 text-right p-1">Author: </div>
         <div className="flex flex-col">
-          <Input {...register("author", { required: "Field is required" })} />
+          <Input {...register('author', { required: 'Field is required' })} />
           {errors.author ? (
             <span className="text-red-500">{errors.author.message}</span>
           ) : (
@@ -54,7 +54,7 @@ export function QuoteForm(props: QuoteFormProps) {
         <div className="w-20 text-right p-1">Content: </div>
         <div className="flex flex-col w-1/2">
           <Textarea
-            {...register("content", { required: "Field is required" })}
+            {...register('content', { required: 'Field is required' })}
           />
           {errors.content ? (
             <span className="text-red-500">{errors.content.message}</span>
@@ -68,7 +68,7 @@ export function QuoteForm(props: QuoteFormProps) {
         <div className="flex flex-col w-1/2">
           <Textarea
             className="flex-1"
-            {...register("context", { required: "Field is required" })}
+            {...register('context', { required: 'Field is required' })}
           />
           {errors.context ? (
             <span className="text-red-500">{errors.context.message}</span>
@@ -81,7 +81,7 @@ export function QuoteForm(props: QuoteFormProps) {
         <div className="flex">
           <div className="w-20 text-right p-1">Sender:</div>
           <div className="flex flex-col">
-            <Input {...register("sender", { required: "Field is required" })} />
+            <Input {...register('sender', { required: 'Field is required' })} />
             {errors.sender ? (
               <span className="text-red-500">{errors.sender.message}</span>
             ) : (

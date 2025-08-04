@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button } from "./ui/button";
+import { useState } from 'react';
+import { Button } from './ui/button';
 
 export type Quote = {
   id: number;

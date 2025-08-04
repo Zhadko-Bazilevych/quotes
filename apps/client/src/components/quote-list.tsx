@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Quote } from "./quote";
-import { QuoteForm } from "./quote-form";
+import { useState } from 'react';
+import { Quote } from './quote';
+import { QuoteForm } from './quote-form';
 
 type QuoteItem = Quote & {
   isEditing?: boolean;
@@ -9,35 +9,35 @@ type QuoteItem = Quote & {
 const initialQuotes: QuoteItem[] = [
   {
     id: 1,
-    author: "Test from docker stack using turborepo",
-    sender: "test",
-    content: "testing context",
-    context: "test",
-    dateAdded: "now",
+    author: 'Test from docker stack using turborepo',
+    sender: 'test',
+    content: 'testing context',
+    context: 'test',
+    dateAdded: 'now',
   },
   {
     id: 2,
-    author: "Test 2",
-    sender: "test",
-    content: "testing context",
-    context: "test",
-    dateAdded: "now",
+    author: 'Test 2',
+    sender: 'test',
+    content: 'testing context',
+    context: 'test',
+    dateAdded: 'now',
   },
   {
     id: 3,
-    author: "Test 3",
-    sender: "test",
-    content: "testing context",
-    context: "test",
-    dateAdded: "now",
+    author: 'Test 3',
+    sender: 'test',
+    content: 'testing context',
+    context: 'test',
+    dateAdded: 'now',
   },
   {
     id: 4,
-    author: "Test 4",
-    sender: "test",
-    content: "testing context",
-    context: "test",
-    dateAdded: "now",
+    author: 'Test 4',
+    sender: 'test',
+    content: 'testing context',
+    context: 'test',
+    dateAdded: 'now',
   },
 ];
 

@@ -1,4 +1,4 @@
-import { QuoteList } from "./components/quote-list";
+import { QuoteList } from './components/quote-list';
 
 function App() {
   return (
