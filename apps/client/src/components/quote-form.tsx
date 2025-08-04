@@ -2,6 +2,7 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { useForm } from 'react-hook-form';
+import type { JSX } from 'react';
 
 type QuoteFormProps = {
   id: number;
@@ -19,7 +20,7 @@ type QuoteFormState = {
   context: string;
 };
 
-export function QuoteForm(props: QuoteFormProps) {
+export function QuoteForm(props: QuoteFormProps): JSX.Element {
   const { author, content, context, sender, onEdit: toggleEdit } = props;
   const {
     formState: { isValid, errors },
@@ -29,7 +30,7 @@ export function QuoteForm(props: QuoteFormProps) {
     values: { author, content, context, sender },
     mode: 'all',
   });
-  const onSubmit = (data: QuoteFormState) => {
+  const onSubmit = (data: QuoteFormState): void => {
     alert(JSON.stringify(data));
     toggleEdit();
   };
@@ -37,7 +38,7 @@ export function QuoteForm(props: QuoteFormProps) {
   return (
     <form
       className="flex flex-col border rounded border-gray-300 p-2"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={(e) => void handleSubmit(onSubmit)(e)}
     >
       <div className="flex">
         <div className="w-20 text-right p-1">Author: </div>

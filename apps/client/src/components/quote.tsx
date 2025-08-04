@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { Button } from './ui/button';
 
 export type Quote = {
@@ -14,7 +14,7 @@ export type QuoteProps = Quote & {
   onEdit: () => void;
 };
 
-export function Quote(props: QuoteProps) {
+export function Quote(props: QuoteProps): JSX.Element {
   const { author, sender, content, context, dateAdded, onEdit } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { Quote } from './quote';
 import { QuoteForm } from './quote-form';
 
@@ -41,7 +41,7 @@ const initialQuotes: QuoteItem[] = [
   },
 ];
 
-export function QuoteList() {
+export function QuoteList(): JSX.Element {
   const [quotes, setQuotes] = useState(initialQuotes);
 
   // useEffect(() => {
@@ -54,7 +54,7 @@ export function QuoteList() {
   //     });
   // }, []);
 
-  function toggleEdit(id: number) {
+  const toggleEdit = (id: number): void => {
     setQuotes((prev) => {
       const idx = prev.findIndex((quote) => quote.id === id);
       if (idx === undefined) {
@@ -68,7 +68,7 @@ export function QuoteList() {
       ];
       return newQuoteList;
     });
-  }
+  };
 
   return (
     <section className="flex flex-col gap-3">
