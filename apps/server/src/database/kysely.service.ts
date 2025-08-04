@@ -45,7 +45,7 @@ export class KyselyService extends Kysely<Database> implements OnModuleDestroy {
     super({ dialect });
   }
 
-  async onModuleDestroy() {
+  async onModuleDestroy(): Promise<void> {
     await this.destroy();
   }
 }

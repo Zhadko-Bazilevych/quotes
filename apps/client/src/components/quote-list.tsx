@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Quote } from "./quote";
-import { QuoteForm } from "./quote-form";
+import { useState, type JSX } from 'react';
+import { Quote } from './quote';
+import { QuoteForm } from './quote-form';
 
 type QuoteItem = Quote & {
   isEditing?: boolean;
@@ -9,39 +9,39 @@ type QuoteItem = Quote & {
 const initialQuotes: QuoteItem[] = [
   {
     id: 1,
-    author: "Test from docker stack using turborepo",
-    sender: "test",
-    content: "testing context",
-    context: "test",
-    dateAdded: "now",
+    author: 'Test from docker stack using turborepo',
+    sender: 'test',
+    content: 'testing context',
+    context: 'test',
+    dateAdded: 'now',
   },
   {
     id: 2,
-    author: "Test 2",
-    sender: "test",
-    content: "testing context",
-    context: "test",
-    dateAdded: "now",
+    author: 'Test 2',
+    sender: 'test',
+    content: 'testing context',
+    context: 'test',
+    dateAdded: 'now',
   },
   {
     id: 3,
-    author: "Test 3",
-    sender: "test",
-    content: "testing context",
-    context: "test",
-    dateAdded: "now",
+    author: 'Test 3',
+    sender: 'test',
+    content: 'testing context',
+    context: 'test',
+    dateAdded: 'now',
   },
   {
     id: 4,
-    author: "Test 4",
-    sender: "test",
-    content: "testing context",
-    context: "test",
-    dateAdded: "now",
+    author: 'Test 4',
+    sender: 'test',
+    content: 'testing context',
+    context: 'test',
+    dateAdded: 'now',
   },
 ];
 
-export function QuoteList() {
+export function QuoteList(): JSX.Element {
   const [quotes, setQuotes] = useState(initialQuotes);
 
   // useEffect(() => {
@@ -54,7 +54,7 @@ export function QuoteList() {
   //     });
   // }, []);
 
-  function toggleEdit(id: number) {
+  const toggleEdit = (id: number): void => {
     setQuotes((prev) => {
       const idx = prev.findIndex((quote) => quote.id === id);
       if (idx === undefined) {
@@ -68,7 +68,7 @@ export function QuoteList() {
       ];
       return newQuoteList;
     });
-  }
+  };
 
   return (
     <section className="flex flex-col gap-3">

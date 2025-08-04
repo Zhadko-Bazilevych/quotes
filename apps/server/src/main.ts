@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ConsoleLogger } from '@nestjs/common';
 import { MigratorService } from './database/migrator/migrator.service';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger({ json: true }),
     bufferLogs: true,
@@ -14,4 +14,5 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
+
 void bootstrap();

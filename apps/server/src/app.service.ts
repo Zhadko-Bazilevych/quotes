@@ -6,7 +6,7 @@ import { CompiledQuery } from 'kysely';
 export class AppService {
   constructor(private readonly db: KyselyService) {}
 
-  async test() {
+  async test(): Promise<{ test: 1 }> {
     const { rows } = await this.db.executeQuery<{ test: 1 }>(
       CompiledQuery.raw('select 1 as test', []),
     );
