@@ -6,8 +6,8 @@ export type Quote = {
   content: string;
   user: string;
   context: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export const getQuoteByIdSchema = z
