@@ -1,21 +1,17 @@
 import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
 import { QuotesService } from 'src/quotes/quotes.service';
-import { ZodValidationPipe } from 'src/zod/zodValidationPipe';
-import {
-  CreateQuoteDto,
-  createQuoteSchema,
-  getQuoteByIdDto,
-  getQuoteByIdSchema,
-  Quote,
-} from 'src/quotes/quotes.types';
+import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
+import { Quote } from 'src/quotes/quotes.types';
+import { IdDto, idSchema } from 'src/utils/dto/id.dto';
+import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
 
 @Controller('quotes')
 export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
 
   @Get(':id')
-  @UsePipes(new ZodValidationPipe(getQuoteByIdSchema))
-  getQuoteById(@Param() params: getQuoteByIdDto): Promise<Quote> {
+  @UsePipes(new ZodValidationPipe(idSchema))
+  getQuoteById(@Param() params: IdDto): Promise<Quote> {
     return this.quotesService.getQuoteById(params.id);
   }
 

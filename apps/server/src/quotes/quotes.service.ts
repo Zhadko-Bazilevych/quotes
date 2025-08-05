@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { KyselyService } from 'src/database/kysely.service';
-import { CreateQuoteDto, Quote } from 'src/quotes/quotes.types';
+import { Quote } from 'src/quotes/quotes.types';
+import { CreateQuoteDto } from './dto/create-quote.dto';
 
 @Injectable()
 export class QuotesService {
