@@ -9,4 +9,4 @@ import { MigratorModule } from 'src/database/migrator/migrator.module';
   controllers: [QuotesController],
   providers: [QuotesService],
 })
-export class AppModule {}
+export class QuotesModule {}
