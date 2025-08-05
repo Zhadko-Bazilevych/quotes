@@ -6,21 +6,22 @@ import {
   createQuoteSchema,
   getQuoteByIdDto,
   getQuoteByIdSchema,
+  Quote,
 } from 'src/quotes/quotes.types';
 
-@Controller()
+@Controller('quotes')
 export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
 
   @Get(':id')
   @UsePipes(new ZodValidationPipe(getQuoteByIdSchema))
-  getQuoteById(@Param() params: getQuoteByIdDto) {
+  getQuoteById(@Param() params: getQuoteByIdDto): Promise<Quote> {
     return this.quotesService.getQuoteById(params.id);
   }
 
   @Post()
   @UsePipes(new ZodValidationPipe(createQuoteSchema))
-  createQuote(@Body() body: CreateQuoteDto) {
+  createQuote(@Body() body: CreateQuoteDto): Promise<Quote> {
     return this.quotesService.createQuote(body);
   }
 }
