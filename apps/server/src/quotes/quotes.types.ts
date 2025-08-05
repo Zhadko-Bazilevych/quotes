@@ -24,8 +24,6 @@ export const createQuoteSchema = z
     content: z.string(),
     user: z.string(),
     context: z.string(),
-    created_at: z.date(),
-    updated_at: z.date(),
   })
   .required();
 
