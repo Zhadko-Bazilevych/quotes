@@ -1,5 +1,6 @@
 import z from 'zod';
 
+// TODO: validate min and max length
 export const createQuoteSchema = z
   .object({
     author: z.string(),
