@@ -1,7 +1,5 @@
-import {
-  QuoteNotFoundError,
-  UnexpectedError,
-} from 'src/utils/validation/app-errors';
+import { QuoteNotFoundError } from 'src/quotes/quotes.errors';
+import { UnexpectedError } from 'src/utils/errors/app-errors';
 
 export type Quote = {
   id: number;
@@ -15,3 +13,5 @@ export type Quote = {
 
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
 export type CreateQuoteError = UnexpectedError;
+export type UpdateQuoteError = QuoteNotFoundError | UnexpectedError;
+export type DeleteQuoteError = QuoteNotFoundError | UnexpectedError;

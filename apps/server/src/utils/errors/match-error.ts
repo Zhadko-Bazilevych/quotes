@@ -1,4 +1,4 @@
-import { GenericTaggedError } from 'src/utils/validation/tagged-error';
+import { GenericTaggedError } from 'src/utils/errors/tagged-error';
 
 export type Matcher<T extends GenericTaggedError> = {
   [P in T as P['tag']]: (args: P['cause']) => never;
