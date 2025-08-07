@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { KyselyService } from 'src/database/kysely.service';
-import { GetQuoteError, Quote } from 'src/quotes/quotes.types';
+import {
+  CreateQuoteError,
+  GetQuoteError,
+  Quote,
+} from 'src/quotes/quotes.types';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
 import {
@@ -29,17 +33,19 @@ export class QuotesService {
     });
   }
 
-  async create(quote: CreateQuoteDto): Promise<Quote> {
-    // TODO: use ResultAsync
-    return this.db
-      .insertInto('quote')
-      .values({
-        author: quote.author,
-        content: quote.content,
-        user: quote.user,
-        context: quote.content,
-      })
-      .returningAll()
-      .executeTakeFirstOrThrow();
+  create(quote: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
+    return ResultAsync.fromPromise(
+      this.db
+        .insertInto('quote')
+        .values({
+          author: quote.author,
+          content: quote.content,
+          user: quote.user,
+          context: quote.context,
+        })
+        .returningAll()
+        .executeTakeFirstOrThrow(),
+      () => new UnexpectedError(),
+    );
   }
 }

@@ -43,6 +43,18 @@ export class QuotesController {
   @Post()
   @UsePipes(new ZodValidationPipe(createQuoteSchema))
   createQuote(@Body() body: CreateQuoteDto): Promise<Quote> {
-    return this.quotesService.create(body);
+    return this.quotesService
+      .create(body)
+      .map((quote) => quote)
+      .match(
+        (quote) => quote,
+        (err) => {
+          matchError(err, {
+            UnexpectedError: () => {
+              throw new InternalServerErrorException();
+            },
+          });
+        },
+      );
   }
 }

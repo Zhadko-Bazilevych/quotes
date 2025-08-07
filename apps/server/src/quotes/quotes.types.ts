@@ -14,3 +14,4 @@ export type Quote = {
 };
 
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
+export type CreateQuoteError = UnexpectedError;
