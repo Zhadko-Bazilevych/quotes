@@ -8,10 +8,10 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('author', 'varchar(30)', (col) => col.notNull())
     .addColumn('content', 'varchar(500)', (col) => col.notNull())
     .addColumn('context', 'varchar(500)', (col) => col.notNull())
-    .addColumn('created_at', 'timestamp', (col) =>
+    .addColumn('createdAt', 'timestamp', (col) =>
       col.defaultTo(sql`now()`).notNull(),
     )
-    .addColumn('updated_at', 'timestamp', (col) =>
+    .addColumn('updatedAt', 'timestamp', (col) =>
       col.defaultTo(sql`now()`).notNull(),
     )
     .execute();

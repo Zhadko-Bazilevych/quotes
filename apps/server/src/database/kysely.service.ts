@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import {
+  CamelCasePlugin,
   ColumnType,
   Generated,
   Insertable,
@@ -31,8 +32,8 @@ interface QuoteTable {
   author: string;
   content: string;
   context: string;
-  created_at: ColumnType<Date, never, never>;
-  updated_at: ColumnType<Date, never, Date>;
+  createdAt: ColumnType<Date, never, never>;
+  updatedAt: ColumnType<Date, never, Date>;
 }
 
 export type Quote = Selectable<QuoteTable>;
@@ -42,7 +43,7 @@ export type UpdateQuote = Updateable<QuoteTable>;
 @Injectable()
 export class KyselyService extends Kysely<Database> implements OnModuleDestroy {
   constructor() {
-    super({ dialect });
+    super({ dialect, plugins: [new CamelCasePlugin()] });
   }
 
   async onModuleDestroy(): Promise<void> {
