@@ -1,5 +1,5 @@
-import { QuoteNotFoundError } from 'src/quotes/quotes.errors';
-import { UnexpectedError } from 'src/utils/errors/app-errors';
+import { type QuoteNotFoundError } from 'src/quotes/quotes.errors';
+import { type UnexpectedError } from 'src/utils/errors/app-errors';
 
 export type Quote = {
   id: number;
