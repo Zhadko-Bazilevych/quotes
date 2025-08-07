@@ -1,30 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { KyselyService } from 'src/database/kysely.service';
-import { Quote } from 'src/quotes/quotes.types';
+import { GetQuoteError, Quote } from 'src/quotes/quotes.types';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function TaggedError<Tag extends string>(tag: Tag) {
-  return class TE<Cause = void> extends Error {
-    tag: Tag = tag;
-    override cause: Cause;
-
-    constructor(cause: Cause) {
-      super();
-      this.cause = cause;
-      this.name = tag;
-    }
-  };
-}
-
-class QuoteNotFoundError extends TaggedError('QuoteNotFoundError')<{
-  id: number;
-}> {}
-
-class UnexpectedError extends TaggedError('UnexpectedError') {}
-
-export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
+import {
+  QuoteNotFoundError,
+  UnexpectedError,
+} from 'src/utils/validation/app-errors';
 
 @Injectable()
 export class QuotesService {
