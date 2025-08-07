@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -20,6 +18,9 @@ import {
   UpdateQuoteDto,
   updateQuoteSchema,
 } from 'src/quotes/dto/update-quote.dto';
+import { UnexpectedException } from 'src/utils/exceptions';
+import { QuoteNotFoundException } from './quotes.errors';
+import { UnexpectedError } from 'src/utils/errors/app-errors';
 
 @Controller('quotes')
 export class QuotesController {
@@ -32,15 +33,13 @@ export class QuotesController {
       .getOneById(id)
       .mapErr((error) =>
         matchError(error, {
-          QuoteNotFoundError: () => {
-            throw new NotFoundException(`quote with id ${id} not found`);
-          },
+          QuoteNotFoundError: ({ id }) => new QuoteNotFoundException(id),
         }),
       )
       .match(
         (quote) => quote,
-        (e) => {
-          throw new NotFoundException(e);
+        () => {
+          throw new UnexpectedError();
         },
       );
   }
@@ -52,9 +51,7 @@ export class QuotesController {
       (quote) => quote,
       (err) =>
         matchError(err, {
-          UnexpectedError: () => {
-            throw new InternalServerErrorException();
-          },
+          UnexpectedError: () => new UnexpectedException(),
         }),
     );
   }
@@ -68,12 +65,8 @@ export class QuotesController {
       (quote) => quote,
       (err) =>
         matchError(err, {
-          QuoteNotFoundError: ({ id }) => {
-            throw new NotFoundException(`quote with id ${id} not found`);
-          },
-          UnexpectedError: () => {
-            throw new InternalServerErrorException();
-          },
+          QuoteNotFoundError: ({ id }) => new QuoteNotFoundException(id),
+          UnexpectedError: () => new UnexpectedException(),
         }),
     );
   }
@@ -85,12 +78,8 @@ export class QuotesController {
       (quote) => quote,
       (err) =>
         matchError(err, {
-          QuoteNotFoundError: ({ id }) => {
-            throw new NotFoundException(`quote with id ${id} not found`);
-          },
-          UnexpectedError: () => {
-            throw new InternalServerErrorException();
-          },
+          QuoteNotFoundError: ({ id }) => new QuoteNotFoundException(id),
+          UnexpectedError: () => new UnexpectedException(),
         }),
     );
   }
