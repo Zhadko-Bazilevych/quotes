@@ -28,19 +28,21 @@ export class QuotesController {
   @Get(':id')
   @UsePipes(new ZodValidationPipe(idSchema))
   getQuoteById(@Param() { id }: IdDto): Promise<Quote> {
-    return this.quotesService.getOneById(id).match(
-      (quote) => quote,
-      (err) => {
-        matchError(err, {
-          QuoteNotFoundError: ({ id }) => {
+    return this.quotesService
+      .getOneById(id)
+      .mapErr((error) =>
+        matchError(error, {
+          QuoteNotFoundError: () => {
             throw new NotFoundException(`quote with id ${id} not found`);
           },
-          UnexpectedError: () => {
-            throw new InternalServerErrorException();
-          },
-        });
-      },
-    );
+        }),
+      )
+      .match(
+        (quote) => quote,
+        (e) => {
+          throw new NotFoundException(e);
+        },
+      );
   }
 
   @Post()
@@ -48,13 +50,12 @@ export class QuotesController {
   createQuote(@Body() body: CreateQuoteDto): Promise<Quote> {
     return this.quotesService.create(body).match(
       (quote) => quote,
-      (err) => {
+      (err) =>
         matchError(err, {
           UnexpectedError: () => {
             throw new InternalServerErrorException();
           },
-        });
-      },
+        }),
     );
   }
 
@@ -65,7 +66,7 @@ export class QuotesController {
   ): Promise<Quote> {
     return this.quotesService.update(id, body).match(
       (quote) => quote,
-      (err) => {
+      (err) =>
         matchError(err, {
           QuoteNotFoundError: ({ id }) => {
             throw new NotFoundException(`quote with id ${id} not found`);
@@ -73,8 +74,7 @@ export class QuotesController {
           UnexpectedError: () => {
             throw new InternalServerErrorException();
           },
-        });
-      },
+        }),
     );
   }
 
@@ -83,7 +83,7 @@ export class QuotesController {
   deleteQuote(@Param() { id }: IdDto): Promise<Quote> {
     return this.quotesService.delete(id).match(
       (quote) => quote,
-      (err) => {
+      (err) =>
         matchError(err, {
           QuoteNotFoundError: ({ id }) => {
             throw new NotFoundException(`quote with id ${id} not found`);
@@ -91,8 +91,7 @@ export class QuotesController {
           UnexpectedError: () => {
             throw new InternalServerErrorException();
           },
-        });
-      },
+        }),
     );
   }
 }
