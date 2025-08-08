@@ -1,18 +1,18 @@
 export type GenericTaggedError = {
   cause: unknown;
-  tag: string;
+  _tag: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function TaggedError<Tag extends string>(tag: Tag) {
+export function TaggedError<Tag extends string>(_tag: Tag) {
   return class TE<Cause = void> extends Error {
-    tag: Tag = tag;
+    _tag: Tag = _tag;
     override cause: Cause;
 
     constructor(cause: Cause) {
       super();
       this.cause = cause;
-      this.name = tag;
+      this.name = _tag;
     }
   };
 }
