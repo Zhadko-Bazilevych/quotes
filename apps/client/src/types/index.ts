@@ -9,5 +9,5 @@ export type Quote = {
 };
 
 export type GetQuotesQuery = { page?: number; size?: number };
-export type QuoteCreateData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
-export type QuoteUpdateData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;

@@ -1,8 +1,8 @@
 import type {
   GetQuotesQuery,
   Quote,
-  QuoteCreateData,
-  QuoteUpdateData,
+  CreateQuoteData,
+  UpdateQuoteData,
 } from '../types';
 import { ApiClient } from './api-client';
 
@@ -22,12 +22,12 @@ class Api {
     return ApiClient.get(url, { query });
   }
 
-  updateQuote(id: number, data: QuoteUpdateData): Promise<Quote> {
+  updateQuote(id: number, data: UpdateQuoteData): Promise<Quote> {
     const url = this.buildUrl('quotes', id);
     return ApiClient.put(url, { body: data });
   }
 
-  createQuote(data: QuoteCreateData): Promise<Quote> {
+  createQuote(data: CreateQuoteData): Promise<Quote> {
     const url = this.buildUrl('quotes');
     return ApiClient.post(url, { body: data });
   }

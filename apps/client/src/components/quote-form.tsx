@@ -3,23 +3,14 @@ import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Quote, QuoteUpdateData } from '../types';
+import { useQueryClient } from '@tanstack/react-query';
+import type { Quote, UpdateQuoteData } from '../types';
+import { useUpdateQuoteMutation } from '../hooks/use-update-quote';
 
 type QuoteFormProps = {
   quote: Quote;
   onCancel: () => void;
 };
-
-function updateQuote(id: number, data: QuoteUpdateData): Promise<Quote> {
-  return fetch(`http://localhost:3000/quotes/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-    headers: {
-      ['Content-Type']: 'application/json',
-    },
-  }).then((res) => res.json());
-}
 
 export function QuoteForm(props: QuoteFormProps): JSX.Element {
   const { quote, onCancel: toggleEdit } = props;
@@ -27,7 +18,7 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
     formState: { isValid, errors },
     register,
     handleSubmit,
-  } = useForm<QuoteUpdateData>({
+  } = useForm<UpdateQuoteData>({
     values: {
       author: quote.author,
       content: quote.content,
@@ -38,17 +29,14 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
   });
 
   const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: QuoteUpdateData }) =>
-      updateQuote(id, data),
+  const mutation = useUpdateQuoteMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['quotes', 'list'] });
       toggleEdit();
     },
   });
 
-  const onSubmit = (data: QuoteUpdateData): void => {
+  const onSubmit = (data: UpdateQuoteData): void => {
     mutation.mutate({ id: quote.id, data });
   };
 
