@@ -4,6 +4,8 @@ import {
   CreateQuoteError,
   DeleteQuoteError,
   GetQuoteError,
+  GetQuoteListError,
+  PaginationOptions,
   Quote,
   UpdateQuoteError,
 } from 'src/quotes/quotes.types';
@@ -32,6 +34,21 @@ export class QuotesService {
 
       return ok(quote);
     });
+  }
+
+  getList({
+    page,
+    size,
+  }: PaginationOptions): ResultAsync<Quote[], GetQuoteListError> {
+    return ResultAsync.fromPromise(
+      this.db
+        .selectFrom('quote')
+        .selectAll()
+        .offset((page - 1) * size)
+        .limit(size)
+        .execute(),
+      () => new UnexpectedError(),
+    );
   }
 
   create(quote: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
