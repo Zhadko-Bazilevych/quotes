@@ -12,6 +12,7 @@ export type Quote = {
 };
 
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
+export type GetQuoteListError = UnexpectedError;
 export type CreateQuoteError = UnexpectedError;
 export type UpdateQuoteError = QuoteNotFoundError | UnexpectedError;
 export type DeleteQuoteError = QuoteNotFoundError | UnexpectedError;

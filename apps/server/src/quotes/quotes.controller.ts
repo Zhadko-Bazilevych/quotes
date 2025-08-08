@@ -6,11 +6,11 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
 } from '@nestjs/common';
 import { QuotesService } from 'src/quotes/quotes.service';
 import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
-import { Quote } from 'src/quotes/quotes.types';
 import { IdDto, idSchema } from 'src/utils/dto/id.dto';
 import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
 import { matchError } from 'src/utils/errors/match-error';
@@ -21,6 +21,11 @@ import {
 import { UnexpectedException } from 'src/utils/exceptions';
 import { QuoteNotFoundException } from './quotes.errors';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
+import {
+  PaginationOptions,
+  paginationSchema,
+} from 'src/utils/dto/pagination.dto';
+import { Quote } from 'src/quotes/quotes.types';
 
 @Controller('quotes')
 export class QuotesController {
@@ -44,9 +49,21 @@ export class QuotesController {
       );
   }
 
+  @Get()
+  @UsePipes(new ZodValidationPipe(paginationSchema))
+  getList(@Query() paginationOptions: PaginationOptions): Promise<Quote[]> {
+    return this.quotesService.getList(paginationOptions).match(
+      (quote) => quote,
+      (err) =>
+        matchError(err, {
+          UnexpectedError: () => new UnexpectedException(),
+        }),
+    );
+  }
+
   @Post()
   @UsePipes(new ZodValidationPipe(createQuoteSchema))
-  createQuote(@Body() body: CreateQuoteDto): Promise<Quote> {
+  create(@Body() body: CreateQuoteDto): Promise<Quote> {
     return this.quotesService.create(body).match(
       (quote) => quote,
       (err) =>
@@ -57,7 +74,7 @@ export class QuotesController {
   }
 
   @Put(':id')
-  updateQuote(
+  update(
     @Param(new ZodValidationPipe(idSchema)) { id }: IdDto,
     @Body(new ZodValidationPipe(updateQuoteSchema)) body: UpdateQuoteDto,
   ): Promise<Quote> {
@@ -73,7 +90,7 @@ export class QuotesController {
 
   @Delete(':id')
   @UsePipes(new ZodValidationPipe(idSchema))
-  deleteQuote(@Param() { id }: IdDto): Promise<Quote> {
+  delete(@Param() { id }: IdDto): Promise<Quote> {
     return this.quotesService.delete(id).match(
       (quote) => quote,
       (err) =>
