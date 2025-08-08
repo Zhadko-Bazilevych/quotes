@@ -11,11 +11,6 @@ export type Quote = {
   updatedAt: Date;
 };
 
-export type PaginationOptions = {
-  page: number;
-  size: number;
-};
-
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
 export type GetQuoteListError = UnexpectedError;
 export type CreateQuoteError = UnexpectedError;

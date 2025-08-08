@@ -5,7 +5,6 @@ import {
   DeleteQuoteError,
   GetQuoteError,
   GetQuoteListError,
-  PaginationOptions,
   Quote,
   UpdateQuoteError,
 } from 'src/quotes/quotes.types';
@@ -14,6 +13,7 @@ import { err, ok, Result, ResultAsync } from 'neverthrow';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
 import { UpdateQuoteDto } from 'src/quotes/dto/update-quote.dto';
 import { QuoteNotFoundError } from 'src/quotes/quotes.errors';
+import { PaginationOptions } from 'src/utils/dto/pagination.dto';
 
 @Injectable()
 export class QuotesService {

@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { QuotesService } from 'src/quotes/quotes.service';
 import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
-import { PaginationOptions, Quote } from 'src/quotes/quotes.types';
 import { IdDto, idSchema } from 'src/utils/dto/id.dto';
 import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
 import { matchError } from 'src/utils/errors/match-error';
@@ -22,7 +21,11 @@ import {
 import { UnexpectedException } from 'src/utils/exceptions';
 import { QuoteNotFoundException } from './quotes.errors';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
-import { getQuoteListSchema } from 'src/quotes/dto/get-quote-list.dto';
+import {
+  PaginationOptions,
+  paginationSchema,
+} from 'src/utils/dto/pagination.dto';
+import { Quote } from 'src/quotes/quotes.types';
 
 @Controller('quotes')
 export class QuotesController {
@@ -47,7 +50,7 @@ export class QuotesController {
   }
 
   @Get()
-  @UsePipes(new ZodValidationPipe(getQuoteListSchema))
+  @UsePipes(new ZodValidationPipe(paginationSchema))
   getList(@Query() paginationOptions: PaginationOptions): Promise<Quote[]> {
     return this.quotesService.getList(paginationOptions).match(
       (quote) => quote,
