@@ -1,22 +1,14 @@
 import { useState, type JSX } from 'react';
-import { Quote } from './quote';
+import { QuoteCard } from './quote';
 import { QuoteForm } from './quote-form';
-import { useQuery } from '@tanstack/react-query';
+import { useQuotes } from '../hooks/use-quotes';
 
 export function QuoteList(): JSX.Element {
-  const { data } = useQuery<Quote[]>({
-    queryKey: ['QuoteList'],
-    queryFn: () => {
-      return fetch('http://localhost:3000/quotes', { method: 'GET' }).then(
-        (res) => res.json(),
-      );
-    },
-  });
-
-  const [isEditingIds, setIsEditingIds] = useState<number[]>([]);
+  const { data } = useQuotes();
+  const [editingIds, setEditingIds] = useState<number[]>([]);
 
   const toggleEdit = (id: number): void => {
-    setIsEditingIds((prev) =>
+    setEditingIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
@@ -24,25 +16,16 @@ export function QuoteList(): JSX.Element {
   return (
     <section className="flex flex-col gap-3">
       {data?.map((quote) => {
-        return isEditingIds.includes(quote.id) ? (
+        return editingIds.includes(quote.id) ? (
           <QuoteForm
-            id={quote.id}
-            author={quote.author}
-            content={quote.content}
-            user={quote.user}
-            context={quote.context}
             key={quote.id}
+            quote={quote}
             onCancel={() => toggleEdit(quote.id)}
           />
         ) : (
-          <Quote
-            id={quote.id}
-            author={quote.author}
-            content={quote.content}
-            user={quote.user}
-            context={quote.context}
+          <QuoteCard
             key={quote.id}
-            dateAdded={quote.dateAdded}
+            quote={quote}
             onEdit={() => toggleEdit(quote.id)}
           />
         );

@@ -4,32 +4,14 @@ import { Button } from './ui/button';
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Quote } from './quote';
+import type { Quote, QuoteUpdateData } from '../types';
 
 type QuoteFormProps = {
-  id: number;
-  author: string;
-  user: string;
-  content: string;
-  context: string;
+  quote: Quote;
   onCancel: () => void;
 };
 
-type QuoteFormState = {
-  author: string;
-  user: string;
-  content: string;
-  context: string;
-};
-
-type QuoteData = {
-  author: string;
-  user: string;
-  content: string;
-  context: string;
-};
-
-function updateQuote(id: number, data: QuoteData): Promise<Quote> {
+function updateQuote(id: number, data: QuoteUpdateData): Promise<Quote> {
   return fetch(`http://localhost:3000/quotes/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
@@ -40,29 +22,34 @@ function updateQuote(id: number, data: QuoteData): Promise<Quote> {
 }
 
 export function QuoteForm(props: QuoteFormProps): JSX.Element {
-  const { id, author, content, context, user, onCancel: toggleEdit } = props;
+  const { quote, onCancel: toggleEdit } = props;
   const {
     formState: { isValid, errors },
     register,
     handleSubmit,
-  } = useForm<QuoteFormState>({
-    values: { author, content, context, user },
+  } = useForm<QuoteUpdateData>({
+    values: {
+      author: quote.author,
+      content: quote.content,
+      context: quote.context,
+      user: quote.user,
+    },
     mode: 'all',
   });
 
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: QuoteData }) =>
+    mutationFn: ({ id, data }: { id: number; data: QuoteUpdateData }) =>
       updateQuote(id, data),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['QuoteList'] });
+      await queryClient.invalidateQueries({ queryKey: ['quotes', 'list'] });
       toggleEdit();
     },
   });
 
-  const onSubmit = (data: QuoteFormState): void => {
-    mutation.mutate({ id, data });
+  const onSubmit = (data: QuoteUpdateData): void => {
+    mutation.mutate({ id: quote.id, data });
   };
 
   return (
