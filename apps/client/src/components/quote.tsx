@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 export type Quote = {
   id: number;
   author: string;
-  sender: string;
+  user: string;
   content: string;
   context: string;
   dateAdded: string;
@@ -15,7 +15,7 @@ export type QuoteProps = Quote & {
 };
 
 export function Quote(props: QuoteProps): JSX.Element {
-  const { author, sender, content, context, dateAdded, onEdit } = props;
+  const { author, user, content, context, dateAdded, onEdit } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
@@ -37,7 +37,7 @@ export function Quote(props: QuoteProps): JSX.Element {
       {isDetailsOpen && (
         <div>
           <p>{context}</p>
-          <span>Sender: {sender}</span>
+          <span>Sender: {user}</span>
         </div>
       )}
     </div>
