@@ -7,6 +7,7 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger({ json: true }),
     bufferLogs: true,
+    cors: true,
   });
 
   const migratorService = app.get(MigratorService);

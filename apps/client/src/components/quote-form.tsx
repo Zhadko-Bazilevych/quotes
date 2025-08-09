@@ -3,36 +3,41 @@ import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import type { Quote, UpdateQuoteData } from '@/types';
+import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
 
 type QuoteFormProps = {
-  id: number;
-  author: string;
-  sender: string;
-  content: string;
-  context: string;
-  onEdit: () => void;
-};
-
-type QuoteFormState = {
-  author: string;
-  sender: string;
-  content: string;
-  context: string;
+  quote: Quote;
+  onCancel: () => void;
 };
 
 export function QuoteForm(props: QuoteFormProps): JSX.Element {
-  const { author, content, context, sender, onEdit: toggleEdit } = props;
+  const { quote, onCancel: toggleEdit } = props;
   const {
     formState: { isValid, errors },
     register,
     handleSubmit,
-  } = useForm<QuoteFormState>({
-    values: { author, content, context, sender },
+  } = useForm<UpdateQuoteData>({
+    values: {
+      author: quote.author,
+      content: quote.content,
+      context: quote.context,
+      user: quote.user,
+    },
     mode: 'all',
   });
-  const onSubmit = (data: QuoteFormState): void => {
-    alert(JSON.stringify(data));
-    toggleEdit();
+
+  const queryClient = useQueryClient();
+  const mutation = useUpdateQuoteMutation({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['quotes', 'list'] });
+      toggleEdit();
+    },
+  });
+
+  const onSubmit = (data: UpdateQuoteData): void => {
+    mutation.mutate({ id: quote.id, data });
   };
 
   return (
@@ -82,9 +87,9 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
         <div className="flex">
           <div className="w-20 text-right p-1">Sender:</div>
           <div className="flex flex-col">
-            <Input {...register('sender', { required: 'Field is required' })} />
-            {errors.sender ? (
-              <span className="text-red-500">{errors.sender.message}</span>
+            <Input {...register('user', { required: 'Field is required' })} />
+            {errors.user ? (
+              <span className="text-red-500">{errors.user.message}</span>
             ) : (
               <div className="h-6"></div>
             )}

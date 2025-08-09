@@ -44,6 +44,7 @@ export class QuotesService {
       this.db
         .selectFrom('quote')
         .selectAll()
+        .orderBy('id', 'asc')
         .offset((page - 1) * size)
         .limit(size)
         .execute(),
