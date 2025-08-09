@@ -4,8 +4,8 @@ import { Button } from './ui/button';
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import type { Quote, UpdateQuoteData } from '../types';
-import { useUpdateQuoteMutation } from '../hooks/use-update-quote';
+import type { Quote, UpdateQuoteData } from '@/types';
+import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
 
 type QuoteFormProps = {
   quote: Quote;

@@ -1,7 +1,7 @@
 import { useState, type JSX } from 'react';
 import { QuoteCard } from './quote';
 import { QuoteForm } from './quote-form';
-import { useQuotes } from '../hooks/use-quotes';
+import { useQuotes } from '@/hooks/use-quotes';
 
 export function QuoteList(): JSX.Element {
   const { data } = useQuotes();

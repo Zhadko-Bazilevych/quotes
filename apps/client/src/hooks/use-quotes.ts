@@ -3,8 +3,8 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from '@tanstack/react-query';
-import type { GetQuotesQuery, Quote } from '../types';
-import { api } from '../api/api';
+import type { GetQuotesQuery, Quote } from '@/types';
+import { api } from '@/api/api';
 
 type UseQuotesOptions = Omit<UseQueryOptions<Quote[]>, 'queryFn' | 'queryKey'>;
 

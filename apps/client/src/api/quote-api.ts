@@ -3,7 +3,7 @@ import type {
   Quote,
   CreateQuoteData,
   UpdateQuoteData,
-} from '../types';
+} from '@/types';
 import { BaseApi } from './base-api';
 import { Client } from './client';
 

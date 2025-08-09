@@ -3,8 +3,8 @@ import {
   type UseMutationOptions,
   type UseMutationResult,
 } from '@tanstack/react-query';
-import type { Quote, UpdateQuoteData } from '../types';
-import { api } from '../api';
+import type { Quote, UpdateQuoteData } from '@/types';
+import { api } from '@/api';
 
 type UpdateQuoteMutationVariables = { id: number; data: UpdateQuoteData };
 type UseUpdateQuoteMutationOptions = Omit<

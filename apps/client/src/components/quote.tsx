@@ -1,6 +1,6 @@
 import { useState, type JSX } from 'react';
 import { Button } from './ui/button';
-import type { Quote } from '../types';
+import type { Quote } from '@/types';
 
 export type QuoteCardProps = {
   quote: Quote;

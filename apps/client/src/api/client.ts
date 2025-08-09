@@ -1,4 +1,4 @@
-import { customFetch, type RequestParams } from '../utils/custom-fetch';
+import { customFetch, type RequestParams } from '@/utils/custom-fetch';
 
 export class Client {
   static get<T = unknown>(url: string, params?: RequestParams): Promise<T> {
