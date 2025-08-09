@@ -1,6 +1,6 @@
-import { customFetch, type RequestParams } from './custom-fetch';
+import { customFetch, type RequestParams } from '../utils/custom-fetch';
 
-export class ApiClient {
+export class Client {
   static get<T = unknown>(url: string, params?: RequestParams): Promise<T> {
     return customFetch<T>(url, 'GET', params);
   }
