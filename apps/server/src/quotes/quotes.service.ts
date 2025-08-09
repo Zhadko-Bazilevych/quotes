@@ -80,6 +80,7 @@ export class QuotesService {
           content: quote.content,
           user: quote.user,
           context: quote.context,
+          updatedAt: new Date(),
         })
         .where('id', '=', id)
         .returningAll()
