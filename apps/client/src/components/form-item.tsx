@@ -25,8 +25,8 @@ export function FormItem<T extends FieldValues>(
   const error = errors[name] as FieldError | undefined;
 
   return (
-    <div className="flex gap-1">
-      <label className="w-20 text-right p-1">{label}: </label>
+    <div className="flex flex-col">
+      <label>{label}: </label>
       {render(register(name, rules))}
       {error?.message ? (
         <span className="text-red-500">{error.message}</span>

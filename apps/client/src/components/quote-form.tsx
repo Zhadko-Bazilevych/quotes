@@ -35,7 +35,7 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
 
   return (
     <Form
-      className="flex flex-col border rounded border-gray-300 p-2 gap-2"
+      className="flex flex-col border rounded border-gray-300 p-2"
       onSubmit={onSubmit}
       methods={methods}
     >
@@ -45,35 +45,29 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
         render={(props) => <Input {...props} />}
         rules={{ required: 'Field is required' }}
       />
-      <div className="w-1/2">
-        <FormItem
-          name="content"
-          label="Content"
-          render={(props) => <Textarea {...props} />}
-          rules={{ required: 'Field is required' }}
-        />
-      </div>
-      <div className="w-1/2">
-        <FormItem
-          name="context"
-          label="Context"
-          render={(props) => <Textarea {...props} />}
-          rules={{ required: 'Field is required' }}
-        />
-      </div>
-      <div className="flex justify-between">
-        <FormItem
-          name="user"
-          label="User"
-          render={(props) => <Input {...props} />}
-          rules={{ required: 'Field is required' }}
-        />
-        <div className="flex gap-3 items-end">
-          <Button type="button" onClick={toggleEdit}>
-            Cancel
-          </Button>
-          <Button type="submit">Submit</Button>
-        </div>
+      <FormItem
+        name="content"
+        label="Content"
+        render={(props) => <Textarea {...props} />}
+        rules={{ required: 'Field is required' }}
+      />
+      <FormItem
+        name="context"
+        label="Context"
+        render={(props) => <Textarea {...props} />}
+        rules={{ required: 'Field is required' }}
+      />
+      <FormItem
+        name="user"
+        label="User"
+        render={(props) => <Input {...props} />}
+        rules={{ required: 'Field is required' }}
+      />
+      <div className="flex gap-3 items-end">
+        <Button type="button" onClick={toggleEdit}>
+          Cancel
+        </Button>
+        <Button type="submit">Submit</Button>
       </div>
     </Form>
   );
