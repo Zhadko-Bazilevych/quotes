@@ -1,24 +1,32 @@
 import {
   useMutation,
+  useQueryClient,
   type UseMutationOptions,
   type UseMutationResult,
 } from '@tanstack/react-query';
-import type { Quote, UpdateQuoteData } from '@/types';
-import { api } from '@/api';
+import type { Quote } from '@/types';
+import { queries } from '@/api/queries';
+import { mutations, type UpdateQuoteVariables } from '@/api/mutations';
 
-type UpdateQuoteMutationVariables = { id: number; data: UpdateQuoteData };
 type UseUpdateQuoteMutationOptions = Omit<
-  UseMutationOptions<Quote, unknown, UpdateQuoteMutationVariables>,
+  UseMutationOptions<Quote, unknown, UpdateQuoteVariables>,
   'mutationFn' | 'mutationKey'
 >;
 
 export function useUpdateQuoteMutation(
   options?: UseUpdateQuoteMutationOptions,
-): UseMutationResult<Quote, unknown, UpdateQuoteMutationVariables> {
-  return useMutation<Quote, unknown, UpdateQuoteMutationVariables>({
-    mutationFn: ({ id, data }: UpdateQuoteMutationVariables) =>
-      api.quotes.update(id, data),
-    mutationKey: ['quotes', 'update'],
-    ...options,
+): UseMutationResult<Quote, unknown, UpdateQuoteVariables> {
+  const { onSuccess, ...restOptions } = options ?? {};
+  const queryClient = useQueryClient();
+
+  return useMutation<Quote, unknown, UpdateQuoteVariables>({
+    ...mutations.quotes.update,
+    onSuccess: (updatedQuote, variables, context) => {
+      void queryClient.invalidateQueries({
+        queryKey: queries.quotes.getList().queryKey,
+      });
+      onSuccess?.(updatedQuote, variables, context);
+    },
+    ...restOptions,
   });
 }

@@ -3,7 +3,6 @@ import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import type { Quote, UpdateQuoteData } from '@/types';
 import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
 
@@ -28,12 +27,8 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
     mode: 'all',
   });
 
-  const queryClient = useQueryClient();
   const mutation = useUpdateQuoteMutation({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['quotes', 'list'] });
-      toggleEdit();
-    },
+    onSuccess: () => toggleEdit(),
   });
 
   const onSubmit = (data: UpdateQuoteData): void => {

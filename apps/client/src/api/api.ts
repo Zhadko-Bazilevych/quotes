@@ -1,6 +1,6 @@
 import { QuoteApi } from './quote-api';
 
-class Api {
+export class Api {
   readonly quotes: QuoteApi;
 
   constructor(baseUrl: string) {
