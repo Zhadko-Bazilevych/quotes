@@ -13,7 +13,7 @@ export class QuoteApi extends BaseApi {
     return Client.get(url, { query });
   }
 
-  getOneById(id: number): Promise<Quote[]> {
+  getOneById(id: number): Promise<Quote> {
     const url = this.buildUrl('quotes', id);
     return Client.get(url);
   }
