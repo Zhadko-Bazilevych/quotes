@@ -7,7 +7,7 @@ export type RequestParams = {
   body?: Record<string, unknown>;
 };
 
-export function customFetch<T = unknown>(
+export async function customFetch<T = unknown>(
   url: string,
   method: Method,
   params?: RequestParams,
@@ -19,11 +19,20 @@ export function customFetch<T = unknown>(
     url = `${url}?${queryString}`;
   }
 
-  return fetch(url, {
+  const res = await fetch(url, {
     body: JSON.stringify(body),
     method,
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then((res) => res.json()) as Promise<T>;
+  });
+
+  const data = (await res.json()) as T;
+  if (!res.ok) {
+    // We need to throw an object here for @tanstack/react-query to catch it
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
+    throw data;
+  }
+
+  return data;
 }
