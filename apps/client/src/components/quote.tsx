@@ -17,7 +17,7 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
     <div className="flex flex-col gap-3 border rounded border-gray-300 p-2">
       <div className="flex justify-between">
         <span>{quote.author}</span>
-        <span>{new Date(quote.updatedAt).toLocaleString()}</span>
+        <span>Created: {new Date(quote.createdAt).toLocaleString()}</span>
       </div>
       <div className="flex justify-between">
         <p>{quote.content}</p>
@@ -29,7 +29,10 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
       {isDetailsOpen && (
         <div>
           <p>{quote.context}</p>
-          <span>Sender: {quote.user}</span>
+          <div className="flex justify-between">
+            <span>Sender: {quote.user}</span>
+            <span>Updated: {new Date(quote.updatedAt).toLocaleString()}</span>
+          </div>
         </div>
       )}
     </div>
