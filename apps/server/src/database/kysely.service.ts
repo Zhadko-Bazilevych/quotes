@@ -10,17 +10,8 @@ import {
   Updateable,
 } from 'kysely';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
-
-const dialect = new PostgresDialect({
-  pool: new Pool({
-    database: 'quotes',
-    host: 'localhost',
-    user: 'postgres',
-    password: 'postgres',
-    port: 5432,
-    max: 10,
-  }),
-});
+import { ConfigService } from '@nestjs/config';
+import { Config } from 'src/config/config.configuration';
 
 export interface Database {
   quote: QuoteTable;
@@ -42,7 +33,18 @@ export type UpdateQuote = Updateable<QuoteTable>;
 
 @Injectable()
 export class KyselyService extends Kysely<Database> implements OnModuleDestroy {
-  constructor() {
+  constructor(config: ConfigService<Config, true>) {
+    const dialect = new PostgresDialect({
+      pool: new Pool({
+        database: config.get('db.database', { infer: true }),
+        host: config.get('db.host', { infer: true }),
+        user: config.get('db.user', { infer: true }),
+        password: config.get('db.password', { infer: true }),
+        port: config.get('db.port', { infer: true }),
+        max: 10,
+      }),
+    });
+
     super({ dialect, plugins: [new CamelCasePlugin()] });
   }
 
