@@ -5,7 +5,8 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import { globalIgnores } from 'eslint/config';
-import pluginQuery from '@tanstack/eslint-plugin-query'
+import pluginQuery from '@tanstack/eslint-plugin-query';
+import pluginReact from 'eslint-plugin-react';
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -18,13 +19,20 @@ export default tseslint.config([
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
       ...pluginQuery.configs['flat/recommended'],
+      pluginReact.configs.flat.recommended,
     ],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.serviceworker,
+        ...globals.browser,
+      },
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
+        ecmaFeatures: {
+          jsx: true,
+        },
       },
     },
     rules: {
@@ -37,6 +45,8 @@ export default tseslint.config([
           fixStyle: 'inline-type-imports',
         },
       ],
+      'react/react-in-jsx-scope': 'off',
+      'react/jsx-key': 'error',
     },
   },
 ]);
