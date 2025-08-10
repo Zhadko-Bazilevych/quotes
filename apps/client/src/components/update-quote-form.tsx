@@ -1,19 +1,17 @@
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
 import type { Quote, UpdateQuoteData } from '@/types';
 import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
-import { FormItem } from '@/components/form-item';
+import { QuoteFormBody } from '@/components/quote-form-body';
 import { Form } from '@/components/form';
 
-type QuoteFormProps = {
+type UpdateQuoteFormProps = {
   quote: Quote;
   onCancel: () => void;
 };
 
-export function QuoteForm(props: QuoteFormProps): JSX.Element {
+export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
   const { quote, onCancel: toggleEdit } = props;
   const methods = useForm<UpdateQuoteData>({
     values: {
@@ -23,7 +21,7 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
       user: quote.user,
     },
     mode: 'all',
-    criteriaMode: 'all',
+    criteriaMode: 'firstError',
   });
 
   const mutation = useUpdateQuoteMutation({
@@ -40,33 +38,8 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
       onSubmit={onSubmit}
       methods={methods}
     >
-      <FormItem<UpdateQuoteData>
-        name="author"
-        label="Author"
-        render={(props) => <Input {...props} />}
-        rules={{
-          required: 'Field is required',
-        }}
-      />
-      <FormItem<UpdateQuoteData>
-        name="content"
-        label="Content"
-        render={(props) => <Textarea {...props} />}
-        rules={{ required: 'Field is required' }}
-      />
-      <FormItem<UpdateQuoteData>
-        name="context"
-        label="Context"
-        render={(props) => <Textarea {...props} />}
-        rules={{ required: 'Field is required' }}
-      />
-      <FormItem<UpdateQuoteData>
-        name="user"
-        label="User"
-        render={(props) => <Input {...props} />}
-        rules={{ required: 'Field is required' }}
-      />
-      <div className="flex gap-3 items-end">
+      <QuoteFormBody />
+      <div className="flex gap-3 justify-end">
         <Button type="button" onClick={toggleEdit}>
           Cancel
         </Button>

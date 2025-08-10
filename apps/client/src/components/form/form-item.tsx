@@ -22,28 +22,36 @@ export function FormItem<T extends FieldValues>(
   props: FormItemProps<T>,
 ): React.ReactNode {
   const { name, label, rules, render } = props;
+  const {
+    register,
+    formState: { errors: formErrors },
+  } = useFormContext<T>();
   const id = useId();
   const uniqueName = `${id}-${name}`;
 
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext<T>();
-  const errorList = (
-    Object.entries(errors[name]?.types ?? {}) as [string, string][]
-  ).map(([type, message]) => ({ type, message }));
+  let errorList = {};
+  if (formErrors[name]?.types) {
+    errorList = formErrors[name].types;
+  } else if (formErrors[name]?.type) {
+    errorList = { message: formErrors[name].message };
+  }
+  const errors = Object.entries<string>(errorList).map(([type, message]) => ({
+    type,
+    message,
+  }));
+
   return (
     <div className="flex flex-col">
       <label htmlFor={uniqueName}>{label}: </label>
       {render({ ...register(name, rules), id: uniqueName })}
-      {errorList.map(({ type, message }) => {
+      {errors.map(({ type, message }) => {
         return (
           <span key={type} className="text-red-500">
             {message}
           </span>
         );
       })}
-      {!errorList.length && <div className="h-6"></div>}
+      {!errors.length && <div className="h-6"></div>}
     </div>
   );
 }
