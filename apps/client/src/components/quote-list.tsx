@@ -16,13 +16,15 @@ export function QuoteList(): JSX.Element {
   return (
     <section className="flex flex-col gap-3">
       {data?.map((quote) => {
-        return editingIds.includes(quote.id) ? (
+        if (editingIds.includes(quote.id)) {
           <QuoteForm
             key={quote.id}
             quote={quote}
             onCancel={() => toggleEdit(quote.id)}
-          />
-        ) : (
+          />;
+        }
+
+        return (
           <QuoteCard
             key={quote.id}
             quote={quote}
