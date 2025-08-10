@@ -4,6 +4,28 @@ services:
 
   quotes-server:
     image: ghcr.io/zhadko-bazilevych/quotes/server:${GIT_COMMIT_HASH:-latest}
+    environment:
+      - DB_DATABASE=quotes
+      - DB_HOST=quotes-pgdb
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=5432
+    depends_on:
+      - quotes-pgdb
+
+  quotes-pgdb:
+    image: postgres:17.5-alpine
+    volumes:
+      - quotes-pgdb-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB: quotes
+      - POSTGRES_USER: ${DB_USER}
+      - POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   quotes-caddy:
     image: ghcr.io/zhadko-bazilevych/quotes/caddy:${GIT_COMMIT_HASH:-latest}
@@ -19,3 +41,4 @@ services:
 volumes:
   caddy-data:
   caddy-config:
+  quotes-pgdb-data:
