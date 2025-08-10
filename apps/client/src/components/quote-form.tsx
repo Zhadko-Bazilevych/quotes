@@ -23,6 +23,7 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
       user: quote.user,
     },
     mode: 'all',
+    criteriaMode: 'all',
   });
 
   const mutation = useUpdateQuoteMutation({
@@ -34,30 +35,32 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
   };
 
   return (
-    <Form
+    <Form<UpdateQuoteData>
       className="flex flex-col border rounded border-gray-300 p-2"
       onSubmit={onSubmit}
       methods={methods}
     >
-      <FormItem
+      <FormItem<UpdateQuoteData>
         name="author"
         label="Author"
         render={(props) => <Input {...props} />}
-        rules={{ required: 'Field is required' }}
+        rules={{
+          required: 'Field is required',
+        }}
       />
-      <FormItem
+      <FormItem<UpdateQuoteData>
         name="content"
         label="Content"
         render={(props) => <Textarea {...props} />}
         rules={{ required: 'Field is required' }}
       />
-      <FormItem
+      <FormItem<UpdateQuoteData>
         name="context"
         label="Context"
         render={(props) => <Textarea {...props} />}
         rules={{ required: 'Field is required' }}
       />
-      <FormItem
+      <FormItem<UpdateQuoteData>
         name="user"
         label="User"
         render={(props) => <Input {...props} />}
