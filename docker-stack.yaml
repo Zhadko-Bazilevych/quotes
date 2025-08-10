@@ -5,11 +5,11 @@ services:
   quotes-server:
     image: ghcr.io/zhadko-bazilevych/quotes/server:${GIT_COMMIT_HASH:-latest}
     environment:
-      - DB_DATABASE=quotes
-      - DB_HOST=quotes-pgdb
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_PORT=5432
+      DB_DATABASE: quotes
+      DB_HOST: quotes-pgdb
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: 5432
     depends_on:
       - quotes-pgdb
 
@@ -18,9 +18,9 @@ services:
     volumes:
       - quotes-pgdb-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB: quotes
-      - POSTGRES_USER: ${DB_USER}
-      - POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: quotes
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 10s
