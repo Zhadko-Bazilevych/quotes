@@ -7,7 +7,9 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger({ json: true }),
     bufferLogs: true,
-    cors: true,
+    cors: {
+      origin: ['https://thatonequotes.duckdns.org', 'http://localhost:5173'],
+    },
   });
 
   const migratorService = app.get(MigratorService);
