@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
 import type { Quote, UpdateQuoteData } from '@/types';
 import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
+import { FormItem } from '@/components/form-item';
+import { Form } from '@/components/form';
 
 type QuoteFormProps = {
   quote: Quote;
@@ -13,11 +15,7 @@ type QuoteFormProps = {
 
 export function QuoteForm(props: QuoteFormProps): JSX.Element {
   const { quote, onCancel: toggleEdit } = props;
-  const {
-    formState: { isValid, errors },
-    register,
-    handleSubmit,
-  } = useForm<UpdateQuoteData>({
+  const methods = useForm<UpdateQuoteData>({
     values: {
       author: quote.author,
       content: quote.content,
@@ -25,6 +23,7 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
       user: quote.user,
     },
     mode: 'all',
+    criteriaMode: 'all',
   });
 
   const mutation = useUpdateQuoteMutation({
@@ -36,69 +35,43 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
   };
 
   return (
-    <form
+    <Form<UpdateQuoteData>
       className="flex flex-col border rounded border-gray-300 p-2"
-      onSubmit={(e) => void handleSubmit(onSubmit)(e)}
+      onSubmit={onSubmit}
+      methods={methods}
     >
-      <div className="flex">
-        <div className="w-20 text-right p-1">Author: </div>
-        <div className="flex flex-col">
-          <Input {...register('author', { required: 'Field is required' })} />
-          {errors.author ? (
-            <span className="text-red-500">{errors.author.message}</span>
-          ) : (
-            <div className="h-6"></div>
-          )}
-        </div>
+      <FormItem<UpdateQuoteData>
+        name="author"
+        label="Author"
+        render={(props) => <Input {...props} />}
+        rules={{
+          required: 'Field is required',
+        }}
+      />
+      <FormItem<UpdateQuoteData>
+        name="content"
+        label="Content"
+        render={(props) => <Textarea {...props} />}
+        rules={{ required: 'Field is required' }}
+      />
+      <FormItem<UpdateQuoteData>
+        name="context"
+        label="Context"
+        render={(props) => <Textarea {...props} />}
+        rules={{ required: 'Field is required' }}
+      />
+      <FormItem<UpdateQuoteData>
+        name="user"
+        label="User"
+        render={(props) => <Input {...props} />}
+        rules={{ required: 'Field is required' }}
+      />
+      <div className="flex gap-3 items-end">
+        <Button type="button" onClick={toggleEdit}>
+          Cancel
+        </Button>
+        <Button type="submit">Submit</Button>
       </div>
-      <div className="flex">
-        <div className="w-20 text-right p-1">Content: </div>
-        <div className="flex flex-col w-1/2">
-          <Textarea
-            {...register('content', { required: 'Field is required' })}
-          />
-          {errors.content ? (
-            <span className="text-red-500">{errors.content.message}</span>
-          ) : (
-            <div className="h-6"></div>
-          )}
-        </div>
-      </div>
-      <div className="flex">
-        <div className="w-20 text-right p-1">Context: </div>
-        <div className="flex flex-col w-1/2">
-          <Textarea
-            className="flex-1"
-            {...register('context', { required: 'Field is required' })}
-          />
-          {errors.context ? (
-            <span className="text-red-500">{errors.context.message}</span>
-          ) : (
-            <div className="h-6"></div>
-          )}
-        </div>
-      </div>
-      <div className="flex justify-between">
-        <div className="flex">
-          <div className="w-20 text-right p-1">Sender:</div>
-          <div className="flex flex-col">
-            <Input {...register('user', { required: 'Field is required' })} />
-            {errors.user ? (
-              <span className="text-red-500">{errors.user.message}</span>
-            ) : (
-              <div className="h-6"></div>
-            )}
-          </div>
-        </div>
-        <div className="flex gap-3 items-end">
-          <Button type="button" onClick={toggleEdit}>
-            Cancel
-          </Button>
-          <Button disabled={!isValid} type="submit">
-            Submit
-          </Button>
-        </div>
-      </div>
-    </form>
+    </Form>
   );
 }

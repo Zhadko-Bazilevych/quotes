@@ -1,5 +1,5 @@
 import { useState, type JSX } from 'react';
-import { QuoteCard } from './quote';
+import { QuoteCard } from './quote-card';
 import { QuoteForm } from './quote-form';
 import { useQuotes } from '@/hooks/use-quotes';
 
