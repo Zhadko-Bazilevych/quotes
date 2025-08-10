@@ -12,4 +12,4 @@ export function createApi(baseUrl: string): Api {
   return new Api(baseUrl);
 }
 
-export const api = createApi('http://localhost:3000/');
+export const api = createApi(import.meta.env.VITE_API_BASE_URL);

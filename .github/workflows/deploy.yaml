@@ -80,7 +80,6 @@ jobs:
             ghcr.io/zhadko-bazilevych/quotes/caddy:latest
             ghcr.io/zhadko-bazilevych/quotes/caddy:${{ github.sha }}
 
-
   deploy:
     runs-on: ubuntu-latest
     environment: production
@@ -94,7 +93,11 @@ jobs:
 
       - name: Create env file
         run: |
-          echo "GIT_COMMIT_HASH=${{ github.sha }}" >> ./envfile
+          {
+            echo "GIT_COMMIT_HASH=${GITHUB_SHA}"
+            echo "DB_USER=${{ secrets.DB_USER }}"
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
+          } > stack.env
 
       - name: Docker Stack Deploy
         uses: cssnr/stack-deploy-action@v1
@@ -104,4 +107,4 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           user: ${{ secrets.VPS_USER }}
           ssh_key: ${{ secrets.VPS_SSH_KEY }}
-          env_file: ./envfile
+          env_file: stack.env
