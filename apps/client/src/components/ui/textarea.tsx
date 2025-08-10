@@ -6,10 +6,7 @@ type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>;
 export function Textarea({ className, ...rest }: TextareaProps): JSX.Element {
   return (
     <textarea
-      className={twMerge(
-        'border rounded border-gray-300 p-1 flex-1',
-        className,
-      )}
+      className={twMerge('border rounded border-gray-300 p-1', className)}
       {...rest}
     />
   );
