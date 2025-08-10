@@ -5,8 +5,7 @@ import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
 import type { Quote, UpdateQuoteData } from '@/types';
 import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
-import { FormItem } from '@/components/form-item';
-import { Form } from '@/components/form';
+import { Form, FormItem } from '@/components/form';
 
 type UpdateQuoteFormProps = {
   quote: Quote;
@@ -35,12 +34,12 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
   };
 
   return (
-    <Form
+    <Form<UpdateQuoteData>
       className="flex flex-col border rounded border-gray-300 p-2"
       onSubmit={onSubmit}
       methods={methods}
     >
-      <FormItem
+      <FormItem<UpdateQuoteData>
         name="author"
         label="Author"
         render={(props) => <Input {...props} />}
@@ -50,10 +49,9 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
             value: 30,
             message: 'Author name is too long. Maximum characters <= 30',
           },
-          pattern: { value: /[A-Za-z]{3}/, message: 'reg' },
         }}
       />
-      <FormItem
+      <FormItem<UpdateQuoteData>
         name="content"
         label="Content"
         render={(props) => <Textarea {...props} />}
@@ -65,7 +63,7 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
           },
         }}
       />
-      <FormItem
+      <FormItem<UpdateQuoteData>
         name="context"
         label="Context"
         render={(props) => <Textarea {...props} />}
@@ -77,7 +75,7 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
           },
         }}
       />
-      <FormItem
+      <FormItem<UpdateQuoteData>
         name="user"
         label="User"
         render={(props) => <Input {...props} />}
