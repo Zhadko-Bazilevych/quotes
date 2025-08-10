@@ -18,6 +18,10 @@ export function QuoteFormBody() {
             value: 30,
             message: 'Author name is too long. Maximum characters <= 30',
           },
+          minLength: {
+            value: 3,
+            message: 'Author name is too short. Minimum characters >= 3',
+          },
         }}
       />
       <FormItem<QuoteFormData>
@@ -29,6 +33,10 @@ export function QuoteFormBody() {
           maxLength: {
             value: 500,
             message: 'Content is too long. Maximum characters <= 500',
+          },
+          minLength: {
+            value: 3,
+            message: 'Content name is too short. Minimum characters >= 3',
           },
         }}
       />
@@ -53,6 +61,10 @@ export function QuoteFormBody() {
           maxLength: {
             value: 30,
             message: 'User name is too long. Maximum characters <= 30',
+          },
+          minLength: {
+            value: 3,
+            message: 'User name is too short. Minimum characters >= 3',
           },
         }}
       />
