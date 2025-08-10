@@ -2,10 +2,11 @@ import { FormItem } from '@/components/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { CreateQuoteData, UpdateQuoteData } from '@/types';
+import type { JSX } from 'react';
 
 type QuoteFormData = CreateQuoteData | UpdateQuoteData;
 
-export function QuoteFormBody() {
+export function QuoteFormBody(): JSX.Element {
   return (
     <>
       <FormItem<QuoteFormData>

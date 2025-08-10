@@ -35,9 +35,10 @@ export function FormItem<T extends FieldValues>(
   } else if (formErrors[name]?.type) {
     errorList = { message: formErrors[name].message };
   }
-  const errors = (Object.entries(errorList) as [string, string][]).map(
-    ([type, message]) => ({ type, message }),
-  );
+  const errors = Object.entries<string>(errorList).map(([type, message]) => ({
+    type,
+    message,
+  }));
 
   return (
     <div className="flex flex-col">
