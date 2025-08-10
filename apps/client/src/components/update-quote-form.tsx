@@ -8,12 +8,12 @@ import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
 import { FormItem } from '@/components/form-item';
 import { Form } from '@/components/form';
 
-type QuoteFormProps = {
+type UpdateQuoteFormProps = {
   quote: Quote;
   onCancel: () => void;
 };
 
-export function QuoteForm(props: QuoteFormProps): JSX.Element {
+export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
   const { quote, onCancel: toggleEdit } = props;
   const methods = useForm<UpdateQuoteData>({
     values: {
@@ -23,7 +23,7 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
       user: quote.user,
     },
     mode: 'all',
-    criteriaMode: 'all',
+    criteriaMode: 'firstError',
   });
 
   const mutation = useUpdateQuoteMutation({
@@ -35,38 +35,61 @@ export function QuoteForm(props: QuoteFormProps): JSX.Element {
   };
 
   return (
-    <Form<UpdateQuoteData>
+    <Form
       className="flex flex-col border rounded border-gray-300 p-2"
       onSubmit={onSubmit}
       methods={methods}
     >
-      <FormItem<UpdateQuoteData>
+      <FormItem
         name="author"
         label="Author"
         render={(props) => <Input {...props} />}
         rules={{
           required: 'Field is required',
+          maxLength: {
+            value: 30,
+            message: 'Author name is too long. Maximum characters <= 30',
+          },
+          pattern: { value: /[A-Za-z]{3}/, message: 'reg' },
         }}
       />
-      <FormItem<UpdateQuoteData>
+      <FormItem
         name="content"
         label="Content"
         render={(props) => <Textarea {...props} />}
-        rules={{ required: 'Field is required' }}
+        rules={{
+          required: 'Field is required',
+          maxLength: {
+            value: 500,
+            message: 'Content is too long. Maximum characters <= 500',
+          },
+        }}
       />
-      <FormItem<UpdateQuoteData>
+      <FormItem
         name="context"
         label="Context"
         render={(props) => <Textarea {...props} />}
-        rules={{ required: 'Field is required' }}
+        rules={{
+          required: 'Field is required',
+          maxLength: {
+            value: 500,
+            message: 'Context is too long. Maximum characters <= 500',
+          },
+        }}
       />
-      <FormItem<UpdateQuoteData>
+      <FormItem
         name="user"
         label="User"
         render={(props) => <Input {...props} />}
-        rules={{ required: 'Field is required' }}
+        rules={{
+          required: 'Field is required',
+          maxLength: {
+            value: 30,
+            message: 'User name is too long. Maximum characters <= 30',
+          },
+        }}
       />
-      <div className="flex gap-3 items-end">
+      <div className="flex gap-3 justify-end">
         <Button type="button" onClick={toggleEdit}>
           Cancel
         </Button>
