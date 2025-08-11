@@ -1,18 +1,18 @@
-import { Button } from './ui/button';
+import { Button } from '../../ui/button';
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
 import type { Quote, UpdateQuoteData } from '@/types';
 import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
-import { QuoteFormBody } from '@/components/quote-form-body';
-import { Form } from '@/components/form';
+import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
+import { Form } from '@/components/ui/form';
 
 type UpdateQuoteFormProps = {
   quote: Quote;
-  onCancel: () => void;
+  onCancel: (id: number) => void;
 };
 
 export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
-  const { quote, onCancel: toggleEdit } = props;
+  const { quote, onCancel } = props;
   const methods = useForm<UpdateQuoteData>({
     values: {
       author: quote.author,
@@ -25,7 +25,7 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
   });
 
   const mutation = useUpdateQuoteMutation({
-    onSuccess: () => toggleEdit(),
+    onSuccess: () => onCancel(quote.id),
   });
 
   const onSubmit = (data: UpdateQuoteData): void => {
@@ -40,7 +40,7 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
     >
       <QuoteFormBody />
       <div className="flex gap-3 justify-end">
-        <Button type="button" onClick={toggleEdit}>
+        <Button type="button" onClick={() => onCancel(quote.id)}>
           Cancel
         </Button>
         <Button type="submit">Submit</Button>

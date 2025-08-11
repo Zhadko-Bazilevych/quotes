@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import { type JSX } from 'react';
 import {
   FormProvider,
   type FieldValues,
@@ -14,6 +14,7 @@ type FormProps<T extends FieldValues> = {
 
 export function Form<T extends FieldValues>(props: FormProps<T>): JSX.Element {
   const { children, methods, onSubmit, className } = props;
+
   return (
     <FormProvider {...methods}>
       <form

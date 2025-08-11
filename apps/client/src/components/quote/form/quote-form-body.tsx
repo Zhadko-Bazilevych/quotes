@@ -1,4 +1,4 @@
-import { FormItem } from '@/components/form';
+import { FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { CreateQuoteData, UpdateQuoteData } from '@/types';

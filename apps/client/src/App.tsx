@@ -1,11 +1,11 @@
 import type { JSX } from 'react';
-import { QuoteList } from './components/quote-list';
+import { QuoteSection } from './components/quote/quote-section';
 
 function App(): JSX.Element {
   return (
     <div className="flex justify-center">
       <div className="w-3/5">
-        <QuoteList />
+        <QuoteSection />
       </div>
     </div>
   );
