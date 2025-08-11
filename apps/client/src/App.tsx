@@ -1,5 +1,5 @@
 import type { JSX } from 'react';
-import { QuoteList } from './components/quote-list';
+import { QuoteList } from './pages/quote-list';
 
 function App(): JSX.Element {
   return (
