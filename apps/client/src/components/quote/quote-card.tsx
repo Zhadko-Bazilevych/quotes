@@ -1,6 +1,8 @@
 import { useState, type JSX } from 'react';
 import { Button } from '../ui/button';
 import type { Quote } from '@/types';
+import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
+import { TrashcanIcon } from '@/components/ui/icons/trashcan';
 
 export type QuoteCardProps = {
   quote: Quote;
@@ -12,6 +14,14 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const toggleDetails = (): void => setIsDetailsOpen((prev) => !prev);
 
+  const mutation = useDeleteQuoteMutation();
+
+  const deleteQuote = (): void => {
+    mutation.mutate({ id: quote.id });
+  };
+
+  const toggleEdit = (): void => onEdit(quote.id);
+
   return (
     <div className="flex flex-col gap-3 border rounded border-gray-300 p-2">
       <div className="flex justify-between">
@@ -21,8 +31,11 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
       <div className="flex justify-between">
         <p>{quote.content}</p>
         <div className="flex gap-1 items-start">
-          <Button onClick={() => onEdit(quote.id)}>Edit</Button>
+          <Button onClick={toggleEdit}>Edit</Button>
           <Button onClick={toggleDetails}>Details</Button>
+          <Button onClick={deleteQuote}>
+            <TrashcanIcon className="w-6 h-6 text-red-500" />
+          </Button>
         </div>
       </div>
       {isDetailsOpen && (
