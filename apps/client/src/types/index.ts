@@ -4,6 +4,16 @@ export type Quote = {
   user: string;
   content: string;
   context: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type QuoteDto = {
+  id: number;
+  author: string;
+  user: string;
+  content: string;
+  context: string;
   createdAt: string;
   updatedAt: string;
 };

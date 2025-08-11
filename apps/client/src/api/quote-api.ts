@@ -1,35 +1,42 @@
-import type {
-  GetQuotesQuery,
-  Quote,
-  CreateQuoteData,
-  UpdateQuoteData,
+import {
+  type GetQuotesQuery,
+  type Quote,
+  type CreateQuoteData,
+  type UpdateQuoteData,
+  type QuoteDto,
 } from '@/types';
 import { BaseApi } from './base-api';
 import { Client } from './client';
+import { QuoteMapper } from '@/mappers/quote';
 
 export class QuoteApi extends BaseApi {
-  getList(query?: GetQuotesQuery): Promise<Quote[]> {
+  async getList(query?: GetQuotesQuery): Promise<Quote[]> {
     const url = this.buildUrl('quotes');
-    return Client.get(url, { query });
+    const quotes = await Client.get<QuoteDto[]>(url, { query });
+    return quotes.map((quote) => QuoteMapper.toDomain(quote));
   }
 
-  getOneById(id: number): Promise<Quote> {
+  async getOneById(id: number): Promise<Quote> {
     const url = this.buildUrl('quotes', id);
-    return Client.get(url);
+    const quote = await Client.get<QuoteDto>(url);
+    return QuoteMapper.toDomain(quote);
   }
 
-  update(id: number, data: UpdateQuoteData): Promise<Quote> {
+  async update(id: number, data: UpdateQuoteData): Promise<Quote> {
     const url = this.buildUrl('quotes', id);
-    return Client.put(url, { body: data });
+    const quote = await Client.put<QuoteDto>(url, { body: data });
+    return QuoteMapper.toDomain(quote);
   }
 
-  create(data: CreateQuoteData): Promise<Quote> {
+  async create(data: CreateQuoteData): Promise<Quote> {
     const url = this.buildUrl('quotes');
-    return Client.post(url, { body: data });
+    const quote = await Client.post<QuoteDto>(url, { body: data });
+    return QuoteMapper.toDomain(quote);
   }
 
-  delete(id: number): Promise<Quote> {
+  async delete(id: number): Promise<Quote> {
     const url = this.buildUrl('quotes', id);
-    return Client.delete(url);
+    const quote = await Client.delete<QuoteDto>(url);
+    return QuoteMapper.toDomain(quote);
   }
 }
