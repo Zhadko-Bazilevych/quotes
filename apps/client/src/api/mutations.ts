@@ -12,6 +12,10 @@ export type CreateQuoteVariables = {
   data: CreateQuoteData;
 };
 
+export type DeleteQuoteVariables = {
+  id: number;
+};
+
 type MutationDetails<TData = unknown, TVariables = unknown> = {
   mutationFn: MutationFunction<TData, TVariables>;
   mutationKey: unknown[];
@@ -21,6 +25,7 @@ type Mutations = {
   quotes: {
     update: MutationDetails<Quote, UpdateQuoteVariables>;
     create: MutationDetails<Quote, CreateQuoteVariables>;
+    delete: MutationDetails<Quote, DeleteQuoteVariables>;
   };
 };
 
@@ -36,6 +41,11 @@ export const createMutations = (api: Api): Mutations => {
         mutationFn: ({ data }: CreateQuoteVariables): Promise<Quote> =>
           api.quotes.create(data),
         mutationKey: ['quotes', 'create'],
+      },
+      delete: {
+        mutationFn: ({ id }: DeleteQuoteVariables): Promise<Quote> =>
+          api.quotes.delete(id),
+        mutationKey: ['quotes', 'delete'],
       },
     },
   };
