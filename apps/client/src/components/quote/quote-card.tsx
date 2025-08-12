@@ -34,7 +34,10 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
         <div className="flex gap-1 items-start">
           <Button onClick={toggleEdit}>Edit</Button>
           <Button onClick={toggleDetails}>Details</Button>
-          <DeleteButton onOk={deleteQuote} />
+          <DeleteButton
+            onOk={deleteQuote}
+            message="Are you sure you want to delete this quote?"
+          />
         </div>
       </div>
       {isDetailsOpen && (
