@@ -1,5 +1,5 @@
 import { Portal } from '@/components/ui/portal';
-import { type JSX } from 'react';
+import { useEffect, type JSX } from 'react';
 
 type ModalProps = {
   children: JSX.Element;
@@ -9,6 +9,23 @@ type ModalProps = {
 
 export function Modal(props: ModalProps): JSX.Element | null {
   const { children, isOpen, onClose } = props;
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const handleKeydown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeydown);
+
+    return (): void => {
+      window.removeEventListener('keydown', handleKeydown);
+    };
+  }, [onClose, isOpen]);
 
   if (!isOpen) {
     return null;
