@@ -34,10 +34,10 @@ export function Modal(props: ModalProps): JSX.Element | null {
   return (
     <Portal>
       <div
-        className="absolute inset-0 flex items-center justify-center bg-black/40 z-50"
+        className="absolute inset-0 flex items-center justify-center bg-black/40 z-50 cursor-pointer"
         onClick={onClose}
       >
-        {children}
+        <div className="cursor-default">{children}</div>
       </div>
     </Portal>
   );
