@@ -3,12 +3,12 @@ import { Button } from '@/components/ui/button';
 import { TrashcanIcon } from '@/components/ui/icons/trashcan';
 import { useState, type JSX } from 'react';
 
-type deleteButtonProps = {
+type DeleteButtonProps = {
   onOk: () => void;
   message?: string;
 };
 
-export function DeleteButton(props: deleteButtonProps): JSX.Element {
+export function DeleteButton(props: DeleteButtonProps): JSX.Element {
   const { onOk, message } = props;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
