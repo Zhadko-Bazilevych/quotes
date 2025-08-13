@@ -14,17 +14,18 @@ export default function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="p-2 border border-gray-300 flex flex-col gap-2 bg-neutral-950 rounded min-w-50">
-        <span>{message}</span>
-        <div className="flex justify-end gap-2">
-          <Button className="px-2" onClick={onOk}>
-            Yep
-          </Button>
-          <Button className="px-2" onClick={onClose}>
-            No
-          </Button>
-        </div>
-      </div>
+      <Modal.Header title={message} />
+      <Modal.Body>
+        <p>This action is final and cannot be undone</p>
+      </Modal.Body>
+      <Modal.Footer className="flex justify-end gap-2">
+        <Button className="px-2" onClick={onClose}>
+          No
+        </Button>
+        <Button className="px-2" onClick={onOk}>
+          Yep
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 }
