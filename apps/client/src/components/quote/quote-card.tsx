@@ -2,7 +2,7 @@ import { useState, type JSX } from 'react';
 import { Button } from '../ui/button';
 import type { Quote } from '@/types';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
-import { TrashcanIcon } from '@/components/ui/icons/trashcan';
+import { DeleteButton } from '@/components/ui/delete-button';
 
 export type QuoteCardProps = {
   quote: Quote;
@@ -12,6 +12,7 @@ export type QuoteCardProps = {
 export function QuoteCard(props: QuoteCardProps): JSX.Element {
   const { quote, onEdit } = props;
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
   const toggleDetails = (): void => setIsDetailsOpen((prev) => !prev);
 
   const mutation = useDeleteQuoteMutation();
@@ -33,9 +34,10 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
         <div className="flex gap-1 items-start">
           <Button onClick={toggleEdit}>Edit</Button>
           <Button onClick={toggleDetails}>Details</Button>
-          <Button onClick={deleteQuote}>
-            <TrashcanIcon className="w-6 h-6 text-red-500" />
-          </Button>
+          <DeleteButton
+            onOk={deleteQuote}
+            message="Are you sure you want to delete this quote?"
+          />
         </div>
       </div>
       {isDetailsOpen && (
