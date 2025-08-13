@@ -3,12 +3,14 @@ import { UpdateQuoteForm as BaseUpdateQuoteForm } from '@/components/quote/form/
 import { useCallback, useState, type JSX } from 'react';
 import { useQuotes } from '@/hooks/use-quotes';
 import React from 'react';
+import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
+import { UnexpectedError } from '@/components/ui/unexpected-error';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
 
 export function QuoteListSection(): JSX.Element {
-  const { data } = useQuotes();
+  const { data, isLoading, isError } = useQuotes();
   const [editingIds, setEditingIds] = useState<number[]>([]);
 
   const toggleEdit = useCallback(
@@ -20,8 +22,14 @@ export function QuoteListSection(): JSX.Element {
     [setEditingIds],
   );
 
+  if (isError) {
+    return <UnexpectedError />;
+  }
+
   return (
     <section className="flex flex-col gap-3">
+      {isLoading && <QuoteListSkeleton pageSize={30} />}
+
       {data?.map((quote) => {
         if (editingIds.includes(quote.id)) {
           return (
