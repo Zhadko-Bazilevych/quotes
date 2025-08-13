@@ -37,7 +37,9 @@ export function Modal(props: ModalProps): JSX.Element | null {
         className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 cursor-pointer"
         onClick={onClose}
       >
-        <div className="cursor-default">{children}</div>
+        <div className="cursor-default" onClick={(e) => e.stopPropagation()}>
+          {children}
+        </div>
       </div>
     </Portal>
   );
