@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { Button } from './button';
 import { twMerge } from 'tailwind-merge';
+import { CloseIcon } from '@/components/ui/icons';
 
 type ModalContext = Pick<ModalProps, 'onClose'>;
 
@@ -63,7 +64,7 @@ export function Modal(props: ModalProps): JSX.Element | null {
         onClick={onClose}
       >
         <div
-          className="cursor-auto rounded border border-gray-300"
+          className="cursor-auto rounded border border-gray-300 bg-neutral-950 mx-2"
           onClick={(e) => e.stopPropagation()}
         >
           <ModalContext.Provider value={contextValue}>
@@ -89,7 +90,11 @@ function ModalHeader({
   return (
     <div className="flex justify-between gap-2 border-b border-gray-300 p-2">
       <h3 className="text-lg font-semibold">{title}</h3>
-      {showCloseButton && <Button onClick={onClose}>X</Button>}
+      {showCloseButton && (
+        <Button className="self-start" onClick={onClose}>
+          <CloseIcon className="size-6" />
+        </Button>
+      )}
     </div>
   );
 }

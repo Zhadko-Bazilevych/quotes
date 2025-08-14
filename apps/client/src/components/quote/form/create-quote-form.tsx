@@ -13,7 +13,7 @@ type CreateQuoteFormProps = {
 export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
   const { onCancel: toggleEdit } = props;
   const methods = useForm<CreateQuoteData>({
-    mode: 'all',
+    mode: 'onBlur',
   });
 
   const mutation = useCreateQuoteMutation({
