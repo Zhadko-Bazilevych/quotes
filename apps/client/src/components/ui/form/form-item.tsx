@@ -1,21 +1,25 @@
 import { useId } from 'react';
 import {
   useFormContext,
+  type FieldPath,
   type FieldValues,
-  type Path,
   type RegisterOptions,
   type UseFormRegisterReturn,
 } from 'react-hook-form';
 
-type FormElementProps = UseFormRegisterReturn<string> & {
-  id: string;
-};
+type FormElementProps<TFieldName extends string> =
+  UseFormRegisterReturn<TFieldName> & {
+    id: string;
+  };
 
-type FormItemProps<T extends FieldValues> = {
-  name: Path<T>;
+type FormItemProps<
+  TFieldValues extends FieldValues,
+  TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> = {
+  name: TFieldName;
   label: string;
-  rules: RegisterOptions<T, Path<T>>;
-  render: (props: FormElementProps) => React.ReactNode;
+  rules: RegisterOptions<TFieldValues, TFieldName>;
+  render: (props: FormElementProps<TFieldName>) => React.ReactNode;
 };
 
 export function FormItem<T extends FieldValues>(
