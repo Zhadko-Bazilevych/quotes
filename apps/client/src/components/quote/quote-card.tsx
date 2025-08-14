@@ -3,6 +3,8 @@ import { Button } from '../ui/button';
 import type { Quote } from '@/types';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { DeleteButton } from '@/components/ui/delete-button';
+import { EditIcon } from '@/components/ui/icons';
+import { formatDatetime } from '@/utils/formatters';
 
 export type QuoteCardProps = {
   quote: Quote;
@@ -26,14 +28,20 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
   return (
     <div className="flex flex-col gap-3 border rounded border-gray-300 p-2">
       <div className="flex justify-between">
-        <span>{quote.author}</span>
-        <span>Created: {quote.createdAt.toLocaleString()}</span>
+        <span className="truncate">{quote.author}</span>
+        <span className="hidden sm:block">
+          Created: {formatDatetime(quote.createdAt)}
+        </span>
       </div>
+      <p className="wrap-break-word">{quote.content}</p>
       <div className="flex justify-between">
-        <p>{quote.content}</p>
+        <Button className="self-start" onClick={toggleDetails}>
+          Details
+        </Button>
         <div className="flex gap-1 items-start">
-          <Button onClick={toggleEdit}>Edit</Button>
-          <Button onClick={toggleDetails}>Details</Button>
+          <Button onClick={toggleEdit}>
+            <EditIcon className="size-6" />
+          </Button>
           <DeleteButton
             onOk={deleteQuote}
             message="Are you sure you want to delete this quote?"
@@ -41,11 +49,16 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
         </div>
       </div>
       {isDetailsOpen && (
-        <div>
-          <p>{quote.context}</p>
-          <div className="flex justify-between">
+        <div className="flex flex-col gap-2">
+          <div>
+            <p className="wrap-break-word">{quote.context}</p>
             <span>Sender: {quote.user}</span>
-            <span>Updated: {quote.updatedAt.toLocaleString()}</span>
+          </div>
+          <div>
+            <span className="sm:hidden block">
+              Created: {formatDatetime(quote.createdAt)}
+            </span>
+            <span>Updated: {formatDatetime(quote.updatedAt)}</span>
           </div>
         </div>
       )}

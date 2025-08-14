@@ -18,7 +18,7 @@ export function DeleteButton(props: DeleteButtonProps): JSX.Element {
   return (
     <>
       <Button onClick={() => setIsModalOpen(true)}>
-        <TrashcanIcon className="w-6 h-6 text-red-500" />
+        <TrashcanIcon className="size-6 text-red-500" />
       </Button>
 
       <DeleteModal
