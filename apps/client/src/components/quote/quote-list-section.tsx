@@ -5,13 +5,25 @@ import { useQuotes } from '@/hooks/use-quotes';
 import React from 'react';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
+import { PaginationBar } from '@/components/quote/pagination-bar';
+import { useSearchParams } from 'react-router';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
 
+const pageSize = 10;
+
 export function QuoteListSection(): JSX.Element {
-  const { data, isLoading, isError } = useQuotes();
   const [editingIds, setEditingIds] = useState<number[]>([]);
+  const [searchParams] = useSearchParams();
+
+  const size = Number(searchParams.get('size') ?? pageSize);
+  const page = Number(searchParams.get('page') ?? 1);
+
+  const { data, isLoading, isError } = useQuotes({
+    size,
+    page,
+  });
 
   const toggleEdit = useCallback(
     (id: number): void => {
@@ -28,7 +40,7 @@ export function QuoteListSection(): JSX.Element {
 
   return (
     <section className="flex flex-col gap-3">
-      {isLoading && <QuoteListSkeleton pageSize={30} />}
+      {isLoading && <QuoteListSkeleton pageSize={pageSize} />}
       {data?.quotes.map((quote) => {
         if (editingIds.includes(quote.id)) {
           return (
@@ -42,6 +54,13 @@ export function QuoteListSection(): JSX.Element {
 
         return <QuoteCard key={quote.id} quote={quote} onEdit={toggleEdit} />;
       })}
+      {data?.total && (
+        <PaginationBar
+          page={page}
+          totalPages={Math.ceil(data.total / size)}
+          onClick={setPage}
+        ></PaginationBar>
+      )}
     </section>
   );
 }
