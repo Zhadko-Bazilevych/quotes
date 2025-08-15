@@ -18,7 +18,7 @@ export class QuoteApi extends BaseApi {
 
     return {
       quotes: response.quotes.map((quote) => QuoteMapper.toDomain(quote)),
-      totalPages: response.totalPages,
+      total: response.total,
     };
   }
 

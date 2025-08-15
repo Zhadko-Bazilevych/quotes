@@ -20,12 +20,12 @@ export type QuoteDto = {
 
 export type QuoteListDto = {
   quotes: QuoteDto[];
-  totalPages: number;
+  total: number;
 };
 
 export type QuoteList = {
   quotes: Quote[];
-  totalPages: number;
+  total: number;
 };
 
 export type GetQuotesQuery = { page?: number; size?: number };

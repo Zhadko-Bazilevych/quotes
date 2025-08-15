@@ -13,7 +13,7 @@ export type Quote = {
 
 export type QuoteListResponse = {
   quotes: Quote[];
-  totalPages: number;
+  total: number;
 };
 
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;

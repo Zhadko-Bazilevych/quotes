@@ -58,7 +58,7 @@ export class QuotesService {
 
         return {
           quotes,
-          totalPages: Math.ceil(count / size),
+          total: Math.ceil(count),
         };
       }),
       () => new UnexpectedError(),
