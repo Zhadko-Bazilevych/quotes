@@ -1,6 +1,6 @@
 import DeleteModal from '@/components/ui/delete-modal';
 import { Button } from '@/components/ui/button';
-import { TrashcanIcon } from '@/components/ui/icons/trashcan';
+import { TrashcanIcon } from '@/components/ui/icons';
 import { useState, type JSX } from 'react';
 
 type DeleteButtonProps = {
