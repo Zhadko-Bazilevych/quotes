@@ -4,16 +4,22 @@ import {
   type CreateQuoteData,
   type UpdateQuoteData,
   type QuoteDto,
+  type QuoteListDto,
+  type QuoteList,
 } from '@/types';
 import { BaseApi } from './base-api';
 import { Client } from './client';
 import { QuoteMapper } from '@/mappers/quote';
 
 export class QuoteApi extends BaseApi {
-  async getList(query?: GetQuotesQuery): Promise<Quote[]> {
+  async getList(query?: GetQuotesQuery): Promise<QuoteList> {
     const url = this.buildUrl('quotes');
-    const quotes = await Client.get<QuoteDto[]>(url, { query });
-    return quotes.map((quote) => QuoteMapper.toDomain(quote));
+    const response = await Client.get<QuoteListDto>(url, { query });
+
+    return {
+      quotes: response.quotes.map((quote) => QuoteMapper.toDomain(quote)),
+      totalPages: response.totalPages,
+    };
   }
 
   async getOneById(id: number): Promise<Quote> {

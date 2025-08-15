@@ -1,4 +1,4 @@
-import type { GetQuotesQuery, Quote } from '@/types';
+import type { GetQuotesQuery, Quote, QuoteList } from '@/types';
 import type { QueryFunction, QueryKey } from '@tanstack/react-query';
 import { api, type Api } from './api';
 
@@ -13,7 +13,7 @@ type QueryDetails<
 
 type Queries = {
   quotes: {
-    getList: (query?: GetQuotesQuery) => QueryDetails<Quote[]>;
+    getList: (query?: GetQuotesQuery) => QueryDetails<QuoteList>;
     getOneById: (id: number) => QueryDetails<Quote>;
   };
 };

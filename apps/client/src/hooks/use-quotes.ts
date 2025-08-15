@@ -3,16 +3,19 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from '@tanstack/react-query';
-import type { GetQuotesQuery, Quote } from '@/types';
+import type { GetQuotesQuery, QuoteList } from '@/types';
 import { queries } from '@/api/queries';
 
-type UseQuotesOptions = Omit<UseQueryOptions<Quote[]>, 'queryFn' | 'queryKey'>;
+type UseQuotesOptions = Omit<
+  UseQueryOptions<QuoteList>,
+  'queryFn' | 'queryKey'
+>;
 
 export function useQuotes(
   query?: GetQuotesQuery,
   options?: UseQuotesOptions,
-): UseQueryResult<Quote[]> {
-  return useQuery<Quote[]>({
+): UseQueryResult<QuoteList> {
+  return useQuery<QuoteList>({
     ...queries.quotes.getList(query),
     ...options,
   });

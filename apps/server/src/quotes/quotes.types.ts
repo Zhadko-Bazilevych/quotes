@@ -11,6 +11,11 @@ export type Quote = {
   updatedAt: Date;
 };
 
+export type QuoteListResponse = {
+  quotes: Quote[];
+  totalPages: number;
+};
+
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
 export type GetQuoteListError = UnexpectedError;
 export type CreateQuoteError = UnexpectedError;
