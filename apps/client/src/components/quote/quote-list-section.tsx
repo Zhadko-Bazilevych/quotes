@@ -6,7 +6,6 @@ import React from 'react';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
 import { PaginationBar } from '@/components/quote/pagination-bar';
-import { useSearchParams } from 'react-router';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
@@ -15,14 +14,10 @@ const pageSize = 10;
 
 export function QuoteListSection(): JSX.Element {
   const [editingIds, setEditingIds] = useState<number[]>([]);
-  const [searchParams] = useSearchParams();
-
-  const size = Number(searchParams.get('size') ?? pageSize);
-  const page = Number(searchParams.get('page') ?? 1);
 
   const { data, isLoading, isError } = useQuotes({
-    size,
-    page,
+    size: pageSize,
+    page: 1,
   });
 
   const toggleEdit = useCallback(
@@ -56,9 +51,9 @@ export function QuoteListSection(): JSX.Element {
       })}
       {data?.total && (
         <PaginationBar
-          page={page}
-          totalPages={Math.ceil(data.total / size)}
-          onClick={setPage}
+          page={1}
+          totalPages={Math.ceil(data.total / pageSize)}
+          onClick={() => {}}
         ></PaginationBar>
       )}
     </section>
