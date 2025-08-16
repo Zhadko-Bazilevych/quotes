@@ -5,7 +5,6 @@ import { useQuotes } from '@/hooks/use-quotes';
 import React from 'react';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
-import { PaginationBar } from '@/components/quote/pagination-bar';
 import { useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 
@@ -52,13 +51,6 @@ export function QuoteListSection(): JSX.Element {
 
         return <QuoteCard key={quote.id} quote={quote} onEdit={toggleEdit} />;
       })}
-      {data?.total && (
-        <PaginationBar
-          page={page}
-          size={size}
-          totalPages={Math.ceil(data.total / size)}
-        ></PaginationBar>
-      )}
     </section>
   );
 }
