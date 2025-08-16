@@ -43,7 +43,7 @@ export class QuotesService {
   }: PaginationOptions): ResultAsync<QuoteListResponse, GetQuoteListError> {
     return ResultAsync.fromPromise(
       this.db.transaction().execute(async (trx) => {
-        const quotes = await trx
+        const data = await trx
           .selectFrom('quote')
           .selectAll()
           .orderBy('id', 'desc')
@@ -51,14 +51,14 @@ export class QuotesService {
           .limit(size)
           .execute();
 
-        const [{ count }] = await trx
+        const { total } = await trx
           .selectFrom('quote')
-          .select((eb) => eb.fn.countAll<number>().as('count'))
-          .execute();
+          .select((eb) => eb.fn.countAll<number>().as('total'))
+          .executeTakeFirstOrThrow();
 
         return {
-          quotes,
-          total: Math.ceil(count),
+          data,
+          total,
         };
       }),
       () => new UnexpectedError(),

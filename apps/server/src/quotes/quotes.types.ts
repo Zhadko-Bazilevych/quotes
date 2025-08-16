@@ -12,7 +12,7 @@ export type Quote = {
 };
 
 export type QuoteListResponse = {
-  quotes: Quote[];
+  data: Quote[];
   total: number;
 };
 

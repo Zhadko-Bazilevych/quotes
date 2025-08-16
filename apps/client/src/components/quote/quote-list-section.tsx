@@ -38,7 +38,7 @@ export function QuoteListSection(): JSX.Element {
   return (
     <section className="flex flex-col gap-3">
       {isLoading && <QuoteListSkeleton pageSize={size} />}
-      {data?.quotes.map((quote) => {
+      {data?.data.map((quote) => {
         if (editingIds.includes(quote.id)) {
           return (
             <UpdateQuoteForm

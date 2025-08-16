@@ -17,7 +17,7 @@ export class QuoteApi extends BaseApi {
     const response = await Client.get<QuoteListDto>(url, { query });
 
     return {
-      quotes: response.quotes.map((quote) => QuoteMapper.toDomain(quote)),
+      data: response.data.map((quote) => QuoteMapper.toDomain(quote)),
       total: response.total,
     };
   }

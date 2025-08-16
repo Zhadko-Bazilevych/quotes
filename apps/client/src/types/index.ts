@@ -19,12 +19,12 @@ export type QuoteDto = {
 };
 
 export type QuoteListDto = {
-  quotes: QuoteDto[];
+  data: QuoteDto[];
   total: number;
 };
 
 export type QuoteList = {
-  quotes: Quote[];
+  data: Quote[];
   total: number;
 };
 
