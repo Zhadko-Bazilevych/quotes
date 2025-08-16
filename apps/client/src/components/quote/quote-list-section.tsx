@@ -55,8 +55,8 @@ export function QuoteListSection(): JSX.Element {
       {data?.total && (
         <PaginationBar
           page={page}
+          size={size}
           totalPages={Math.ceil(data.total / size)}
-          onClick={() => {}}
         ></PaginationBar>
       )}
     </section>

@@ -5,50 +5,91 @@ import {
   DoubleAngleBracketsLeft,
   DoubleAngleBracketsRight,
 } from '@/components/ui/icons';
+import { quoteListRoute } from '@/routes/route-tree';
+import { Link } from '@tanstack/react-router';
 import type { JSX } from 'react';
 
 export type PaginationBarProps = {
   page: number;
+  size: number;
   totalPages: number;
-  onClick: (page: number) => void;
 };
 
 export function PaginationBar(props: PaginationBarProps): JSX.Element {
-  const { page, totalPages, onClick } = props;
+  const { page, size, totalPages } = props;
   return (
     <div className="flex gap-3 justify-center mb-2">
       {page > 2 && (
-        <Button className="size-9" onClick={() => onClick(1)}>
-          <DoubleAngleBracketsLeft />
-        </Button>
+        <Link
+          to={quoteListRoute.to}
+          search={{
+            page: 1,
+            size,
+          }}
+        >
+          <Button className="size-9">
+            <DoubleAngleBracketsLeft />
+          </Button>
+        </Link>
       )}
       {page > 1 && (
-        <Button className="size-9" onClick={() => onClick(page - 1)}>
-          <AngleBracketLeft />
-        </Button>
+        <Link
+          to={quoteListRoute.to}
+          search={{
+            page: page - 1,
+            size,
+          }}
+        >
+          <Button className="size-9">
+            <AngleBracketLeft />
+          </Button>
+        </Link>
       )}
       {Array.from({ length: totalPages }).map((_, idx) => {
         const isActive = idx + 1 === page;
 
         return (
-          <Button
-            className={`size-9 ${isActive && 'bg-gray-200 text-neutral-950 hover:bg-gray-400'}`}
+          <Link
             key={idx}
-            onClick={() => onClick(idx + 1)}
+            to={quoteListRoute.to}
+            search={{
+              page: idx + 1,
+              size,
+            }}
           >
-            {idx}
-          </Button>
+            <Button
+              className={`size-9 ${isActive && 'bg-gray-200 text-neutral-950 hover:bg-gray-400'}`}
+            >
+              {idx + 1}
+            </Button>
+          </Link>
         );
       })}
       {page < totalPages && (
-        <Button className="size-9" onClick={() => onClick(page + 1)}>
-          <AngleBracketRight />
-        </Button>
+        <Link
+          to={quoteListRoute.to}
+          search={{
+            page: page + 1,
+            size,
+          }}
+        >
+          <Button className="size-9">
+            <AngleBracketRight />
+          </Button>
+        </Link>
       )}
       {page < totalPages - 1 && (
-        <Button className="size-9" onClick={() => onClick(totalPages)}>
-          <DoubleAngleBracketsRight />
-        </Button>
+        <Link
+          to={quoteListRoute.to}
+          search={{
+            page: totalPages,
+            size,
+          }}
+        >
+          <Button className="size-9">
+            <DoubleAngleBracketsRight />
+          </Button>
+        </Link>
       )}
     </div>
   );
