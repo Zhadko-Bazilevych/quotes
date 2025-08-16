@@ -11,11 +11,12 @@ type DeleteButtonProps = {
 
 // TODO: wait for successful deletion before closing the modal
 // and show spinner while the the delete operation is pending
+// and show a toast on success and on error
 export function DeleteButton(props: DeleteButtonProps): JSX.Element {
   const { onOk: onOkFromProps, message } = props;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [, setIsQuoteListVisible] = useQuoteListContext();
+  const { setIsQuoteListVisible } = useQuoteListContext();
 
   const openModal = (): void => {
     setIsQuoteListVisible(false);

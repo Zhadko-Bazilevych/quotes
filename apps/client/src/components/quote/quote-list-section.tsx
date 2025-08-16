@@ -20,10 +20,9 @@ import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
 
-type QuoteListContext = [
-  boolean,
-  React.Dispatch<React.SetStateAction<boolean>>,
-];
+type QuoteListContext = {
+  setIsQuoteListVisible: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 const QuoteListContext = createContext<QuoteListContext | null>(null);
 
@@ -50,8 +49,10 @@ export function QuoteListSection(): JSX.Element {
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
   const contextValue = useMemo(
-    () => [isQuoteListVisible, setIsQuoteListVisible] as QuoteListContext,
-    [isQuoteListVisible, setIsQuoteListVisible],
+    () => ({
+      setIsQuoteListVisible,
+    }),
+    [setIsQuoteListVisible],
   );
 
   const [editingIds, setEditingIds] = useState<number[]>([]);
@@ -70,13 +71,11 @@ export function QuoteListSection(): JSX.Element {
       return;
     }
 
-    const cleanup = addEventListenerWithCleaup('keydown', (event) => {
+    return addEventListenerWithCleaup('keydown', (event) => {
       if (event.key === 'Escape') {
         setEditingIds((prev) => prev.slice(0, Math.max(0, prev.length - 1)));
       }
     });
-
-    return cleanup;
   }, [setEditingIds, isQuoteListVisible]);
 
   if (isError) {
