@@ -2,7 +2,7 @@ import DeleteModal from '@/components/ui/delete-modal';
 import { Button } from '@/components/ui/button';
 import { TrashcanIcon } from '@/components/ui/icons';
 import { useState, type JSX } from 'react';
-import { useQuoteListContext } from '../quote/quote-list-section';
+import { useQuoteListContext } from '@/components/quote/quote-list-context';
 
 type DeleteButtonProps = {
   onOk: () => void;

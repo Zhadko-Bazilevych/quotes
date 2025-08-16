@@ -1,14 +1,6 @@
 import { QuoteCard as BaseQuoteCard } from '@/components/quote/quote-card';
 import { UpdateQuoteForm as BaseUpdateQuoteForm } from '@/components/quote/form/update-quote-form';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type JSX,
-} from 'react';
+import { useCallback, useEffect, useMemo, useState, type JSX } from 'react';
 import { useQuotes } from '@/hooks/use-quotes';
 import React from 'react';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
@@ -16,27 +8,10 @@ import { UnexpectedError } from '@/components/ui/unexpected-error';
 import { useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
+import { QuoteListContext } from './quote-list-context';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
-
-type QuoteListContext = {
-  setIsQuoteListVisible: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const QuoteListContext = createContext<QuoteListContext | null>(null);
-
-export function useQuoteListContext(): QuoteListContext {
-  const quoteListIsVisibleContext = useContext(QuoteListContext);
-
-  if (!quoteListIsVisibleContext) {
-    throw new Error(
-      "QuoteListContext should only be used inside of it's provider",
-    );
-  }
-
-  return quoteListIsVisibleContext;
-}
 
 export function QuoteListSection(): JSX.Element {
   const { size, page } = useSearch({
