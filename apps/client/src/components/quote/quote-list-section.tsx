@@ -6,18 +6,21 @@ import React from 'react';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
 import { PaginationBar } from '@/components/quote/pagination-bar';
+import { useSearch } from '@tanstack/react-router';
+import { quoteListRoute } from '@/routes/route-tree';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
 
-const pageSize = 10;
-
 export function QuoteListSection(): JSX.Element {
   const [editingIds, setEditingIds] = useState<number[]>([]);
+  const { size, page } = useSearch({
+    from: quoteListRoute.fullPath,
+  });
 
   const { data, isLoading, isError } = useQuotes({
-    size: pageSize,
-    page: 1,
+    size,
+    page,
   });
 
   const toggleEdit = useCallback(
@@ -35,7 +38,7 @@ export function QuoteListSection(): JSX.Element {
 
   return (
     <section className="flex flex-col gap-3">
-      {isLoading && <QuoteListSkeleton pageSize={pageSize} />}
+      {isLoading && <QuoteListSkeleton pageSize={size} />}
       {data?.quotes.map((quote) => {
         if (editingIds.includes(quote.id)) {
           return (
@@ -51,8 +54,8 @@ export function QuoteListSection(): JSX.Element {
       })}
       {data?.total && (
         <PaginationBar
-          page={1}
-          totalPages={Math.ceil(data.total / pageSize)}
+          page={page}
+          totalPages={Math.ceil(data.total / size)}
           onClick={() => {}}
         ></PaginationBar>
       )}
