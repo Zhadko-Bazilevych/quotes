@@ -1,23 +1,22 @@
-import { useState, type JSX } from 'react';
+import React, { useState, type JSX } from 'react';
 import { Button } from '@/components/ui/button';
 import type { Quote } from '@/types';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { DeleteButton } from '@/components/ui/delete-button';
 import { EditIcon } from '@/components/ui/icons';
 import { formatDatetime } from '@/utils/formatters';
-import { useQuoteListContext } from './quote-list-context';
 import { useDisclosure } from '@/hooks/use-disclosure';
 
 export type QuoteCardProps = {
   quote: Quote;
   onEdit: (id: number) => void;
+  setIsQuoteListVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function QuoteCard(props: QuoteCardProps): JSX.Element {
-  const { quote, onEdit } = props;
+  const { quote, onEdit, setIsQuoteListVisible } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const { setIsQuoteListVisible } = useQuoteListContext();
   const { isPending, mutate } = useDeleteQuoteMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
 

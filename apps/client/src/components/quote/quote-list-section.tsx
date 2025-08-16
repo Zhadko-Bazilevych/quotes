@@ -1,6 +1,6 @@
 import { QuoteCard as BaseQuoteCard } from '@/components/quote/quote-card';
 import { UpdateQuoteForm as BaseUpdateQuoteForm } from '@/components/quote/form/update-quote-form';
-import { useCallback, useEffect, useMemo, useState, type JSX } from 'react';
+import { useCallback, useEffect, useState, type JSX } from 'react';
 import { useQuotes } from '@/hooks/use-quotes';
 import React from 'react';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
@@ -8,7 +8,6 @@ import { UnexpectedError } from '@/components/ui/unexpected-error';
 import { useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
-import { QuoteListContext } from './quote-list-context';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
@@ -23,12 +22,6 @@ export function QuoteListSection(): JSX.Element {
   });
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
-  const contextValue = useMemo(
-    () => ({
-      setIsQuoteListVisible,
-    }),
-    [setIsQuoteListVisible],
-  );
 
   const [editingIds, setEditingIds] = useState<number[]>([]);
 
@@ -60,21 +53,26 @@ export function QuoteListSection(): JSX.Element {
   return (
     <section className="flex flex-col gap-3">
       {isLoading && <QuoteListSkeleton pageSize={size} />}
-      <QuoteListContext.Provider value={contextValue}>
-        {data?.data.map((quote) => {
-          if (editingIds.includes(quote.id)) {
-            return (
-              <UpdateQuoteForm
-                key={quote.id}
-                quote={quote}
-                onCancel={toggleEdit}
-              />
-            );
-          }
+      {data?.data.map((quote) => {
+        if (editingIds.includes(quote.id)) {
+          return (
+            <UpdateQuoteForm
+              key={quote.id}
+              quote={quote}
+              onCancel={toggleEdit}
+            />
+          );
+        }
 
-          return <QuoteCard key={quote.id} quote={quote} onEdit={toggleEdit} />;
-        })}
-      </QuoteListContext.Provider>
+        return (
+          <QuoteCard
+            key={quote.id}
+            quote={quote}
+            onEdit={toggleEdit}
+            setIsQuoteListVisible={setIsQuoteListVisible}
+          />
+        );
+      })}
     </section>
   );
 }
