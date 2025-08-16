@@ -15,9 +15,15 @@ export default function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
     onClose,
     isOpen,
     isDeleting,
-    onOk,
+    onOk: onOkFromProps,
     message = 'Are you sure?',
   } = props;
+
+  const onOk = (): void => {
+    if (!isDeleting) {
+      onOkFromProps();
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

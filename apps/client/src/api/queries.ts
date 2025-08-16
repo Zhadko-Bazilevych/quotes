@@ -18,6 +18,7 @@ type Queries = {
   };
 };
 
+// TODO: fix queries not invalidating properly
 export function createQueries(api: Api): Queries {
   return {
     quotes: {

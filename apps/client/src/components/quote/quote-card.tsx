@@ -6,30 +6,12 @@ import { DeleteButton } from '@/components/ui/delete-button';
 import { EditIcon } from '@/components/ui/icons';
 import { formatDatetime } from '@/utils/formatters';
 import { useQuoteListContext } from './quote-list-context';
+import { useDisclosure } from '@/hooks/use-disclosure';
 
 export type QuoteCardProps = {
   quote: Quote;
   onEdit: (id: number) => void;
 };
-
-type UseDisclosureReturn = {
-  isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-};
-
-function useDisclosure(initialState: boolean = false): UseDisclosureReturn {
-  const [isOpen, setIsOpen] = useState(initialState);
-
-  const onOpen = (): void => setIsOpen(true);
-  const onClose = (): void => setIsOpen(false);
-
-  return {
-    isOpen,
-    onOpen,
-    onClose,
-  };
-}
 
 export function QuoteCard(props: QuoteCardProps): JSX.Element {
   const { quote, onEdit } = props;

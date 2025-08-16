@@ -5,6 +5,7 @@ import { TrashcanIcon } from '@/components/ui/icons';
 
 type DeleteButtonProps = {
   isModalOpen: boolean;
+  isDeleting: boolean;
   onOk: () => void;
   onModalOpen: () => void;
   onModalClose: () => void;
@@ -15,7 +16,8 @@ type DeleteButtonProps = {
 // and show spinner while the the delete operation is pending
 // and show a toast on success and on error
 export function DeleteButton(props: DeleteButtonProps): JSX.Element {
-  const { onOk, onModalClose, onModalOpen, isModalOpen, message } = props;
+  const { isModalOpen, isDeleting, onOk, onModalClose, onModalOpen, message } =
+    props;
 
   return (
     <>
@@ -27,6 +29,7 @@ export function DeleteButton(props: DeleteButtonProps): JSX.Element {
         onClose={onModalClose}
         onOk={onOk}
         isOpen={isModalOpen}
+        isDeleting={isDeleting}
         message={message}
       />
     </>
