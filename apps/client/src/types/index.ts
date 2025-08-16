@@ -18,6 +18,16 @@ export type QuoteDto = {
   updatedAt: string;
 };
 
+export type QuoteListDto = {
+  data: QuoteDto[];
+  total: number;
+};
+
+export type QuoteList = {
+  data: Quote[];
+  total: number;
+};
+
 export type GetQuotesQuery = { page?: number; size?: number };
 export type CreateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;

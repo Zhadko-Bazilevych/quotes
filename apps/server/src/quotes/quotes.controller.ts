@@ -25,7 +25,7 @@ import {
   PaginationOptions,
   paginationSchema,
 } from 'src/utils/dto/pagination.dto';
-import { Quote } from 'src/quotes/quotes.types';
+import { Quote, QuoteListResponse } from 'src/quotes/quotes.types';
 
 @Controller('quotes')
 export class QuotesController {
@@ -51,7 +51,9 @@ export class QuotesController {
 
   @Get()
   @UsePipes(new ZodValidationPipe(paginationSchema))
-  getList(@Query() paginationOptions: PaginationOptions): Promise<Quote[]> {
+  getList(
+    @Query() paginationOptions: PaginationOptions,
+  ): Promise<QuoteListResponse> {
     return this.quotesService.getList(paginationOptions).match(
       (quote) => quote,
       (err) =>

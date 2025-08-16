@@ -6,6 +6,7 @@ import {
   GetQuoteError,
   GetQuoteListError,
   Quote,
+  QuoteListResponse,
   UpdateQuoteError,
 } from 'src/quotes/quotes.types';
 import { CreateQuoteDto } from './dto/create-quote.dto';
@@ -39,15 +40,27 @@ export class QuotesService {
   getList({
     page,
     size,
-  }: PaginationOptions): ResultAsync<Quote[], GetQuoteListError> {
+  }: PaginationOptions): ResultAsync<QuoteListResponse, GetQuoteListError> {
     return ResultAsync.fromPromise(
-      this.db
-        .selectFrom('quote')
-        .selectAll()
-        .orderBy('id', 'asc')
-        .offset((page - 1) * size)
-        .limit(size)
-        .execute(),
+      this.db.transaction().execute(async (trx) => {
+        const data = await trx
+          .selectFrom('quote')
+          .selectAll()
+          .orderBy('id', 'desc')
+          .offset((page - 1) * size)
+          .limit(size)
+          .execute();
+
+        const { total } = await trx
+          .selectFrom('quote')
+          .select((eb) => eb.fn.countAll<number>().as('total'))
+          .executeTakeFirstOrThrow();
+
+        return {
+          data,
+          total,
+        };
+      }),
       () => new UnexpectedError(),
     );
   }

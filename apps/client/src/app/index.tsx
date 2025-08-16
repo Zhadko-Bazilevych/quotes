@@ -1,14 +1,12 @@
 import type { JSX } from 'react';
-import { QuoteList } from './pages/quote-list';
+import { Outlet } from '@tanstack/react-router';
 
-function App(): JSX.Element {
+export function App(): JSX.Element {
   return (
     <div className="flex justify-center">
       <div className="w-full sm:w-3/5 sm:min-w-160 px-2">
-        <QuoteList />
+        <Outlet />
       </div>
     </div>
   );
 }
-
-export default App;

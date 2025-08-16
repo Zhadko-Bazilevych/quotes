@@ -5,13 +5,22 @@ import { useQuotes } from '@/hooks/use-quotes';
 import React from 'react';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
+import { useSearch } from '@tanstack/react-router';
+import { quoteListRoute } from '@/routes/route-tree';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
 
 export function QuoteListSection(): JSX.Element {
-  const { data, isLoading, isError } = useQuotes();
   const [editingIds, setEditingIds] = useState<number[]>([]);
+  const { size, page } = useSearch({
+    from: quoteListRoute.fullPath,
+  });
+
+  const { data, isLoading, isError } = useQuotes({
+    size,
+    page,
+  });
 
   const toggleEdit = useCallback(
     (id: number): void => {
@@ -28,9 +37,8 @@ export function QuoteListSection(): JSX.Element {
 
   return (
     <section className="flex flex-col gap-3">
-      {isLoading && <QuoteListSkeleton pageSize={30} />}
-
-      {data?.map((quote) => {
+      {isLoading && <QuoteListSkeleton pageSize={size} />}
+      {data?.data.map((quote) => {
         if (editingIds.includes(quote.id)) {
           return (
             <UpdateQuoteForm
