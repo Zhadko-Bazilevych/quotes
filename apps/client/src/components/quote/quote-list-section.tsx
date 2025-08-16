@@ -15,6 +15,7 @@ import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skelet
 import { UnexpectedError } from '@/components/ui/unexpected-error';
 import { useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
+import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
@@ -69,16 +70,13 @@ export function QuoteListSection(): JSX.Element {
       return;
     }
 
-    const handleKeydown = (event: KeyboardEvent): void => {
+    const cleanup = addEventListenerWithCleaup('keydown', (event) => {
       if (event.key === 'Escape') {
         setEditingIds((prev) => prev.slice(0, Math.max(0, prev.length - 1)));
       }
-    };
-    window.addEventListener('keydown', handleKeydown);
+    });
 
-    return (): void => {
-      window.removeEventListener('keydown', handleKeydown);
-    };
+    return cleanup;
   }, [setEditingIds, isQuoteListVisible]);
 
   if (isError) {

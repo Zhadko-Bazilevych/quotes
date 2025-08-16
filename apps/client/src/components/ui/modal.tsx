@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { twMerge } from 'tailwind-merge';
 import { CloseIcon } from '@/components/ui/icons';
+import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 
 type ModalContext = Pick<ModalProps, 'onClose'>;
 
@@ -41,16 +42,14 @@ export function Modal(props: ModalProps): JSX.Element | null {
       return;
     }
 
-    const handleKeydown = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeydown);
-
-    return (): void => {
-      window.removeEventListener('keydown', handleKeydown);
-    };
+    return addEventListenerWithCleaup(
+      'keydown',
+      (event: KeyboardEvent): void => {
+        if (event.key === 'Escape') {
+          onClose();
+        }
+      },
+    );
   }, [onClose, isOpen]);
 
   if (!isOpen) {
