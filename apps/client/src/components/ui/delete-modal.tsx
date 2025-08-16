@@ -6,11 +6,18 @@ type DeleteQuoteModalProps = {
   onOk: () => void;
   onClose: () => void;
   isOpen: boolean;
+  isDeleting: boolean;
   message?: string;
 };
 
 export default function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
-  const { onClose, isOpen, onOk, message = 'Are you sure?' } = props;
+  const {
+    onClose,
+    isOpen,
+    isDeleting,
+    onOk,
+    message = 'Are you sure?',
+  } = props;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -22,7 +29,7 @@ export default function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
         <Button className="px-2" onClick={onClose}>
           No
         </Button>
-        <Button className="px-2" onClick={onOk}>
+        <Button className="px-2" onClick={onOk} disabled={isDeleting}>
           Yep
         </Button>
       </Modal.Footer>

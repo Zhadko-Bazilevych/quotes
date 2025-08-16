@@ -1,11 +1,13 @@
+import type { JSX } from 'react';
 import DeleteModal from '@/components/ui/delete-modal';
 import { Button } from '@/components/ui/button';
 import { TrashcanIcon } from '@/components/ui/icons';
-import { useState, type JSX } from 'react';
-import { useQuoteListContext } from '@/components/quote/quote-list-context';
 
 type DeleteButtonProps = {
+  isModalOpen: boolean;
   onOk: () => void;
+  onModalOpen: () => void;
+  onModalClose: () => void;
   message?: string;
 };
 
@@ -13,32 +15,16 @@ type DeleteButtonProps = {
 // and show spinner while the the delete operation is pending
 // and show a toast on success and on error
 export function DeleteButton(props: DeleteButtonProps): JSX.Element {
-  const { onOk: onOkFromProps, message } = props;
-
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { setIsQuoteListVisible } = useQuoteListContext();
-
-  const openModal = (): void => {
-    setIsQuoteListVisible(false);
-    setIsModalOpen(true);
-  };
-  const closeModal = (): void => {
-    setIsModalOpen(false);
-    setIsQuoteListVisible(true);
-  };
-  const onOk = (): void => {
-    onOkFromProps();
-    closeModal();
-  };
+  const { onOk, onModalClose, onModalOpen, isModalOpen, message } = props;
 
   return (
     <>
-      <Button onClick={openModal}>
+      <Button onClick={onModalOpen}>
         <TrashcanIcon className="size-6 text-red-500" />
       </Button>
 
       <DeleteModal
-        onClose={closeModal}
+        onClose={onModalClose}
         onOk={onOk}
         isOpen={isModalOpen}
         message={message}
