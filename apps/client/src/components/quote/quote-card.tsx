@@ -1,5 +1,5 @@
 import { useState, type JSX } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import type { Quote } from '@/types';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { DeleteButton } from '@/components/ui/delete-button';

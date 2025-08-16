@@ -1,10 +1,10 @@
-import { Button } from '../../ui/button';
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
 import type { Quote, UpdateQuoteData } from '@/types';
 import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
 import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
 import { Form } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
 
 type UpdateQuoteFormProps = {
   quote: Quote;
