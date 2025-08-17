@@ -23,7 +23,7 @@ export function useDeleteQuoteMutation(
     ...mutations.quotes.delete,
     onSuccess: (deletedQuote, variables, context) => {
       void queryClient.invalidateQueries({
-        queryKey: queries.quotes.getList().queryKey,
+        queryKey: queries.quotes.getList._def,
       });
       onSuccess?.(deletedQuote, variables, context);
     },
