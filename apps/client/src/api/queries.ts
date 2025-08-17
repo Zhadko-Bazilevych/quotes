@@ -11,25 +11,41 @@ type QueryDetails<
   queryKey: TQueryKey;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type WithDefaultKey<TFn extends (...params: any) => any> = {
+  (...params: Parameters<TFn>): ReturnType<TFn>;
+  _def: unknown[];
+};
+
+type QuotesGetListFn = (query?: GetQuotesQuery) => QueryDetails<QuoteList>;
+type QuotesGetOneByIdFn = (id: number) => QueryDetails<Quote>;
+
 type Queries = {
   quotes: {
-    getList: (query?: GetQuotesQuery) => QueryDetails<QuoteList>;
-    getOneById: (id: number) => QueryDetails<Quote>;
+    _def: ['quotes'];
+    getList: WithDefaultKey<QuotesGetListFn>;
+    getOneById: WithDefaultKey<QuotesGetOneByIdFn>;
   };
 };
 
-// TODO: fix queries not invalidating properly
 export function createQueries(api: Api): Queries {
+  const getList: WithDefaultKey<QuotesGetListFn> = (query) => ({
+    queryFn: () => api.quotes.getList(query),
+    queryKey: ['quotes', 'getList', query],
+  });
+  getList._def = ['quotes', 'getList'];
+
+  const getOneById: WithDefaultKey<QuotesGetOneByIdFn> = (id) => ({
+    queryFn: () => api.quotes.getOneById(id),
+    queryKey: ['quotes', 'getOneById', id],
+  });
+  getOneById._def = ['quotes', 'getList'];
+
   return {
     quotes: {
-      getList: (query) => ({
-        queryFn: () => api.quotes.getList(query),
-        queryKey: ['quotes', 'getList', query],
-      }),
-      getOneById: (id) => ({
-        queryFn: () => api.quotes.getOneById(id),
-        queryKey: ['quotes', 'getOneById', id],
-      }),
+      _def: ['quotes'],
+      getList,
+      getOneById,
     },
   };
 }

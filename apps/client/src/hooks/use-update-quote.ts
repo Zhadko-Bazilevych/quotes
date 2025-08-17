@@ -23,7 +23,7 @@ export function useUpdateQuoteMutation(
     ...mutations.quotes.update,
     onSuccess: (updatedQuote, variables, context) => {
       void queryClient.invalidateQueries({
-        queryKey: queries.quotes.getList().queryKey,
+        queryKey: queries.quotes.getList._def,
       });
       onSuccess?.(updatedQuote, variables, context);
     },
