@@ -1,8 +1,7 @@
-import { INT_MAX } from 'src/utils/constants';
 import z from 'zod';
 
 export const paginationSchema = z.object({
-  page: z.coerce.number().int().min(1).max(INT_MAX).default(1),
+  page: z.coerce.number().int().min(1).pipe(z.int32()).default(1),
   size: z.coerce.number().int().min(1).max(100).default(30),
 });
 
