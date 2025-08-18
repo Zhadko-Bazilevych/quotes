@@ -1,5 +1,6 @@
 import { type QuoteNotFoundError } from 'src/quotes/quotes.errors';
 import { type UnexpectedError } from 'src/utils/errors/app-errors';
+import { type ListResponse } from 'src/utils/types';
 
 export type Quote = {
   id: number;
@@ -11,10 +12,7 @@ export type Quote = {
   updatedAt: Date;
 };
 
-export type QuoteListResponse = {
-  data: Quote[];
-  total: number;
-};
+export type QuoteListResponse = ListResponse<Quote>;
 
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
 export type GetQuoteListError = UnexpectedError;
