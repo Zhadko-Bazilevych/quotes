@@ -20,19 +20,24 @@ export function QuotePaginationBar(
 ): JSX.Element {
   const { page, total, size } = props;
   const totalPages = Math.ceil(total / size);
-  console.log(totalPages);
+
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious />
+          {page !== 1 && (
+            <PaginationPrevious
+              to={quoteListRoute.to}
+              search={{ page: page - 1, size }}
+            />
+          )}
         </PaginationItem>
         {Array.from({ length: totalPages }).map((_, idx) => {
           return (
             <PaginationItem key={idx}>
               <PaginationLink
                 to={quoteListRoute.to}
-                search={{ page, size }}
+                search={{ page: idx + 1, size }}
                 isActive={page === idx + 1}
               >
                 {idx + 1}
@@ -41,7 +46,12 @@ export function QuotePaginationBar(
           );
         })}
         <PaginationItem>
-          <PaginationNext />
+          {page !== totalPages && (
+            <PaginationNext
+              to={quoteListRoute.to}
+              search={{ page: page + 1, size }}
+            />
+          )}
         </PaginationItem>
       </PaginationContent>
     </Pagination>
