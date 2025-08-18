@@ -8,7 +8,7 @@ import {
 import { cn } from '@/lib/utils';
 import { type Button, buttonVariants } from '@/components/ui/button';
 import type { JSX } from 'react';
-import { Link } from '@tanstack/react-router';
+import { createLink, type LinkComponent } from '@tanstack/react-router';
 
 function Pagination({
   className,
@@ -42,21 +42,19 @@ function PaginationItem({ ...props }: React.ComponentProps<'li'>): JSX.Element {
   return <li data-slot="pagination-item" {...props} />;
 }
 
-type LinkProps = LinkPropsOpti;
-
 type PaginationLinkProps = {
   isActive?: boolean;
 } & Pick<React.ComponentProps<typeof Button>, 'size'> &
-  LinkProps;
+  React.ComponentProps<'a'>;
 
-function PaginationLink({
+function BasePaginationLink({
   className,
   isActive,
   size = 'icon',
   ...props
 }: PaginationLinkProps): JSX.Element {
   return (
-    <Link
+    <a
       aria-current={isActive ? 'page' : undefined}
       data-slot="pagination-link"
       data-active={isActive}
@@ -71,6 +69,12 @@ function PaginationLink({
     />
   );
 }
+
+const CreatedLinkComponent = createLink(BasePaginationLink);
+
+const PaginationLink: LinkComponent<typeof BasePaginationLink> = (props) => {
+  return <CreatedLinkComponent preload={'intent'} {...props} />;
+};
 
 function PaginationPrevious({
   className,
