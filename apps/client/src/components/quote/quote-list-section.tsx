@@ -17,7 +17,7 @@ export function QuoteListSection(): JSX.Element {
   const { size, page } = useSearch({
     from: quoteListRoute.fullPath,
   });
-  const { data, isLoading, isError } = useQuotes({
+  const { data, isFetching, isError } = useQuotes({
     size,
     page,
   });
@@ -53,7 +53,7 @@ export function QuoteListSection(): JSX.Element {
 
   return (
     <section className="flex flex-col gap-3">
-      {isLoading && <QuoteListSkeleton pageSize={size} />}
+      {isFetching && <QuoteListSkeleton pageSize={size} />}
       {data?.data.map((quote) => {
         if (editingIds.includes(quote.id)) {
           return (
