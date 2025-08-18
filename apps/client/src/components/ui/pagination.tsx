@@ -8,7 +8,7 @@ import {
 import { cn } from '@/lib/utils';
 import { type Button, buttonVariants } from '@/components/ui/button';
 import type { JSX } from 'react';
-import { createLink, type LinkComponent } from '@tanstack/react-router';
+import { createLink } from '@tanstack/react-router';
 
 function Pagination({
   className,
@@ -47,68 +47,68 @@ type PaginationLinkProps = {
 } & Pick<React.ComponentProps<typeof Button>, 'size'> &
   React.ComponentProps<'a'>;
 
-function BasePaginationLink({
-  className,
-  isActive,
-  size = 'icon',
-  ...props
-}: PaginationLinkProps): JSX.Element {
-  return (
-    <a
-      aria-current={isActive ? 'page' : undefined}
-      data-slot="pagination-link"
-      data-active={isActive}
-      className={cn(
-        buttonVariants({
-          variant: isActive ? 'outline' : 'ghost',
-          size,
-        }),
-        className,
-      )}
-      {...props}
-    />
-  );
-}
+const PaginationLink = createLink(
+  ({
+    className,
+    isActive,
+    size = 'icon',
+    ...props
+  }: PaginationLinkProps): JSX.Element => {
+    return (
+      <a
+        aria-current={isActive ? 'page' : undefined}
+        data-slot="pagination-link"
+        data-active={isActive}
+        className={cn(
+          buttonVariants({
+            variant: isActive ? 'outline' : 'ghost',
+            size,
+          }),
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
 
-const CreatedLinkComponent = createLink(BasePaginationLink);
+const PaginationPrevious = createLink(
+  ({
+    className,
+    ...props
+  }: React.ComponentProps<typeof PaginationLink>): JSX.Element => {
+    return (
+      <PaginationLink
+        aria-label="Go to previous page"
+        size="default"
+        className={cn('gap-1 px-2.5 sm:pl-2.5', className)}
+        {...props}
+      >
+        <ChevronLeftIcon />
+        <span className="hidden sm:block">Previous</span>
+      </PaginationLink>
+    );
+  },
+);
 
-const PaginationLink: LinkComponent<typeof BasePaginationLink> = (props) => {
-  return <CreatedLinkComponent preload={'intent'} {...props} />;
-};
-
-function PaginationPrevious({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>): JSX.Element {
-  return (
-    <PaginationLink
-      aria-label="Go to previous page"
-      size="default"
-      className={cn('gap-1 px-2.5 sm:pl-2.5', className)}
-      {...props}
-    >
-      <ChevronLeftIcon />
-      <span className="hidden sm:block">Previous</span>
-    </PaginationLink>
-  );
-}
-
-function PaginationNext({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>): JSX.Element {
-  return (
-    <PaginationLink
-      aria-label="Go to next page"
-      size="default"
-      className={cn('gap-1 px-2.5 sm:pr-2.5', className)}
-      {...props}
-    >
-      <span className="hidden sm:block">Next</span>
-      <ChevronRightIcon />
-    </PaginationLink>
-  );
-}
+const PaginationNext = createLink(
+  ({
+    className,
+    ...props
+  }: React.ComponentProps<typeof PaginationLink>): JSX.Element => {
+    return (
+      <PaginationLink
+        aria-label="Go to next page"
+        size="default"
+        className={cn('gap-1 px-2.5 sm:pr-2.5', className)}
+        {...props}
+      >
+        <span className="hidden sm:block">Next</span>
+        <ChevronRightIcon />
+      </PaginationLink>
+    );
+  },
+);
 
 function PaginationEllipsis({
   className,

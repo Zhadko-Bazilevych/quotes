@@ -17,7 +17,7 @@ export function QuoteListSection(): JSX.Element {
   const { size, page } = useSearch({
     from: quoteListRoute.fullPath,
   });
-  const { data, isFetching, isError } = useQuotes({
+  const { data, isFetching, isError, isSuccess } = useQuotes({
     size,
     page,
   });
@@ -54,26 +54,27 @@ export function QuoteListSection(): JSX.Element {
   return (
     <section className="flex flex-col gap-3">
       {isFetching && <QuoteListSkeleton pageSize={size} />}
-      {data?.data.map((quote) => {
-        if (editingIds.includes(quote.id)) {
+      {isSuccess &&
+        data.data.map((quote) => {
+          if (editingIds.includes(quote.id)) {
+            return (
+              <UpdateQuoteForm
+                key={quote.id}
+                quote={quote}
+                onCancel={toggleEdit}
+              />
+            );
+          }
+
           return (
-            <UpdateQuoteForm
+            <QuoteCard
               key={quote.id}
               quote={quote}
-              onCancel={toggleEdit}
+              onEdit={toggleEdit}
+              setIsQuoteListVisible={setIsQuoteListVisible}
             />
           );
-        }
-
-        return (
-          <QuoteCard
-            key={quote.id}
-            quote={quote}
-            onEdit={toggleEdit}
-            setIsQuoteListVisible={setIsQuoteListVisible}
-          />
-        );
-      })}
+        })}
       {data && (
         <QuotePaginationBar page={page} total={data.total} size={size} />
       )}
