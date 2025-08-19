@@ -5,9 +5,6 @@ type InputProps = InputHTMLAttributes<HTMLInputElement>;
 
 export function Input({ className, ...rest }: InputProps): JSX.Element {
   return (
-    <input
-      className={twMerge('border rounded border-gray-300 p-1', className)}
-      {...rest}
-    />
+    <input className={twMerge('border rounded p-1', className)} {...rest} />
   );
 }

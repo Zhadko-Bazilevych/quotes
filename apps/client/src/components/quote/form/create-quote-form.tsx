@@ -26,7 +26,7 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
 
   return (
     <Form<CreateQuoteData>
-      className="flex flex-col border rounded border-gray-300 p-2"
+      className="flex flex-col border rounded p-2"
       onSubmit={onSubmit}
       methods={methods}
     >

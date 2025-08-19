@@ -34,7 +34,7 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
 
   return (
     <Form<UpdateQuoteData>
-      className="flex flex-col border rounded border-gray-300 p-2"
+      className="flex flex-col border rounded p-2"
       onSubmit={onSubmit}
       methods={methods}
     >
