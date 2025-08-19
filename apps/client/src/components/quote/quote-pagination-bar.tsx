@@ -7,7 +7,14 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { quoteListRoute } from '@/routes/route-tree';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { quoteListRoute, router } from '@/routes/route-tree';
 import type { JSX } from 'react';
 
 type QuotePaginationBarProps = {
@@ -15,6 +22,8 @@ type QuotePaginationBarProps = {
   total: number;
   size: number;
 };
+
+const defaultSizeVariants = [5, 10, 20, 30, 50];
 
 export function QuotePaginationBar(
   props: QuotePaginationBarProps,
@@ -26,10 +35,12 @@ export function QuotePaginationBar(
   const rightLimit = Math.min(totalPages, page + 2);
   const length = rightLimit - leftLimit + 1;
 
+  const isSizeDefault = defaultSizeVariants.includes(size);
+
   return (
-    <Pagination>
+    <Pagination className="gap-1">
       <PaginationContent>
-        {page !== 1 && (
+        {page > 1 && (
           <PaginationItem>
             <PaginationPrevious
               to={quoteListRoute.to}
@@ -79,7 +90,7 @@ export function QuotePaginationBar(
             </PaginationLink>
           </PaginationItem>
         )}
-        {page !== totalPages && (
+        {page < totalPages && (
           <PaginationItem>
             <PaginationNext
               to={quoteListRoute.to}
@@ -88,6 +99,30 @@ export function QuotePaginationBar(
           </PaginationItem>
         )}
       </PaginationContent>
+      <Select
+        onValueChange={(value) => {
+          const size = Number(value);
+          void router.navigate({
+            to: quoteListRoute.to,
+            search: {
+              page: 1,
+              size,
+            },
+          });
+        }}
+        defaultValue={isSizeDefault ? String(size) : undefined}
+      >
+        <SelectTrigger className="w-30">
+          <SelectValue placeholder={`${size}/page`} />
+        </SelectTrigger>
+        <SelectContent>
+          {defaultSizeVariants.map((variant, idx) => (
+            <SelectItem key={idx} value={String(variant)}>
+              {`${variant}/page`}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </Pagination>
   );
 }
