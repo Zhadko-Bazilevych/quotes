@@ -14,7 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { quoteListRoute, router } from '@/routes/route-tree';
+import { quoteListRoute } from '@/routes/route-tree';
+import { useNavigate } from '@tanstack/react-router';
 import type { JSX } from 'react';
 
 type QuotePaginationBarProps = {
@@ -28,6 +29,8 @@ const defaultSizeVariants = [5, 10, 20, 30, 50];
 export function QuotePaginationBar(
   props: QuotePaginationBarProps,
 ): JSX.Element {
+  const navigate = useNavigate();
+
   const { page, total, size } = props;
   const totalPages = Math.ceil(total / size);
 
@@ -102,7 +105,7 @@ export function QuotePaginationBar(
       <Select
         onValueChange={(value) => {
           const size = Number(value);
-          void router.navigate({
+          void navigate({
             to: quoteListRoute.to,
             search: {
               page: 1,
@@ -113,12 +116,12 @@ export function QuotePaginationBar(
         defaultValue={isSizeDefault ? String(size) : undefined}
       >
         <SelectTrigger className="w-30">
-          <SelectValue placeholder={`${size}/page`} />
+          <SelectValue placeholder={`${size} / page`} />
         </SelectTrigger>
         <SelectContent>
           {defaultSizeVariants.map((variant, idx) => (
             <SelectItem key={idx} value={String(variant)}>
-              {`${variant}/page`}
+              {`${variant} / page`}
             </SelectItem>
           ))}
         </SelectContent>

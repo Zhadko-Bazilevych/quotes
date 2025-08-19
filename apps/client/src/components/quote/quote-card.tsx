@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import type { Quote } from '@/types';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { DeleteButton } from '@/components/ui/delete-button';
-import { EditIcon } from '@/components/ui/icons';
 import { formatDatetime } from '@/utils/formatters';
 import { useDisclosure } from '@/hooks/use-disclosure';
+import { PencilIcon } from 'lucide-react';
 
 export type QuoteCardProps = {
   quote: Quote;
@@ -55,12 +55,16 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
       </div>
       <p className="wrap-break-word">{quote.content}</p>
       <div className="flex justify-between">
-        <Button className="self-start" onClick={toggleDetails}>
+        <Button
+          className="self-start"
+          onClick={toggleDetails}
+          variant="outline"
+        >
           Details
         </Button>
         <div className="flex gap-1 items-start">
-          <Button onClick={toggleEdit}>
-            <EditIcon className="size-6" />
+          <Button onClick={toggleEdit} variant="outline" size="icon">
+            <PencilIcon />
           </Button>
           <DeleteButton
             isModalOpen={isOpen}

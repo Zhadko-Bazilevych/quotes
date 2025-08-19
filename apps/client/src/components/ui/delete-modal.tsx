@@ -32,7 +32,7 @@ export default function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
         <p>This action is final and cannot be undone</p>
       </Modal.Body>
       <Modal.Footer className="flex justify-end gap-2">
-        <Button className="px-2" onClick={onClose}>
+        <Button className="px-2" onClick={onClose} variant="outline">
           No
         </Button>
         <Button className="px-2" onClick={onOk} disabled={isDeleting}>

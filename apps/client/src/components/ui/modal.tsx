@@ -63,7 +63,7 @@ export function Modal(props: ModalProps): JSX.Element | null {
         onClick={onClose}
       >
         <div
-          className="rounded border border-gray-300 mx-2"
+          className="rounded border border-gray-300 mx-2 bg-background"
           onClick={(e) => e.stopPropagation()}
         >
           <ModalContext.Provider value={contextValue}>
