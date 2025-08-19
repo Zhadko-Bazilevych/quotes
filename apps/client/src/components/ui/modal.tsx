@@ -63,7 +63,7 @@ export function Modal(props: ModalProps): JSX.Element | null {
         onClick={onClose}
       >
         <div
-          className="rounded border border-gray-300 mx-2 bg-background"
+          className="rounded border mx-2 bg-background"
           onClick={(e) => e.stopPropagation()}
         >
           <ModalContext.Provider value={contextValue}>
@@ -87,7 +87,7 @@ function ModalHeader({
   const { onClose } = useModalContext();
 
   return (
-    <div className="flex justify-between gap-2 border-b border-gray-300 p-2">
+    <div className="flex justify-between gap-2 border-b p-2">
       <h3 className="text-lg font-semibold">{title}</h3>
       {showCloseButton && (
         <Button
@@ -125,10 +125,7 @@ function ModalFooter({
   ...rest
 }: ModalFooterProps): JSX.Element {
   return (
-    <div
-      className={twMerge('border-t border-gray-300 p-2', className)}
-      {...rest}
-    >
+    <div className={twMerge('border-t p-2', className)} {...rest}>
       {children}
     </div>
   );
