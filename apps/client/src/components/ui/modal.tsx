@@ -10,8 +10,8 @@ import {
 } from 'react';
 import { Button } from '@/components/ui/button';
 import { twMerge } from 'tailwind-merge';
-import { CloseIcon } from '@/components/ui/icons';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
+import { XIcon } from 'lucide-react';
 
 type ModalContext = Pick<ModalProps, 'onClose'>;
 
@@ -90,8 +90,13 @@ function ModalHeader({
     <div className="flex justify-between gap-2 border-b border-gray-300 p-2">
       <h3 className="text-lg font-semibold">{title}</h3>
       {showCloseButton && (
-        <Button className="self-start" onClick={onClose}>
-          <CloseIcon className="size-6" />
+        <Button
+          className="self-start"
+          onClick={onClose}
+          variant="outline"
+          size="icon"
+        >
+          <XIcon />
         </Button>
       )}
     </div>

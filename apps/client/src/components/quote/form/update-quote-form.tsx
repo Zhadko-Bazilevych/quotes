@@ -40,7 +40,11 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
     >
       <QuoteFormBody />
       <div className="flex gap-3 justify-end">
-        <Button type="button" onClick={() => onCancel(quote.id)}>
+        <Button
+          type="button"
+          onClick={() => onCancel(quote.id)}
+          variant="outline"
+        >
           Cancel
         </Button>
         <Button type="submit">Submit</Button>

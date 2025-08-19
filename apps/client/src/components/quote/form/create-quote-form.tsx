@@ -32,7 +32,7 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
     >
       <QuoteFormBody />
       <div className="flex gap-3 justify-end">
-        <Button type="button" onClick={toggleEdit}>
+        <Button type="button" onClick={toggleEdit} variant="outline">
           Nevermind
         </Button>
         <Button type="submit">Create</Button>

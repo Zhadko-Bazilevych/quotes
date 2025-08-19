@@ -1,7 +1,7 @@
 import type { JSX } from 'react';
 import DeleteModal from '@/components/ui/delete-modal';
 import { Button } from '@/components/ui/button';
-import { TrashcanIcon } from '@/components/ui/icons';
+import { Trash2Icon } from 'lucide-react';
 
 type DeleteButtonProps = {
   isModalOpen: boolean;
@@ -21,8 +21,8 @@ export function DeleteButton(props: DeleteButtonProps): JSX.Element {
 
   return (
     <>
-      <Button onClick={onModalOpen}>
-        <TrashcanIcon className="size-6 text-red-500" />
+      <Button onClick={onModalOpen} variant="outline" size="icon">
+        <Trash2Icon className="text-red-500" />
       </Button>
 
       <DeleteModal
