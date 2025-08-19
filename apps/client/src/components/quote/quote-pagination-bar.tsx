@@ -1,6 +1,7 @@
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -21,38 +22,71 @@ export function QuotePaginationBar(
   const { page, total, size } = props;
   const totalPages = Math.ceil(total / size);
 
+  const leftLimit = Math.max(1, page - 2);
+  const rightLimit = Math.min(totalPages, page + 2);
+  const length = rightLimit - leftLimit + 1;
+
   return (
     <Pagination>
       <PaginationContent>
-        <PaginationItem>
-          {page !== 1 && (
+        {page !== 1 && (
+          <PaginationItem>
             <PaginationPrevious
               to={quoteListRoute.to}
               search={{ page: page - 1, size }}
             />
-          )}
-        </PaginationItem>
-        {Array.from({ length: totalPages }).map((_, idx) => {
+          </PaginationItem>
+        )}
+        {page > 3 && (
+          <PaginationItem>
+            <PaginationLink to={quoteListRoute.to} search={{ page: 1, size }}>
+              1
+            </PaginationLink>
+          </PaginationItem>
+        )}
+        {page > 4 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
+        {Array.from({ length }).map((_, arrayIdx) => {
+          const pageNumber = arrayIdx + leftLimit;
+
           return (
-            <PaginationItem key={idx}>
+            <PaginationItem key={arrayIdx}>
               <PaginationLink
                 to={quoteListRoute.to}
-                search={{ page: idx + 1, size }}
-                isActive={page === idx + 1}
+                search={{ page: pageNumber, size }}
+                isActive={pageNumber === page}
               >
-                {idx + 1}
+                {pageNumber}
               </PaginationLink>
             </PaginationItem>
           );
         })}
-        <PaginationItem>
-          {page !== totalPages && (
+        {page < totalPages - 3 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
+        {page < totalPages - 2 && (
+          <PaginationItem>
+            <PaginationLink
+              to={quoteListRoute.to}
+              search={{ page: totalPages, size }}
+            >
+              {totalPages}
+            </PaginationLink>
+          </PaginationItem>
+        )}
+        {page !== totalPages && (
+          <PaginationItem>
             <PaginationNext
               to={quoteListRoute.to}
               search={{ page: page + 1, size }}
             />
-          )}
-        </PaginationItem>
+          </PaginationItem>
+        )}
       </PaginationContent>
     </Pagination>
   );
