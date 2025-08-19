@@ -9,9 +9,9 @@ import {
   type ReactNode,
 } from 'react';
 import { Button } from '@/components/ui/button';
-import { twMerge } from 'tailwind-merge';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { XIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type ModalContext = Pick<ModalProps, 'onClose'>;
 
@@ -111,7 +111,7 @@ function ModalBody({
   ...rest
 }: ModalBodyProps): JSX.Element {
   return (
-    <div className={twMerge('p-2', className)} {...rest}>
+    <div className={cn('p-2', className)} {...rest}>
       {children}
     </div>
   );
@@ -125,7 +125,7 @@ function ModalFooter({
   ...rest
 }: ModalFooterProps): JSX.Element {
   return (
-    <div className={twMerge('border-t p-2', className)} {...rest}>
+    <div className={cn('border-t p-2', className)} {...rest}>
       {children}
     </div>
   );
