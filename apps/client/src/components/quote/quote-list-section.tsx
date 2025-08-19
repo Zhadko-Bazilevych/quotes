@@ -9,6 +9,7 @@ import { useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { QuotePaginationBar } from '@/components/quote/quote-pagination-bar';
+import { keepPreviousData } from '@tanstack/react-query';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
@@ -17,10 +18,15 @@ export function QuoteListSection(): JSX.Element {
   const { size, page } = useSearch({
     from: quoteListRoute.fullPath,
   });
-  const { data, isError, isSuccess, isLoading } = useQuotes({
-    size,
-    page,
-  });
+  const { data, isError, isSuccess, isLoading } = useQuotes(
+    {
+      size,
+      page,
+    },
+    {
+      placeholderData: keepPreviousData,
+    },
+  );
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
 
