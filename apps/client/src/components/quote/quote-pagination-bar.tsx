@@ -31,6 +31,7 @@ type PaginationConfig = {
   renderFirstEllipsis: boolean;
   pages: number[];
   renderLastEllipsis: boolean;
+  renderLast: boolean;
   renderNext: boolean;
 };
 
@@ -51,43 +52,36 @@ function getPaginationConfig({
   page,
   totalPages,
 }: PaginationConfigInput): PaginationConfig {
-  let pages = [];
+  const current = Math.min(Math.max(1, page), totalPages);
+  const intervalRadius = Math.floor(MAX_PAGES_TO_RENDER / 2);
 
-  // TODO: change to left right and generate array at the end of the function
-  if (page < MAX_PAGES_TO_RENDER) {
-    pages = range(1, Math.min(totalPages, MAX_PAGES_TO_RENDER) + 1);
-  } else if (page > totalPages - MAX_PAGES_TO_RENDER) {
-    pages = range(
-      Math.max(1, totalPages - MAX_PAGES_TO_RENDER),
-      totalPages + 1,
-    );
-  } else {
-    pages = range(
-      Math.max(1, page - Math.floor(MAX_PAGES_TO_RENDER / 2)),
-      Math.min(totalPages, page + Math.floor(MAX_PAGES_TO_RENDER / 2)) + 1,
-    );
+  let start = current - intervalRadius;
+  let end = current + intervalRadius;
+
+  if (start < 1) {
+    end += 1 - start;
+    start = 1;
   }
-
-  const firstPage = pages[0];
-  const lastPage = pages[pages.length - 1];
-  const renderFirstEllipsis = firstPage > 2;
-  const renderLastEllipsis = lastPage < totalPages - 2;
-
-  if (firstPage === 1) {
-    pages.shift();
+  if (end >= totalPages) {
+    start -= end - totalPages;
+    end = totalPages - 1;
   }
-  if (lastPage === totalPages) {
-    pages.pop();
-  }
+  start = Math.max(2, start);
 
-  const renderPrev = page > 1;
-  const renderNext = page < totalPages;
+  const renderPrev = current > 1;
+  const renderNext = current < totalPages;
+  const renderFirstEllipsis = start > 2;
+  const renderLastEllipsis = end < totalPages - 1;
+  const renderLast = totalPages !== 1;
+
+  const pages = range(start, end + 1);
 
   return {
     renderPrev,
     renderFirstEllipsis,
     pages,
     renderLastEllipsis,
+    renderLast,
     renderNext,
   };
 }
@@ -105,6 +99,7 @@ export function QuotePaginationBar(
     renderFirstEllipsis,
     pages,
     renderLastEllipsis,
+    renderLast,
     renderNext,
   } = getPaginationConfig({ page, totalPages });
 
@@ -151,7 +146,7 @@ export function QuotePaginationBar(
             <PaginationEllipsis />
           </PaginationItem>
         )}
-        {totalPages && totalPages !== 1 && (
+        {renderLast && (
           <PaginationItem>
             <PaginationLink
               to={quoteListRoute.to}
