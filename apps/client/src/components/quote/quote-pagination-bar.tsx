@@ -14,8 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import { quoteListRoute } from '@/routes/route-tree';
 import { useNavigate } from '@tanstack/react-router';
+import { ChevronsLeftIcon } from 'lucide-react';
 import type { JSX } from 'react';
 
 type QuotePaginationBarProps = {
@@ -127,7 +129,10 @@ export function QuotePaginationBar(
               search={{ page: 1, size }}
               isActive={page === 1}
             >
-              1
+              <span className={cn(page !== 1 && 'max-sm:hidden')}>1</span>
+              <ChevronsLeftIcon
+                className={cn(page === 1 && 'sm:max-lg:hidden')}
+              />
             </PaginationLink>
           </PaginationItem>
           {renderFirstEllipsis && (
