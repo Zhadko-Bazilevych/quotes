@@ -177,7 +177,7 @@ export function QuotePaginationBar(
 
         <div className="flex justify-center">
           <PaginationPrevious
-            className="block sm:hidden"
+            className="sm:hidden"
             to={quoteListRoute.to}
             search={{ page: 1, size }}
           />
@@ -207,7 +207,7 @@ export function QuotePaginationBar(
           </Select>
           {renderNext && (
             <PaginationNext
-              className="block sm:hidden"
+              className="sm:hidden"
               to={quoteListRoute.to}
               search={{ page: page + 1, size }}
             />
