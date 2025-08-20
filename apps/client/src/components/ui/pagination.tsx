@@ -85,7 +85,7 @@ const PaginationPrevious = createLink(
         {...props}
       >
         <ChevronLeftIcon />
-        <span className="hidden md:block">Previous</span>
+        <span className="hidden xl:block">Previous</span>
       </PaginationLink>
     );
   },
@@ -103,7 +103,7 @@ const PaginationNext = createLink(
         className={cn('gap-1 px-2.5 sm:pr-2.5', className)}
         {...props}
       >
-        <span className="hidden md:block">Next</span>
+        <span className="hidden xl:block">Next</span>
         <ChevronRightIcon />
       </PaginationLink>
     );
