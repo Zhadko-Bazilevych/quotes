@@ -94,6 +94,9 @@ export function QuotePaginationBar(
   const { page, total, size } = props;
   const totalPages = Math.ceil(total / size);
 
+  // const firstQuoteIdx = (page - 1) * size + 1;
+  // const lastQuoteIdx = Math.min(page * size, total);
+
   const {
     renderPrev,
     renderFirstEllipsis,
@@ -106,90 +109,133 @@ export function QuotePaginationBar(
   const isSizeDefault = DEFAULT_SIZE_VARIANTS.includes(size);
 
   return (
-    <Pagination className="justify-end gap-1">
-      <PaginationContent>
-        {renderPrev && (
+    <Pagination>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <PaginationContent className="flex flex-wrap">
+          {renderPrev && (
+            <PaginationItem className="hidden sm:block">
+              <PaginationPrevious
+                to={quoteListRoute.to}
+                search={{ page: page - 1, size }}
+              />
+            </PaginationItem>
+          )}
+
           <PaginationItem>
-            <PaginationPrevious
+            <PaginationLink
               to={quoteListRoute.to}
-              search={{ page: page - 1, size }}
-            />
+              search={{ page: 1, size }}
+              isActive={page === 1}
+            >
+              1
+            </PaginationLink>
           </PaginationItem>
-        )}
-        <PaginationItem>
-          <PaginationLink
+          {renderFirstEllipsis && (
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          )}
+
+          {pages.map((currentPage) => (
+            <PaginationItem key={currentPage}>
+              <PaginationLink
+                to={quoteListRoute.to}
+                search={{ page: currentPage, size }}
+                isActive={currentPage === page}
+              >
+                {currentPage}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          {renderLastEllipsis && (
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          )}
+          {renderLast && (
+            <PaginationItem>
+              <PaginationLink
+                to={quoteListRoute.to}
+                search={{ page: totalPages, size }}
+                isActive={page === totalPages}
+              >
+                {totalPages}
+              </PaginationLink>
+            </PaginationItem>
+          )}
+
+          {renderNext && (
+            <PaginationItem className="hidden sm:block">
+              <PaginationNext
+                to={quoteListRoute.to}
+                search={{ page: page + 1, size }}
+              />
+            </PaginationItem>
+          )}
+        </PaginationContent>
+
+        <div className="flex justify-center">
+          <PaginationPrevious
+            className="block sm:hidden"
             to={quoteListRoute.to}
             search={{ page: 1, size }}
-            isActive={page === 1}
+          />
+          <Select
+            onValueChange={(value) => {
+              const size = Number(value);
+              void navigate({
+                to: quoteListRoute.to,
+                search: {
+                  page: 1,
+                  size,
+                },
+              });
+            }}
+            defaultValue={isSizeDefault ? String(size) : undefined}
           >
-            1
-          </PaginationLink>
-        </PaginationItem>
-        {renderFirstEllipsis && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-        )}
-        {pages.map((currentPage) => (
-          <PaginationItem key={currentPage}>
-            <PaginationLink
-              to={quoteListRoute.to}
-              search={{ page: currentPage, size }}
-              isActive={currentPage === page}
-            >
-              {currentPage}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
-        {renderLastEllipsis && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-        )}
-        {renderLast && (
-          <PaginationItem>
-            <PaginationLink
-              to={quoteListRoute.to}
-              search={{ page: totalPages, size }}
-              isActive={page === totalPages}
-            >
-              {totalPages}
-            </PaginationLink>
-          </PaginationItem>
-        )}
-        {renderNext && (
-          <PaginationItem>
+            <SelectTrigger className="w-30">
+              <SelectValue placeholder={`${size} / page`} />
+            </SelectTrigger>
+            <SelectContent>
+              {DEFAULT_SIZE_VARIANTS.map((variant, idx) => (
+                <SelectItem key={idx} value={String(variant)}>
+                  {`${variant} / page`}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {renderNext && (
             <PaginationNext
+              className="block sm:hidden"
               to={quoteListRoute.to}
               search={{ page: page + 1, size }}
             />
-          </PaginationItem>
-        )}
-      </PaginationContent>
-      <Select
-        onValueChange={(value) => {
-          const size = Number(value);
-          void navigate({
-            to: quoteListRoute.to,
-            search: {
-              page: 1,
-              size,
-            },
-          });
-        }}
-        defaultValue={isSizeDefault ? String(size) : undefined}
-      >
-        <SelectTrigger className="w-30">
-          <SelectValue placeholder={`${size} / page`} />
-        </SelectTrigger>
-        <SelectContent>
-          {DEFAULT_SIZE_VARIANTS.map((variant, idx) => (
-            <SelectItem key={idx} value={String(variant)}>
-              {`${variant} / page`}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+          )}
+        </div>
+      </div>
     </Pagination>
   );
+}
+
+{
+  /* <span className="inline sm:hidden">
+          {`${firstQuoteIdx}-${lastQuoteIdx} of ${total}`}
+          <span className="hidden xs2:inline">{' items'}</span>
+        </span>
+        <div className="sm:hidden mx-auto">
+          <span>
+            Go to
+            <Input
+              className="inline w-15 text-center mx-2"
+              inputMode="numeric"
+              enterKeyHint="go"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  console.log('Handle action');
+                }
+              }}
+            ></Input>
+          </span>
+        </div> */
 }
