@@ -7,7 +7,6 @@ import {
   Post,
   Put,
   Query,
-  UsePipes,
 } from '@nestjs/common';
 import { QuotesService } from 'src/quotes/quotes.service';
 import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
@@ -32,8 +31,9 @@ export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
 
   @Get(':id')
-  @UsePipes(new ZodValidationPipe(idSchema))
-  getQuoteById(@Param() { id }: IdDto): Promise<Quote> {
+  getQuoteById(
+    @Param(new ZodValidationPipe(idSchema)) { id }: IdDto,
+  ): Promise<Quote> {
     return this.quotesService
       .getOneById(id)
       .mapErr((error) =>
@@ -50,9 +50,9 @@ export class QuotesController {
   }
 
   @Get()
-  @UsePipes(new ZodValidationPipe(paginationSchema))
   getList(
-    @Query() paginationOptions: PaginationOptions,
+    @Query(new ZodValidationPipe(paginationSchema))
+    paginationOptions: PaginationOptions,
   ): Promise<QuoteListResponse> {
     return this.quotesService.getList(paginationOptions).match(
       (quote) => quote,
@@ -64,8 +64,9 @@ export class QuotesController {
   }
 
   @Post()
-  @UsePipes(new ZodValidationPipe(createQuoteSchema))
-  create(@Body() body: CreateQuoteDto): Promise<Quote> {
+  create(
+    @Body(new ZodValidationPipe(createQuoteSchema)) body: CreateQuoteDto,
+  ): Promise<Quote> {
     return this.quotesService.create(body).match(
       (quote) => quote,
       (err) =>
@@ -91,8 +92,9 @@ export class QuotesController {
   }
 
   @Delete(':id')
-  @UsePipes(new ZodValidationPipe(idSchema))
-  delete(@Param() { id }: IdDto): Promise<Quote> {
+  delete(
+    @Param(new ZodValidationPipe(idSchema)) { id }: IdDto,
+  ): Promise<Quote> {
     return this.quotesService.delete(id).match(
       (quote) => quote,
       (err) =>
