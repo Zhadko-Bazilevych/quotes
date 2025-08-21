@@ -22,12 +22,6 @@ import type { JSX } from 'react';
 import { PAGINATION } from '@/utils/constants';
 import { range } from '@/utils/range';
 
-type QuotePaginationBarProps = {
-  page: number;
-  size: number;
-  totalPages: number;
-};
-
 type PaginationConfig = {
   renderPrev: boolean;
   renderFirstEllipsis: boolean;
@@ -87,10 +81,16 @@ function getPaginationConfig({
   };
 }
 
+export type QuotePaginationBarProps = {
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
 export function QuotePaginationBar(
   props: QuotePaginationBarProps,
 ): JSX.Element {
-  const { page, size, totalPages } = props;
+  const { page, pageSize, totalPages } = props;
 
   const navigate = useNavigate();
 
@@ -104,7 +104,7 @@ export function QuotePaginationBar(
     renderLeftChevronsOnMobile,
     renderRightChevronsOnMobile,
   } = getPaginationConfig({ page, totalPages });
-  const isSizeDefault = PAGINATION.PAGE_SIZES.includes(size);
+  const isSizeDefault = PAGINATION.PAGE_SIZES.includes(pageSize);
 
   return (
     <Pagination className="max-sm:flex-col gap-2">
@@ -113,7 +113,7 @@ export function QuotePaginationBar(
           <PaginationItem className="max-sm:hidden">
             <PaginationPrevious
               to={quoteListRoute.to}
-              search={{ page: page - 1, size }}
+              search={{ page: page - 1, pageSize }}
             />
           </PaginationItem>
         )}
@@ -121,7 +121,7 @@ export function QuotePaginationBar(
         <PaginationItem>
           <PaginationLink
             to={quoteListRoute.to}
-            search={{ page: 1, size }}
+            search={{ page: 1, pageSize }}
             isActive={page === 1}
           >
             <span className={cn(renderLeftChevronsOnMobile && 'max-sm:hidden')}>
@@ -145,7 +145,7 @@ export function QuotePaginationBar(
           <PaginationItem key={currentPage}>
             <PaginationLink
               to={quoteListRoute.to}
-              search={{ page: currentPage, size }}
+              search={{ page: currentPage, pageSize }}
               isActive={currentPage === page}
             >
               {currentPage}
@@ -162,7 +162,7 @@ export function QuotePaginationBar(
           <PaginationItem>
             <PaginationLink
               to={quoteListRoute.to}
-              search={{ page: totalPages, size }}
+              search={{ page: totalPages, pageSize }}
               isActive={page === totalPages}
             >
               <span
@@ -184,7 +184,7 @@ export function QuotePaginationBar(
           <PaginationItem className="max-sm:hidden">
             <PaginationNext
               to={quoteListRoute.to}
-              search={{ page: page + 1, size }}
+              search={{ page: page + 1, pageSize }}
             />
           </PaginationItem>
         )}
@@ -195,7 +195,7 @@ export function QuotePaginationBar(
           <PaginationPrevious
             className="sm:hidden"
             to={quoteListRoute.to}
-            search={{ page: page - 1, size }}
+            search={{ page: page - 1, pageSize }}
           />
         )}
         <Select
@@ -204,14 +204,14 @@ export function QuotePaginationBar(
               to: quoteListRoute.to,
               search: {
                 page: 1,
-                size: Number(value),
+                pageSize: Number(value),
               },
             });
           }}
-          defaultValue={isSizeDefault ? String(size) : undefined}
+          defaultValue={isSizeDefault ? String(pageSize) : undefined}
         >
           <SelectTrigger>
-            <SelectValue placeholder={`${size} / page`} />
+            <SelectValue placeholder={`${pageSize} / page`} />
           </SelectTrigger>
           <SelectContent>
             {PAGINATION.PAGE_SIZES.map((variant, idx) => (
@@ -225,7 +225,7 @@ export function QuotePaginationBar(
           <PaginationNext
             className="sm:hidden"
             to={quoteListRoute.to}
-            search={{ page: page + 1, size }}
+            search={{ page: page + 1, pageSize }}
           />
         )}
       </div>
