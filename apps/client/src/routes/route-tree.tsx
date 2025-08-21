@@ -1,6 +1,6 @@
 import { App } from '@/app';
 import { QuoteList } from '@/pages/quote-list';
-import { quoteListSearchSchema } from '@/pages/quote-list-schema';
+import { quoteListQuerySchema } from '@/pages/quote-list-schema';
 import {
   createRootRoute,
   createRoute,
@@ -15,7 +15,7 @@ export const quoteListRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: QuoteList,
-  validateSearch: quoteListSearchSchema,
+  validateSearch: quoteListQuerySchema,
 });
 
 export const routeTree = rootRoute.addChildren([quoteListRoute]);

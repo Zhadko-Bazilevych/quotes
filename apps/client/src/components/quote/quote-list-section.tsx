@@ -16,12 +16,12 @@ const QuoteCard = React.memo(BaseQuoteCard);
 const QuotePaginationBar = React.memo(BaseQuotePaginationBar);
 
 export function QuoteListSection(): JSX.Element {
-  const { size, page } = useSearch({
+  const { pageSize, page } = useSearch({
     from: quoteListRoute.fullPath,
   });
-  const { data, isError, isSuccess, isLoading } = useQuotes(
+  const { data, isError, isLoading } = useQuotes(
     {
-      size,
+      pageSize,
       page,
     },
     {
@@ -60,8 +60,8 @@ export function QuoteListSection(): JSX.Element {
 
   return (
     <section className="flex flex-col gap-3">
-      {isLoading && <QuoteListSkeleton pageSize={size} />}
-      {isSuccess &&
+      {isLoading && <QuoteListSkeleton pageSize={pageSize} />}
+      {data &&
         data.data.map((quote) => {
           if (editingIds.includes(quote.id)) {
             return (
@@ -85,7 +85,7 @@ export function QuoteListSection(): JSX.Element {
       {data && (
         <QuotePaginationBar
           page={page}
-          size={size}
+          pageSize={pageSize}
           totalPages={data.totalPages}
         />
       )}

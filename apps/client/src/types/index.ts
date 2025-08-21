@@ -18,20 +18,18 @@ export type QuoteDto = {
   updatedAt: string;
 };
 
-export type QuoteListDto = {
-  data: QuoteDto[];
+export type ListResponse<T> = {
+  data: T[];
   total: number;
   page: number;
+  pageSize: number;
   totalPages: number;
 };
 
-export type QuoteList = {
-  data: Quote[];
-  total: number;
-  page: number;
-  totalPages: number;
-};
+export type QuoteListDto = ListResponse<QuoteDto>;
 
-export type GetQuotesQuery = { page?: number; size?: number };
+export type QuoteList = ListResponse<Quote>;
+
+export type GetQuotesQuery = { page?: number; pageSize?: number };
 export type CreateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
