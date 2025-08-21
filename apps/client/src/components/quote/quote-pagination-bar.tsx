@@ -38,8 +38,8 @@ type PaginationConfig = {
   renderLastEllipsis: boolean;
   renderLast: boolean;
   renderNext: boolean;
-  applyLeftChevrons: boolean;
-  applyRightChevrons: boolean;
+  renderLeftChevronsOnMobile: boolean;
+  renderRightChevronsOnMobile: boolean;
 };
 
 type PaginationConfigInput = {
@@ -73,8 +73,8 @@ function getPaginationConfig({
   const renderLastEllipsis = end < totalPages - 1;
   const renderLast = totalPages > 1;
 
-  const applyLeftChevrons = current <= intervalRadius + 1;
-  const applyRightChevrons = current >= totalPages - intervalRadius;
+  const renderLeftChevronsOnMobile = current > intervalRadius + 1;
+  const renderRightChevronsOnMobile = current < totalPages - intervalRadius;
 
   const pages = range(start, end + 1);
 
@@ -85,8 +85,8 @@ function getPaginationConfig({
     renderLastEllipsis,
     renderLast,
     renderNext,
-    applyLeftChevrons,
-    applyRightChevrons,
+    renderLeftChevronsOnMobile,
+    renderRightChevronsOnMobile,
   };
 }
 
@@ -105,8 +105,8 @@ export function QuotePaginationBar(
     renderLastEllipsis,
     renderLast,
     renderNext,
-    applyLeftChevrons,
-    applyRightChevrons,
+    renderLeftChevronsOnMobile,
+    renderRightChevronsOnMobile,
   } = getPaginationConfig({ page, totalPages });
   const isSizeDefault = PAGINATION_SIZE_VARIANTS.includes(size);
 
@@ -128,9 +128,14 @@ export function QuotePaginationBar(
             search={{ page: 1, size }}
             isActive={page === 1}
           >
-            <span className={cn(!applyLeftChevrons && 'max-sm:hidden')}>1</span>
+            <span className={cn(renderLeftChevronsOnMobile && 'max-sm:hidden')}>
+              1
+            </span>
             <ChevronsLeftIcon
-              className={cn(applyLeftChevrons && 'hidden', 'sm:hidden')}
+              className={cn(
+                !renderLeftChevronsOnMobile && 'hidden',
+                'sm:hidden',
+              )}
             />
           </PaginationLink>
         </PaginationItem>
@@ -164,11 +169,16 @@ export function QuotePaginationBar(
               search={{ page: totalPages, size }}
               isActive={page === totalPages}
             >
-              <span className={cn(!applyRightChevrons && 'max-sm:hidden')}>
+              <span
+                className={cn(renderRightChevronsOnMobile && 'max-sm:hidden')}
+              >
                 {totalPages}
               </span>
               <ChevronsRightIcon
-                className={cn(applyRightChevrons && 'hidden', 'sm:hidden')}
+                className={cn(
+                  !renderRightChevronsOnMobile && 'hidden',
+                  'sm:hidden',
+                )}
               />
             </PaginationLink>
           </PaginationItem>
