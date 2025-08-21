@@ -57,15 +57,15 @@ function getPaginationConfig({
   let start = current - intervalRadius;
   let end = current + intervalRadius;
 
-  if (start < 1) {
+  if (start < 2) {
     end += 1 - start;
-    start = 1;
+    start = 2;
   }
   if (end >= totalPages) {
     start -= end - totalPages;
     end = totalPages - 1;
+    start = Math.max(2, start);
   }
-  start = Math.max(2, start);
 
   const renderPrev = current > 1;
   const renderNext = current < totalPages;
