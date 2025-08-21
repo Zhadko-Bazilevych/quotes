@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool, types } from 'pg';
 import {
   CamelCasePlugin,
   ColumnType,
@@ -30,6 +30,8 @@ interface QuoteTable {
 export type Quote = Selectable<QuoteTable>;
 export type NewQuote = Insertable<QuoteTable>;
 export type UpdateQuote = Updateable<QuoteTable>;
+
+types.setTypeParser(types.builtins.INT8, Number);
 
 @Injectable()
 export class KyselyService extends Kysely<Database> implements OnModuleDestroy {

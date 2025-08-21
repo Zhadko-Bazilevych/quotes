@@ -62,7 +62,12 @@ export class QuotesService {
         };
       }),
       () => new UnexpectedError(),
-    );
+    ).map(({ data, total }) => ({
+      data,
+      total,
+      page,
+      pageSize: size,
+    }));
   }
 
   create(quote: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
