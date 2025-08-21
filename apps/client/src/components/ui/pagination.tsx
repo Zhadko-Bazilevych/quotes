@@ -64,6 +64,7 @@ const PaginationLink = createLink(
             variant: isActive ? 'outline' : 'ghost',
             size,
           }),
+          'transition-none',
           className,
         )}
         {...props}
