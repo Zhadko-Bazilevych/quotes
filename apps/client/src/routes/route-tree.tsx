@@ -21,6 +21,7 @@ export const quoteListRoute = createRoute({
 export const routeTree = rootRoute.addChildren([quoteListRoute]);
 
 export const router = createRouter({
+  scrollRestoration: true,
   routeTree,
 });
 
