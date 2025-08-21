@@ -5,4 +5,5 @@ export type ListResponse<T> = {
   total: number;
   page: number;
   pageSize: number;
+  totalPages: number;
 };
