@@ -19,10 +19,7 @@ import { quoteListRoute } from '@/routes/route-tree';
 import { useNavigate } from '@tanstack/react-router';
 import { ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react';
 import type { JSX } from 'react';
-import {
-  PAGINATION_BAR_INTERVAL_SIZE,
-  PAGINATION_SIZE_VARIANTS,
-} from '@/utils/constrants';
+import { PAGINATION } from '@/utils/constants';
 import { range } from '@/utils/range';
 
 type QuotePaginationBarProps = {
@@ -52,7 +49,7 @@ function getPaginationConfig({
   totalPages,
 }: PaginationConfigInput): PaginationConfig {
   const current = Math.min(Math.max(1, page), totalPages);
-  const intervalRadius = Math.floor(PAGINATION_BAR_INTERVAL_SIZE / 2);
+  const intervalRadius = Math.floor(PAGINATION.MAX_DISPLAYED_PAGES / 2);
 
   let start = current - intervalRadius;
   let end = current + intervalRadius;
@@ -108,7 +105,7 @@ export function QuotePaginationBar(
     renderLeftChevronsOnMobile,
     renderRightChevronsOnMobile,
   } = getPaginationConfig({ page, totalPages });
-  const isSizeDefault = PAGINATION_SIZE_VARIANTS.includes(size);
+  const isSizeDefault = PAGINATION.PAGE_SIZES.includes(size);
 
   return (
     <Pagination className="max-sm:flex-col gap-2">
@@ -218,7 +215,7 @@ export function QuotePaginationBar(
             <SelectValue placeholder={`${size} / page`} />
           </SelectTrigger>
           <SelectContent>
-            {PAGINATION_SIZE_VARIANTS.map((variant, idx) => (
+            {PAGINATION.PAGE_SIZES.map((variant, idx) => (
               <SelectItem key={idx} value={String(variant)}>
                 {`${variant} / page`}
               </SelectItem>
