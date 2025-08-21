@@ -23,6 +23,7 @@ import {
   PAGINATION_BAR_INTERVAL_SIZE,
   PAGINATION_SIZE_VARIANTS,
 } from '@/utils/constrants';
+import { range } from '@/utils/range';
 
 type QuotePaginationBarProps = {
   page: number;
@@ -45,12 +46,6 @@ type PaginationConfigInput = {
   page: number;
   totalPages: number;
 };
-
-function range(start: number, stop?: number): number[] {
-  stop ??= start * 2;
-  const add = stop ? start : 0;
-  return Array.from({ length: stop - start }).map((_, i) => i + add);
-}
 
 function getPaginationConfig({
   page,
