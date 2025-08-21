@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/ui/skeleton/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { JSX } from 'react';
 
 export function QuoteCardSkeleton(): JSX.Element {
