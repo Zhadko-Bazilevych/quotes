@@ -15,6 +15,7 @@ import { UnexpectedError } from 'src/utils/errors/app-errors';
 import { UpdateQuoteDto } from 'src/quotes/dto/update-quote.dto';
 import { QuoteNotFoundError } from 'src/quotes/quotes.errors';
 import { PaginationOptions } from 'src/utils/dto/pagination.dto';
+import { getOffset, getTotalPages } from 'src/utils/query';
 
 @Injectable()
 export class QuotesService {
@@ -39,16 +40,18 @@ export class QuotesService {
 
   getList({
     page,
-    size,
+    pageSize,
   }: PaginationOptions): ResultAsync<QuoteListResponse, GetQuoteListError> {
     return ResultAsync.fromPromise(
       this.db.transaction().execute(async (trx) => {
+        const offset = getOffset(page, pageSize);
+
         const data = await trx
           .selectFrom('quote')
           .selectAll()
           .orderBy('id', 'desc')
-          .offset((page - 1) * size)
-          .limit(size)
+          .offset(offset)
+          .limit(pageSize)
           .execute();
 
         const { total } = await trx
@@ -56,18 +59,18 @@ export class QuotesService {
           .select((eb) => eb.fn.countAll<number>().as('total'))
           .executeTakeFirstOrThrow();
 
+        const totalPages = getTotalPages(total, pageSize);
+
         return {
           data,
           total,
+          page,
+          pageSize,
+          totalPages,
         };
       }),
       () => new UnexpectedError(),
-    ).map(({ data, total }) => ({
-      data,
-      total,
-      page,
-      pageSize: size,
-    }));
+    );
   }
 
   create(quote: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
