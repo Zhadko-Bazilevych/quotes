@@ -21,11 +21,15 @@ export type QuoteDto = {
 export type QuoteListDto = {
   data: QuoteDto[];
   total: number;
+  page: number;
+  totalPages: number;
 };
 
 export type QuoteList = {
   data: Quote[];
   total: number;
+  page: number;
+  totalPages: number;
 };
 
 export type GetQuotesQuery = { page?: number; size?: number };

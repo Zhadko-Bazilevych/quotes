@@ -24,8 +24,8 @@ import { range } from '@/utils/range';
 
 type QuotePaginationBarProps = {
   page: number;
-  total: number;
   size: number;
+  totalPages: number;
 };
 
 type PaginationConfig = {
@@ -90,10 +90,9 @@ function getPaginationConfig({
 export function QuotePaginationBar(
   props: QuotePaginationBarProps,
 ): JSX.Element {
-  const navigate = useNavigate();
+  const { page, size, totalPages } = props;
 
-  const { page, total, size } = props;
-  const totalPages = Math.ceil(total / size);
+  const navigate = useNavigate();
 
   const {
     renderPrev,
