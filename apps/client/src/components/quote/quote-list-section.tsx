@@ -28,7 +28,7 @@ export function QuoteListSection(): JSX.Element {
       placeholderData: keepPreviousData,
     },
   );
-  console.log(data);
+
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
 
   const [editingIds, setEditingIds] = useState<number[]>([]);
