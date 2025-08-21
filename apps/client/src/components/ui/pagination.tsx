@@ -76,17 +76,23 @@ const PaginationLink = createLink(
 const PaginationPrevious = createLink(
   ({
     className,
+    disabled,
     ...props
   }: React.ComponentProps<typeof PaginationLink>): JSX.Element => {
     return (
       <PaginationLink
         aria-label="Go to previous page"
         size="default"
-        className={cn('gap-1 px-2.5 sm:pl-2.5', className)}
+        className={cn(
+          'gap-1 px-2.5!',
+          disabled && 'text-muted-foreground',
+          className,
+        )}
+        disabled={disabled}
         {...props}
       >
         <ChevronLeftIcon />
-        <span className="sm:max-xl:hidden">Previous</span>
+        <span className="sm:max-xl:hidden">Prev</span>
       </PaginationLink>
     );
   },
@@ -95,13 +101,19 @@ const PaginationPrevious = createLink(
 const PaginationNext = createLink(
   ({
     className,
+    disabled,
     ...props
   }: React.ComponentProps<typeof PaginationLink>): JSX.Element => {
     return (
       <PaginationLink
         aria-label="Go to next page"
         size="default"
-        className={cn('gap-1 px-2.5 sm:pr-2.5', className)}
+        className={cn(
+          'gap-1 px-2.5!',
+          disabled && 'text-muted-foreground',
+          className,
+        )}
+        disabled={disabled}
         {...props}
       >
         <span className="sm:max-xl:hidden">Next</span>

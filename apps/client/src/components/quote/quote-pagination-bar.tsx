@@ -198,13 +198,12 @@ export function QuotePaginationBar(
       </PaginationContent>
 
       <div className="flex justify-center gap-2">
-        {renderPrev && (
-          <PaginationPrevious
-            className="sm:hidden"
-            to={quoteListRoute.to}
-            search={{ page: page - 1, pageSize }}
-          />
-        )}
+        <PaginationPrevious
+          className="sm:hidden"
+          disabled={!renderPrev}
+          to={quoteListRoute.to}
+          search={{ page: page - 1, pageSize }}
+        />
         <Select
           onValueChange={(value) => {
             void navigate({
@@ -228,13 +227,12 @@ export function QuotePaginationBar(
             ))}
           </SelectContent>
         </Select>
-        {renderNext && (
-          <PaginationNext
-            className="sm:hidden"
-            to={quoteListRoute.to}
-            search={{ page: page + 1, pageSize }}
-          />
-        )}
+        <PaginationNext
+          className="sm:hidden"
+          disabled={!renderNext}
+          to={quoteListRoute.to}
+          search={{ page: page + 1, pageSize }}
+        />
       </div>
     </Pagination>
   );
