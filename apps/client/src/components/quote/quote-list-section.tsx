@@ -28,7 +28,7 @@ export function QuoteListSection(): JSX.Element {
       placeholderData: keepPreviousData,
     },
   );
-
+  console.log(data);
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
 
   const [editingIds, setEditingIds] = useState<number[]>([]);
@@ -83,7 +83,11 @@ export function QuoteListSection(): JSX.Element {
           );
         })}
       {data && (
-        <QuotePaginationBar page={page} total={data.total} size={size} />
+        <QuotePaginationBar
+          page={page}
+          size={size}
+          totalPages={data.totalPages}
+        />
       )}
     </section>
   );

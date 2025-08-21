@@ -14,11 +14,16 @@ import { QuoteMapper } from '@/mappers/quote';
 export class QuoteApi extends BaseApi {
   async getList(query?: GetQuotesQuery): Promise<QuoteList> {
     const url = this.buildUrl('quotes');
-    const response = await Client.get<QuoteListDto>(url, { query });
+    const { data, total, page, totalPages } = await Client.get<QuoteListDto>(
+      url,
+      { query },
+    );
 
     return {
-      data: response.data.map((quote) => QuoteMapper.toDomain(quote)),
-      total: response.total,
+      data: data.map((quote) => QuoteMapper.toDomain(quote)),
+      total,
+      page,
+      totalPages,
     };
   }
 
