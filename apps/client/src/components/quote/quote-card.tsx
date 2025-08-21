@@ -46,7 +46,7 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
   const toggleEdit = (): void => onEdit(quote.id);
 
   return (
-    <div className="flex flex-col gap-3 border rounded p-2">
+    <div className="flex flex-col gap-3 border rounded p-2 bg-card">
       <div className="flex justify-between">
         <span className="truncate">{quote.author}</span>
         <span className="hidden sm:block">
