@@ -1,5 +1,6 @@
 import { QuoteCard as BaseQuoteCard } from '@/components/quote/quote-card';
 import { UpdateQuoteForm as BaseUpdateQuoteForm } from '@/components/quote/form/update-quote-form';
+import { QuotePaginationBar as BaseQuotePaginationBar } from '@/components/quote/quote-pagination-bar';
 import { useCallback, useEffect, useState, type JSX } from 'react';
 import { useQuotes } from '@/hooks/use-quotes';
 import React from 'react';
@@ -8,11 +9,11 @@ import { UnexpectedError } from '@/components/ui/unexpected-error';
 import { useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
-import { QuotePaginationBar } from '@/components/quote/quote-pagination-bar';
 import { keepPreviousData } from '@tanstack/react-query';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
+const QuotePaginationBar = React.memo(BaseQuotePaginationBar);
 
 export function QuoteListSection(): JSX.Element {
   const { size, page } = useSearch({
