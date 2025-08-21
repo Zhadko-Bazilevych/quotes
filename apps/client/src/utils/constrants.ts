@@ -1,1 +1,3 @@
-export const DEFAULT_PAGE_SIZE = 30;
+export const PAGINATION_PAGE_SIZE = 30;
+export const PAGINATION_SIZE_VARIANTS = [10, 20, 30, 50];
+export const PAGINATION_BAR_INTERVAL_SIZE = 5;
