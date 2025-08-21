@@ -59,6 +59,7 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
           className="self-start"
           onClick={toggleDetails}
           variant="outline"
+          size="sm"
         >
           Details
         </Button>
