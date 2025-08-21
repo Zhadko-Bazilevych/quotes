@@ -12,7 +12,7 @@ export function AddQuoteSection(): JSX.Element {
     <>
       {isCreatingQuote && <CreateQuoteForm onCancel={toggleCreate} />}
       {!isCreatingQuote && (
-        <Button className="py-2" onClick={toggleCreate} variant="secondary">
+        <Button className="py-2" onClick={toggleCreate} variant="outline">
           Create new quote?
         </Button>
       )}

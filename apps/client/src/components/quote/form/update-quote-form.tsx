@@ -34,7 +34,7 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
 
   return (
     <Form<UpdateQuoteData>
-      className="flex flex-col border rounded p-2"
+      className="flex flex-col border rounded p-2 bg-card"
       onSubmit={onSubmit}
       methods={methods}
     >
@@ -43,11 +43,11 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
         <Button
           type="button"
           onClick={() => onCancel(quote.id)}
-          variant="outline"
+          variant="destructive"
         >
           Cancel
         </Button>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Update</Button>
       </div>
     </Form>
   );
