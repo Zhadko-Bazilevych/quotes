@@ -84,6 +84,7 @@ export function QuoteListSection(): JSX.Element {
         })}
       {data && (
         <QuotePaginationBar
+          total={data.total}
           page={page}
           pageSize={pageSize}
           totalPages={data.totalPages}

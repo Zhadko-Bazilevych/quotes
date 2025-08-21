@@ -84,13 +84,14 @@ function getPaginationConfig({
 export type QuotePaginationBarProps = {
   page: number;
   pageSize: number;
+  total: number;
   totalPages: number;
 };
 
 export function QuotePaginationBar(
   props: QuotePaginationBarProps,
 ): JSX.Element {
-  const { page, pageSize, totalPages } = props;
+  const { page, pageSize, totalPages, total } = props;
 
   const navigate = useNavigate();
 
@@ -106,8 +107,14 @@ export function QuotePaginationBar(
   } = getPaginationConfig({ page, totalPages });
   const isSizeDefault = PAGINATION.PAGE_SIZES.includes(pageSize);
 
+  const firstItemIndex = (page - 1) * pageSize + 1;
+  const lastItemIndex = Math.min(page * pageSize, total);
+
   return (
-    <Pagination className="max-sm:flex-col gap-2">
+    <Pagination className="max-sm:flex-col gap-2 items-center">
+      <span className="text-sm text-nowrap">
+        {firstItemIndex} - {lastItemIndex} of {total}
+      </span>
       <PaginationContent className="justify-center">
         {renderPrev && (
           <PaginationItem className="max-sm:hidden">
