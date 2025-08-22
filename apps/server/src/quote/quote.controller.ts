@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { QuotesService } from 'src/quote/quote.service';
 import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
-import { IdDto, idSchema } from 'src/utils/dto/id.dto';
 import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
 import { matchError } from 'src/utils/errors/match-error';
 import {
@@ -24,7 +23,9 @@ import {
   PaginationOptions,
   paginationSchema,
 } from 'src/utils/dto/pagination.dto';
-import { Quote, QuoteListResponse } from 'src/quote/quote.types';
+import { QuoteListResponse } from 'src/quote/quote.types';
+import { QuoteIdDto, quoteIdSchema } from './dto/quote-id.dto';
+import { Quote } from './domain/quote';
 
 @Controller('quotes')
 export class QuotesController {
@@ -32,7 +33,7 @@ export class QuotesController {
 
   @Get(':id')
   getQuoteById(
-    @Param(new ZodValidationPipe(idSchema)) { id }: IdDto,
+    @Param(new ZodValidationPipe(quoteIdSchema)) { id }: QuoteIdDto,
   ): Promise<Quote> {
     return this.quotesService
       .getOneById(id)
@@ -78,7 +79,7 @@ export class QuotesController {
 
   @Put(':id')
   update(
-    @Param(new ZodValidationPipe(idSchema)) { id }: IdDto,
+    @Param(new ZodValidationPipe(quoteIdSchema)) { id }: QuoteIdDto,
     @Body(new ZodValidationPipe(updateQuoteSchema)) body: UpdateQuoteDto,
   ): Promise<Quote> {
     return this.quotesService.update(id, body).match(
@@ -93,7 +94,7 @@ export class QuotesController {
 
   @Delete(':id')
   delete(
-    @Param(new ZodValidationPipe(idSchema)) { id }: IdDto,
+    @Param(new ZodValidationPipe(quoteIdSchema)) { id }: QuoteIdDto,
   ): Promise<Quote> {
     return this.quotesService.delete(id).match(
       (quote) => quote,
