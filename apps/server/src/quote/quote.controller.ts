@@ -8,7 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { QuotesService } from 'src/quotes/quotes.service';
+import { QuotesService } from 'src/quote/quote.service';
 import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
 import { IdDto, idSchema } from 'src/utils/dto/id.dto';
 import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
@@ -16,15 +16,15 @@ import { matchError } from 'src/utils/errors/match-error';
 import {
   UpdateQuoteDto,
   updateQuoteSchema,
-} from 'src/quotes/dto/update-quote.dto';
+} from 'src/quote/dto/update-quote.dto';
 import { UnexpectedException } from 'src/utils/exceptions';
-import { QuoteNotFoundException } from './quotes.errors';
+import { QuoteNotFoundException } from './quote.errors';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
 import {
   PaginationOptions,
   paginationSchema,
 } from 'src/utils/dto/pagination.dto';
-import { Quote, QuoteListResponse } from 'src/quotes/quotes.types';
+import { Quote, QuoteListResponse } from 'src/quote/quote.types';
 
 @Controller('quotes')
 export class QuotesController {
