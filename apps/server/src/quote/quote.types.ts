@@ -1,4 +1,4 @@
-import type { Quote } from 'src/database/kysely.service';
+import type { Quote } from './domain/quote';
 import { type QuoteNotFoundError } from 'src/quote/quote.errors';
 import { type UnexpectedError } from 'src/utils/errors/app-errors';
 import { type ListResponse } from 'src/utils/types';
