@@ -5,23 +5,24 @@ import {
   DeleteQuoteError,
   GetQuoteError,
   GetQuoteListError,
-  Quote,
+  QuoteId,
   QuoteListResponse,
   UpdateQuoteError,
-} from 'src/quotes/quotes.types';
+} from 'src/quote/quote.types';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
-import { UpdateQuoteDto } from 'src/quotes/dto/update-quote.dto';
-import { QuoteNotFoundError } from 'src/quotes/quotes.errors';
+import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
+import { QuoteNotFoundError } from 'src/quote/quote.errors';
 import { PaginationOptions } from 'src/utils/dto/pagination.dto';
 import { getOffset, getTotalPages } from 'src/utils/query';
+import { Quote } from './domain/quote';
 
 @Injectable()
 export class QuotesService {
   constructor(private readonly db: KyselyService) {}
 
-  getOneById(id: number): ResultAsync<Quote, GetQuoteError> {
+  getOneById(id: QuoteId): ResultAsync<Quote, GetQuoteError> {
     return ResultAsync.fromPromise(
       this.db
         .selectFrom('quote')
@@ -90,7 +91,7 @@ export class QuotesService {
   }
 
   update(
-    id: number,
+    id: QuoteId,
     quote: UpdateQuoteDto,
   ): ResultAsync<Quote, UpdateQuoteError> {
     return ResultAsync.fromPromise(
@@ -116,7 +117,7 @@ export class QuotesService {
     });
   }
 
-  delete(id: number): ResultAsync<Quote, DeleteQuoteError> {
+  delete(id: QuoteId): ResultAsync<Quote, DeleteQuoteError> {
     return ResultAsync.fromPromise(
       this.db
         .deleteFrom('quote')

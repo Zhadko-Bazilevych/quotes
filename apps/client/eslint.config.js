@@ -62,6 +62,7 @@ export default tseslint.config([
       ],
       'react/react-in-jsx-scope': 'off',
       'no-unreachable': 'error',
+      curly: ['error', 'all'],
     },
     settings: {
       react: {

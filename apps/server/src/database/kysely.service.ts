@@ -12,13 +12,14 @@ import {
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Config } from 'src/config/config.configuration';
+import { QuoteId } from 'src/quote/quote.types';
 
 export interface Database {
   quote: QuoteTable;
 }
 
 interface QuoteTable {
-  id: Generated<number>;
+  id: Generated<QuoteId>;
   user: string;
   author: string;
   content: string;
