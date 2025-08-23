@@ -6,7 +6,7 @@ import type { Brand } from 'src/utils/types';
 
 export type QuoteId = Brand<number, 'QuoteId'>;
 
-export type QuoteListResponse = ListResponse<Quote>;
+export type QuoteList = ListResponse<Quote>;
 
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
 export type GetQuoteListError = UnexpectedError;

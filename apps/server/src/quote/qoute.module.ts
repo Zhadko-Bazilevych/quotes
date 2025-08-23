@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { QuotesController } from 'src/quote/quote.controller';
-import { QuotesService } from 'src/quote/quote.service';
-import { KyselyModule } from 'src/database/kysely.module';
-import { MigratorModule } from 'src/database/migrator/migrator.module';
+import { QuoteController } from 'src/quote/quote.controller';
+import { QuoteService } from 'src/quote/quote.service';
+import { QuotePersistenceModule } from './infrastructure/persistence/quote-persistence.module';
 
 @Module({
-  imports: [KyselyModule, MigratorModule],
-  controllers: [QuotesController],
-  providers: [QuotesService],
+  imports: [QuotePersistenceModule],
+  controllers: [QuoteController],
+  providers: [QuoteService],
 })
-export class QuotesModule {}
+export class QuoteModule {}

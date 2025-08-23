@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { KyselyModule } from 'src/database/kysely.module';
 import { MigratorModule } from 'src/database/migrator/migrator.module';
-import { QuotesModule } from './quote/qoute.module';
+import { QuoteModule } from './quote/qoute.module';
 import { ConfigModule } from '@nestjs/config';
 import { dbConfig } from './config/config.configuration';
 
@@ -15,7 +15,7 @@ import { dbConfig } from './config/config.configuration';
       envFilePath: ['.env'],
       cache: true,
     }),
-    QuotesModule,
+    QuoteModule,
   ],
 })
 export class AppModule {}
