@@ -6,28 +6,23 @@ import { useQuotes } from '@/hooks/use-quotes';
 import React from 'react';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
-import { useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
-import { keepPreviousData } from '@tanstack/react-query';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
 const QuotePaginationBar = React.memo(BaseQuotePaginationBar);
 
 export function QuoteListSection(): JSX.Element {
+  const navigate = useNavigate();
   const { pageSize, page } = useSearch({
     from: quoteListRoute.fullPath,
   });
-  const { data, isError, isLoading } = useQuotes(
-    {
-      pageSize,
-      page,
-    },
-    {
-      placeholderData: keepPreviousData,
-    },
-  );
+  const { data, isError, isLoading } = useQuotes({
+    pageSize,
+    page,
+  });
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
 
@@ -41,6 +36,38 @@ export function QuoteListSection(): JSX.Element {
     },
     [setEditingIds],
   );
+
+  useEffect(() => {
+    if (!isQuoteListVisible || !data) {
+      return;
+    }
+
+    return addEventListenerWithCleaup('keydown', (e) => {
+      const isCtrl = e.ctrlKey || e.metaKey;
+      if (!isCtrl) {
+        return;
+      }
+
+      if (e.key === 'ArrowRight') {
+        void navigate({
+          to: '/',
+          search: {
+            page: Math.min(page + 1, data.totalPages),
+            pageSize: pageSize,
+          },
+        });
+      }
+      if (e.key === 'ArrowLeft') {
+        void navigate({
+          to: '/',
+          search: {
+            page: Math.max(1, page - 1),
+            pageSize: pageSize,
+          },
+        });
+      }
+    });
+  }, [isQuoteListVisible, navigate, page, pageSize, data]);
 
   useEffect(() => {
     if (!isQuoteListVisible) {
