@@ -119,6 +119,7 @@ export function QuotePaginationBar(
         {renderPrev && (
           <PaginationItem className="max-sm:hidden">
             <PaginationPrevious
+              title="Go to previous page (Ctrl + Left Arrow)"
               to={quoteListRoute.to}
               search={{ page: page - 1, pageSize }}
             />
@@ -190,6 +191,7 @@ export function QuotePaginationBar(
         {renderNext && (
           <PaginationItem className="max-sm:hidden">
             <PaginationNext
+              title="Go to next page (Ctrl + Right Arrow)"
               to={quoteListRoute.to}
               search={{ page: page + 1, pageSize }}
             />
@@ -199,6 +201,7 @@ export function QuotePaginationBar(
 
       <div className="flex justify-center gap-2">
         <PaginationPrevious
+          title="Go to previous page (Ctrl + Left Arrow)"
           className="sm:hidden"
           disabled={!renderPrev}
           to={quoteListRoute.to}
@@ -228,6 +231,7 @@ export function QuotePaginationBar(
           </SelectContent>
         </Select>
         <PaginationNext
+          title="Go to next page (Ctrl + Right Arrow)"
           className="sm:hidden"
           disabled={!renderNext}
           to={quoteListRoute.to}
