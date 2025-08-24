@@ -1,10 +1,7 @@
-import path from 'node:path';
-import { promises as fs } from 'fs';
-import { Migrator, FileMigrationProvider } from 'kysely';
+import { Migrator } from 'kysely';
 import { KyselyService } from 'src/database/kysely.service';
 import { Injectable } from '@nestjs/common';
-
-const LATEST_MIGRATION = '001_initial';
+import { CustomMigrationProvider } from './migration.provider';
 
 @Injectable()
 export class MigratorService {
@@ -13,13 +10,9 @@ export class MigratorService {
   async migrate(): Promise<void> {
     const migrator = new Migrator({
       db: this.db,
-      provider: new FileMigrationProvider({
-        fs,
-        path,
-        migrationFolder: path.join(__dirname, 'migrations'),
-      }),
+      provider: new CustomMigrationProvider(),
     });
-    const { error, results } = await migrator.migrateTo(LATEST_MIGRATION);
+    const { error, results } = await migrator.migrateToLatest();
 
     results?.forEach((it) => {
       if (it.status === 'Success') {
