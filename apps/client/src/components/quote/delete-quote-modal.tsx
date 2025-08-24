@@ -14,12 +14,35 @@ import type { JSX } from 'react';
 type DeleteQuoteModalProps = {
   isOpen: boolean;
   onOk: () => void;
-  onOpenChange: (state: boolean) => void;
+  onOpen: () => void;
+  onClose: () => void;
   isDeleting: boolean;
 };
 
+// TODO: and show spinner while the the delete operation is pending
+// and show a toast on success and on error
 export default function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
-  const { isOpen, onOpenChange, isDeleting, onOk: onOkFromProps } = props;
+  const {
+    isOpen,
+    onOpen,
+    onClose: onCloseFromProps,
+    isDeleting,
+    onOk: onOkFromProps,
+  } = props;
+
+  const onClose = (): void => {
+    if (!isDeleting) {
+      onCloseFromProps();
+    }
+  };
+
+  const onOpenChange = (open: boolean): void => {
+    if (open) {
+      onOpen();
+    } else {
+      onClose();
+    }
+  };
 
   const onOk = (): void => {
     if (!isDeleting) {

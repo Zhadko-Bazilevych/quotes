@@ -39,18 +39,8 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
   };
 
   const onModalClose = (): void => {
-    if (!isPending) {
-      onClose();
-      setIsQuoteListVisible(true);
-    }
-  };
-
-  const onModalChange = (state: boolean): void => {
-    if (state) {
-      onModalOpen();
-    } else {
-      onModalClose();
-    }
+    onClose();
+    setIsQuoteListVisible(true);
   };
 
   const toggleEdit = (): void => onEdit(quote.id);
@@ -79,7 +69,8 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
           </Button>
           <DeleteModal
             isOpen={isOpen}
-            onOpenChange={onModalChange}
+            onOpen={onModalOpen}
+            onClose={onModalClose}
             onOk={deleteQuote}
             isDeleting={isPending}
           />
