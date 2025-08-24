@@ -111,7 +111,7 @@ export function QuotePaginationBar(
   const lastItemIndex = Math.min(page * pageSize, total);
 
   return (
-    <Pagination className="max-sm:flex-col gap-2 items-center">
+    <Pagination className="items-center gap-2 max-sm:flex-col">
       <span className="text-sm text-nowrap">
         {firstItemIndex} - {lastItemIndex} of {total}
       </span>

@@ -26,12 +26,12 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
 
   return (
     <Form<CreateQuoteData>
-      className="flex flex-col border rounded p-2 bg-card"
+      className="bg-card flex flex-col rounded border p-2"
       onSubmit={onSubmit}
       methods={methods}
     >
       <QuoteFormBody />
-      <div className="flex gap-3 justify-end">
+      <div className="flex justify-end gap-3">
         <Button type="button" onClick={toggleEdit} variant="destructive">
           Cancel
         </Button>
