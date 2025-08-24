@@ -7,6 +7,7 @@ import {
 import type { Quote } from '@/types';
 import { queries } from '@/api/queries';
 import { mutations, type DeleteQuoteVariables } from '@/api/mutations';
+import { toast } from 'sonner';
 
 type UseDeleteQuoteMutationOptions = Omit<
   UseMutationOptions<Quote, unknown, DeleteQuoteVariables>,
@@ -26,6 +27,9 @@ export function useDeleteQuoteMutation(
         queryKey: queries.quotes.getList._def,
       });
       onSuccess?.(deletedQuote, variables, context);
+      toast.info('Quote was deleted successfully', {
+        closeButton: true,
+      });
     },
     ...restOptions,
   });
