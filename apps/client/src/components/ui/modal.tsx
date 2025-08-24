@@ -59,11 +59,11 @@ export function Modal(props: ModalProps): JSX.Element | null {
   return (
     <Portal>
       <div
-        className="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
         onClick={onClose}
       >
         <div
-          className="rounded border mx-2 bg-background"
+          className="bg-background mx-2 rounded border"
           onClick={(e) => e.stopPropagation()}
         >
           <ModalContext.Provider value={contextValue}>

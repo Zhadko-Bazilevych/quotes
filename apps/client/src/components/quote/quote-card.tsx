@@ -46,7 +46,7 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
   const toggleEdit = (): void => onEdit(quote.id);
 
   return (
-    <div className="flex flex-col gap-3 border rounded p-2 bg-card">
+    <div className="bg-card flex flex-col gap-3 rounded border p-2">
       <div className="flex justify-between">
         <span className="truncate">{quote.author}</span>
         <span className="hidden sm:block">
@@ -63,7 +63,7 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
         >
           Details
         </Button>
-        <div className="flex gap-1 items-start">
+        <div className="flex items-start gap-1">
           <Button onClick={toggleEdit} variant="outline" size="icon">
             <PencilIcon />
           </Button>
@@ -83,7 +83,7 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
             <span>Sender: {quote.user}</span>
           </div>
           <div>
-            <span className="sm:hidden block">
+            <span className="block sm:hidden">
               Created: {formatDatetime(quote.createdAt)}
             </span>
             <span>Updated: {formatDatetime(quote.updatedAt)}</span>

@@ -3,12 +3,12 @@ import type { JSX } from 'react';
 
 export function QuoteCardSkeleton(): JSX.Element {
   return (
-    <div className="flex flex-col gap-3 rounded p-2 bg-card border">
+    <div className="bg-card flex flex-col gap-3 rounded border p-2">
       <div className="flex justify-between">
-        <Skeleton className="w-40 h-6 rounded" />
-        <Skeleton className="w-60 h-6 rounded max-sm:hidden" />
+        <Skeleton className="h-6 w-40 rounded" />
+        <Skeleton className="h-6 w-60 rounded max-sm:hidden" />
       </div>
-      <Skeleton className="w-3/4 h-6 rounded" />
+      <Skeleton className="h-6 w-3/4 rounded" />
       <div className="flex justify-between">
         <Skeleton className="h-8 w-16" />
         <div className="flex gap-1">

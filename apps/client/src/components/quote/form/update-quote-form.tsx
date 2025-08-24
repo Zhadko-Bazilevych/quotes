@@ -34,12 +34,12 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
 
   return (
     <Form<UpdateQuoteData>
-      className="flex flex-col border rounded p-2 bg-card"
+      className="bg-card flex flex-col rounded border p-2"
       onSubmit={onSubmit}
       methods={methods}
     >
       <QuoteFormBody />
-      <div className="flex gap-3 justify-end">
+      <div className="flex justify-end gap-3">
         <Button
           type="button"
           onClick={() => onCancel(quote.id)}
