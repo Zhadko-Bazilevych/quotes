@@ -2,10 +2,10 @@ import React, { useState, type JSX } from 'react';
 import { Button } from '@/components/ui/button';
 import type { Quote } from '@/types';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
-import { DeleteButton } from '@/components/ui/delete-button';
 import { formatDatetime } from '@/utils/formatters';
 import { useDisclosure } from '@/hooks/use-disclosure';
 import { PencilIcon } from 'lucide-react';
+import DeleteModal from '@/components/quote/delete-quote-modal';
 
 export type QuoteCardProps = {
   quote: Quote;
@@ -39,8 +39,18 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
   };
 
   const onModalClose = (): void => {
-    onClose();
-    setIsQuoteListVisible(true);
+    if (!isPending) {
+      onClose();
+      setIsQuoteListVisible(true);
+    }
+  };
+
+  const onModalChange = (state: boolean): void => {
+    if (state) {
+      onModalOpen();
+    } else {
+      onModalClose();
+    }
   };
 
   const toggleEdit = (): void => onEdit(quote.id);
@@ -67,13 +77,11 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
           <Button onClick={toggleEdit} variant="outline" size="icon">
             <PencilIcon />
           </Button>
-          <DeleteButton
-            isModalOpen={isOpen}
-            onModalClose={onModalClose}
-            onModalOpen={onModalOpen}
+          <DeleteModal
+            isOpen={isOpen}
+            onOpenChange={onModalChange}
             onOk={deleteQuote}
             isDeleting={isPending}
-            message="Are you sure you want to delete this quote?"
           />
         </div>
       </div>
