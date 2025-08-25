@@ -27,9 +27,7 @@ export function useDeleteQuoteMutation(
         queryKey: queries.quotes.getList._def,
       });
       onSuccess?.(deletedQuote, variables, context);
-      toast.info('Quote was deleted successfully', {
-        closeButton: true,
-      });
+      toast('Quote was deleted sucscessfully');
     },
     ...restOptions,
   });
