@@ -98,7 +98,10 @@ export class KyselyQuoteRepository implements QuoteRepository {
     options: GetQuoteListOptions,
   ): ResultAsync<QuoteList, GetQuoteListError> {
     const {
-      pagination: { page, pageSize },
+      quoteListQuery: {
+        pagination: { page, pageSize },
+        filter: { search },
+      },
     } = options;
 
     return ResultAsync.fromPromise(

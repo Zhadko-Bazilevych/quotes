@@ -20,9 +20,9 @@ import { UnexpectedException } from 'src/utils/exceptions';
 import { QuoteNotFoundException } from './quote.errors';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
 import {
-  PaginationOptions,
-  paginationSchema,
-} from 'src/utils/dto/pagination.dto';
+  QuoteListQueryDto,
+  quoteListQuerySchema,
+} from 'src/utils/dto/quote-list-query.dto';
 import { QuoteList } from 'src/quote/quote.types';
 import { QuoteIdDto, quoteIdSchema } from './dto/quote-id.dto';
 import { Quote } from './domain/quote';
@@ -52,10 +52,10 @@ export class QuoteController {
 
   @Get()
   getList(
-    @Query(new ZodValidationPipe(paginationSchema))
-    paginationOptions: PaginationOptions,
+    @Query(new ZodValidationPipe(quoteListQuerySchema))
+    searchOptions: QuoteListQueryDto,
   ): Promise<QuoteList> {
-    return this.quotesService.getList(paginationOptions).match(
+    return this.quotesService.getList(searchOptions).match(
       (quote) => quote,
       (err) =>
         matchError(err, {
