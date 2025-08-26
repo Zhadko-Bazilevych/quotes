@@ -9,6 +9,7 @@ import { UnexpectedError } from '@/components/ui/unexpected-error';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
+import { Search } from '@/components/ui/search';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
@@ -19,9 +20,10 @@ export function QuoteListSection(): JSX.Element {
   const { pageSize, page } = useSearch({
     from: quoteListRoute.fullPath,
   });
+  const [search, setSearch] = useState('');
   const { data, isError, isLoading } = useQuotes({
-    pageSize,
-    page,
+    pagination: { pageSize, page },
+    filter: { search },
   });
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
@@ -87,6 +89,11 @@ export function QuoteListSection(): JSX.Element {
 
   return (
     <section className="flex flex-col gap-3">
+      <Search
+        placeholder="Search quotes..."
+        value={search}
+        setValue={setSearch}
+      />
       {isLoading && <QuoteListSkeleton pageSize={pageSize} />}
       {data &&
         data.data.map((quote) => {

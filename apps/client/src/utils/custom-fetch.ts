@@ -1,4 +1,4 @@
-import { getQueryString, type QueryParams } from './get-query-string';
+import { buildQueryString, type QueryParams } from './build-query-string';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -13,7 +13,7 @@ export async function customFetch<T = unknown>(
   params?: RequestParams,
 ): Promise<T> {
   const { query = {}, body } = params ?? {};
-  const queryString = getQueryString(query);
+  const queryString = buildQueryString(query);
 
   if (queryString) {
     url = `${url}?${queryString}`;
