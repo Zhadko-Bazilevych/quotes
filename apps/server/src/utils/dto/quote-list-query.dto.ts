@@ -1,17 +1,15 @@
 import z from 'zod';
 
-const quotePaginationSchema = z
-  .object({
-    page: z.coerce.number().int().min(1).pipe(z.int32()).default(1),
-    pageSize: z.coerce.number().int().min(1).max(100).default(30),
-  })
-  .default({ page: 1, pageSize: 30 });
+const quotePaginationSchema = z.object({
+  page: z.coerce.number().int().min(1).pipe(z.int32()).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(30),
+});
 
 const quoteFilterSchema = z
   .object({
-    search: z.string().max(100).default(''),
+    q: z.string().max(100).optional(),
   })
-  .default({ search: '' });
+  .optional();
 
 export type QuotePaginationDto = z.infer<typeof quotePaginationSchema>;
 export type QuoteFilterDto = z.infer<typeof quoteFilterSchema>;

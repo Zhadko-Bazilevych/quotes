@@ -23,7 +23,7 @@ export function QuoteListSection(): JSX.Element {
   const [search, setSearch] = useState('');
   const { data, isError, isLoading } = useQuotes({
     pagination: { pageSize, page },
-    filter: { search },
+    filter: { q: search },
   });
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);

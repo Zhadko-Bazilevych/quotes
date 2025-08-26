@@ -32,7 +32,7 @@ export type QuoteList = ListResponse<Quote>;
 
 export type GetQuotesQuery = {
   pagination: { page?: number; pageSize?: number };
-  filter?: { search?: string };
+  filter?: { q?: string };
 };
 export type CreateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;

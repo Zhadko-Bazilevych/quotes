@@ -99,23 +99,24 @@ export class KyselyQuoteRepository implements QuoteRepository {
   ): ResultAsync<QuoteList, GetQuoteListError> {
     const {
       pagination: { page, pageSize },
-      filter: { search },
+      filter: { q } = {},
     } = options;
 
     return ResultAsync.fromPromise(
       this.db.transaction().execute(async (trx) => {
         const offset = getOffset(page, pageSize);
 
-        const baseQuery = trx
-          .selectFrom('quote')
-          .where((eb) =>
+        let baseQuery = trx.selectFrom('quote');
+        if (q) {
+          baseQuery = baseQuery.where((eb) =>
             eb.or([
-              eb('author', 'ilike', `%${search}%`),
-              eb('content', 'ilike', `%${search}%`),
-              eb('context', 'ilike', `%${search}%`),
-              eb('user', 'ilike', `%${search}%`),
+              eb('author', 'ilike', `%${q}%`),
+              eb('content', 'ilike', `%${q}%`),
+              eb('context', 'ilike', `%${q}%`),
+              eb('user', 'ilike', `%${q}%`),
             ]),
           );
+        }
 
         const data = await baseQuery
           .selectAll()

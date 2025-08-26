@@ -18,7 +18,7 @@ import type {
 
 export type GetQuoteListOptions = {
   pagination: QuotePaginationDto;
-  filter: QuoteFilterDto;
+  filter?: QuoteFilterDto;
 };
 
 export abstract class QuoteRepository {
