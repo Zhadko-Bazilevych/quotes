@@ -1,24 +1,42 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { SearchIcon } from "lucide-react";
-import type { JSX } from "react";
+import { Input } from '@/components/ui/input';
+import { useCallback, useEffect, useState, type JSX } from 'react';
 
 type SearchProps = {
   value: string;
   setValue: (value: string) => void;
 } & React.ComponentProps<'input'>;
 
-export function Search(props: SearchProps): JSX.Element {
-  const {value, setValue, ...rest } = props;
+export function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
-  let inputData: string;
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+export function Search(props: SearchProps): JSX.Element {
+  const { value, setValue, ...rest } = props;
+
+  const debouncedChange = useDebounce((inputValue: string) => {
+    setValue(inputValue);
+  }, 1000);
 
   return (
     <div className="flex w-full items-center gap-2">
-      <Input onChange={(e) => { inputData=e.target.value }} {...rest}/>
-      <Button onClick={() => { setValue(inputData) }} variant="outline" size="icon">
-        <SearchIcon/>
-      </Button>
-      </div>
-  )
+      <Input
+        onChange={(e) => {
+          debouncedChange(e.target.value);
+        }}
+        {...rest}
+      />
+    </div>
+  );
 }
