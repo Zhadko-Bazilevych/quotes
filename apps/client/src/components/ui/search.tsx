@@ -1,41 +1,63 @@
 import { Input } from '@/components/ui/input';
-import { useCallback, useEffect, useState, type JSX } from 'react';
+import { quoteListRoute } from '@/routes/route-tree';
+import { useNavigate, useSearch } from '@tanstack/react-router';
+import { useCallback, useRef, useState, type JSX } from 'react';
 
-type SearchProps = {
-  value: string;
-  setValue: (value: string) => void;
-} & React.ComponentProps<'input'>;
+export type SearchProps = {} & Omit<
+  React.ComponentProps<'input'>,
+  'onChange' | 'value'
+>;
 
-export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+// TODO: move this to it's own file
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function useDebouncedCallback<T extends (...args: any[]) => void>(
+  cb: T,
+  delay: number,
+): (...args: Parameters<T>) => void {
+  const timeout = useRef<number | undefined>(undefined);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
+  return useCallback(
+    (...args: Parameters<T>) => {
+      const later = (): void => {
+        clearTimeout(timeout.current);
+        cb(...args);
+      };
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
+      clearTimeout(timeout.current);
+      timeout.current = window.setTimeout(later, delay);
+    },
+    [cb, delay],
+  );
 }
-
 export function Search(props: SearchProps): JSX.Element {
-  const { value, setValue, ...rest } = props;
+  const navigate = useNavigate({
+    from: '/',
+  });
+  const { q: initialQ = '' } = useSearch({
+    from: quoteListRoute.fullPath,
+  });
 
-  const debouncedChange = useDebounce((inputValue: string) => {
-    setValue(inputValue);
-  }, 1000);
+  const [q, setQ] = useState<string>(initialQ);
+
+  const onChange = useCallback(
+    (value: string) => {
+      void navigate({
+        search: (prev) => ({ ...prev, q: value }),
+      });
+    },
+    [navigate],
+  );
+  const debouncedChange = useDebouncedCallback(onChange, 500);
 
   return (
     <div className="flex w-full items-center gap-2">
       <Input
         onChange={(e) => {
+          setQ(e.target.value);
           debouncedChange(e.target.value);
         }}
-        {...rest}
+        value={q}
+        {...props}
       />
     </div>
   );

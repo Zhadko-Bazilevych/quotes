@@ -16,14 +16,15 @@ const QuoteCard = React.memo(BaseQuoteCard);
 const QuotePaginationBar = React.memo(BaseQuotePaginationBar);
 
 export function QuoteListSection(): JSX.Element {
-  const navigate = useNavigate();
-  const { pageSize, page } = useSearch({
+  const navigate = useNavigate({
     from: quoteListRoute.fullPath,
   });
-  const [search, setSearch] = useState('');
+  const { pageSize, page, q } = useSearch({
+    from: quoteListRoute.fullPath,
+  });
   const { data, isError, isLoading } = useQuotes({
     pagination: { pageSize, page },
-    filter: { q: search },
+    filter: { q },
   });
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
@@ -52,20 +53,18 @@ export function QuoteListSection(): JSX.Element {
 
       if (e.key === 'ArrowRight') {
         void navigate({
-          to: '/',
-          search: {
+          search: (prev) => ({
+            ...prev,
             page: Math.min(page + 1, data.totalPages),
-            pageSize: pageSize,
-          },
+          }),
         });
       }
       if (e.key === 'ArrowLeft') {
         void navigate({
-          to: '/',
-          search: {
+          search: (prev) => ({
+            ...prev,
             page: Math.max(1, page - 1),
-            pageSize: pageSize,
-          },
+          }),
         });
       }
     });
@@ -89,11 +88,7 @@ export function QuoteListSection(): JSX.Element {
 
   return (
     <section className="flex flex-col gap-3">
-      <Search
-        placeholder="Search quotes..."
-        value={search}
-        setValue={setSearch}
-      />
+      <Search placeholder="Search quotes..." />
       {isLoading && <QuoteListSkeleton pageSize={pageSize} />}
       {data &&
         data.data.map((quote) => {
