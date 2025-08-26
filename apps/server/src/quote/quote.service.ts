@@ -26,7 +26,7 @@ export class QuoteService {
   getList(
     quoteListQueryDto: QuoteListQueryDto,
   ): ResultAsync<QuoteList, GetQuoteListError> {
-    return this.quoteRepository.getList({ quoteListQuery: quoteListQueryDto });
+    return this.quoteRepository.getList(quoteListQueryDto);
   }
 
   create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {

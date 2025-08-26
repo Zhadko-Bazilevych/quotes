@@ -11,10 +11,14 @@ import type {
   QuoteList,
   UpdateQuoteError,
 } from 'src/quote/quote.types';
-import type { QuoteListQueryDto } from 'src/utils/dto/quote-list-query.dto';
+import type {
+  QuoteFilterDto,
+  QuotePaginationDto,
+} from 'src/utils/dto/quote-list-query.dto';
 
 export type GetQuoteListOptions = {
-  quoteListQuery: QuoteListQueryDto;
+  pagination: QuotePaginationDto;
+  filter: QuoteFilterDto;
 };
 
 export abstract class QuoteRepository {
