@@ -111,6 +111,14 @@ export class KyselyQuoteRepository implements QuoteRepository {
         const data = await trx
           .selectFrom('quote')
           .selectAll()
+          .where((eb) =>
+            eb.or([
+              eb('author', 'ilike', `%${search}%`),
+              eb('content', 'ilike', `%${search}%`),
+              eb('context', 'ilike', `%${search}%`),
+              eb('user', 'ilike', `%${search}%`),
+            ]),
+          )
           .orderBy('id', 'desc')
           .offset(offset)
           .limit(pageSize)
