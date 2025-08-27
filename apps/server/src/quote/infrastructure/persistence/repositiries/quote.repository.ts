@@ -100,6 +100,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
     const {
       pagination: { page, pageSize },
       filter: { q } = {},
+      sort = [{ field: 'id', order: 'desc' }],
     } = options;
 
     return ResultAsync.fromPromise(
@@ -117,18 +118,21 @@ export class KyselyQuoteRepository implements QuoteRepository {
             ]),
           );
         }
+        for (const sorter of sort) {
+          baseQuery = baseQuery.orderBy(sorter.field, sorter.order);
+        }
 
         const data = await baseQuery
           .selectAll()
-          .orderBy('id', 'desc')
           .offset(offset)
           .limit(pageSize)
           .execute();
 
         const { total } = await baseQuery
+          .clearOrderBy()
           .select((eb) => eb.fn.countAll<number>().as('total'))
           .executeTakeFirstOrThrow();
-
+        console.log(baseQuery.compile());
         return {
           data,
           total,
