@@ -9,7 +9,7 @@ export type SearchProps = {} & Omit<
   'onChange' | 'value'
 >;
 
-export function Search(props: SearchProps): JSX.Element {
+export function QuoteSearch(props: SearchProps): JSX.Element {
   const navigate = useNavigate({
     from: '/',
   });
