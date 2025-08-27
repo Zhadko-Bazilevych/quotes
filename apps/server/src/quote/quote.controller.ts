@@ -19,13 +19,13 @@ import {
 import { UnexpectedException } from 'src/utils/exceptions';
 import { QuoteNotFoundException } from './quote.errors';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
-import {
-  QuoteListQueryDto,
-  quoteListQuerySchema,
-} from 'src/utils/dto/quote-list-query.dto';
 import { QuoteList } from 'src/quote/quote.types';
 import { QuoteIdDto, quoteIdSchema } from './dto/quote-id.dto';
 import { Quote } from './domain/quote';
+import {
+  QuoteListQueryDto,
+  quoteListQuerySchema,
+} from 'src/quote/dto/quote-list-query.dto';
 
 @Controller('quotes')
 export class QuoteController {
