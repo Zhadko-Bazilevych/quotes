@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import { router } from '@/routes/route-tree';
 import { Toaster } from '@/components/ui/sonner';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ createRoot(rootElement).render(
     <QueryClientProvider client={queryClient}>
       <Toaster />
       <RouterProvider router={router} />
+      <ReactQueryDevtools />
     </QueryClientProvider>
   </StrictMode>,
 );
