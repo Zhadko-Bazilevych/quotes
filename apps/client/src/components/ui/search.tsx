@@ -1,34 +1,14 @@
 import { Input } from '@/components/ui/input';
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { quoteListRoute } from '@/routes/route-tree';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { useCallback, useRef, useState, type JSX } from 'react';
+import { useCallback, useState, type JSX } from 'react';
 
 export type SearchProps = {} & Omit<
   React.ComponentProps<'input'>,
   'onChange' | 'value'
 >;
 
-// TODO: move this to it's own file
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function useDebouncedCallback<T extends (...args: any[]) => void>(
-  cb: T,
-  delay: number,
-): (...args: Parameters<T>) => void {
-  const timeout = useRef<number | undefined>(undefined);
-
-  return useCallback(
-    (...args: Parameters<T>) => {
-      const later = (): void => {
-        clearTimeout(timeout.current);
-        cb(...args);
-      };
-
-      clearTimeout(timeout.current);
-      timeout.current = window.setTimeout(later, delay);
-    },
-    [cb, delay],
-  );
-}
 export function Search(props: SearchProps): JSX.Element {
   const navigate = useNavigate({
     from: '/',
