@@ -11,9 +11,9 @@ import {
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { ResultAsync } from 'neverthrow';
 import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
-import { PaginationOptions } from 'src/utils/dto/pagination.dto';
 import { Quote } from './domain/quote';
 import { QuoteRepository } from './infrastructure/persistence/repositiries/quote-repository.interface';
+import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
 
 @Injectable()
 export class QuoteService {
@@ -24,9 +24,9 @@ export class QuoteService {
   }
 
   getList(
-    paginationOptions: PaginationOptions,
+    quoteListQueryDto: QuoteListQueryDto,
   ): ResultAsync<QuoteList, GetQuoteListError> {
-    return this.quoteRepository.getList({ pagination: paginationOptions });
+    return this.quoteRepository.getList(quoteListQueryDto);
   }
 
   create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {

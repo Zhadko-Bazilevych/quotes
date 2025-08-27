@@ -1,6 +1,7 @@
 import type { ResultAsync } from 'neverthrow';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
+import type { QuoteListFilterDto } from 'src/quote/dto/quote-list-query.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
 import type {
   CreateQuoteError,
@@ -11,10 +12,11 @@ import type {
   QuoteList,
   UpdateQuoteError,
 } from 'src/quote/quote.types';
-import type { PaginationOptions } from 'src/utils/dto/pagination.dto';
+import type { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 export type GetQuoteListOptions = {
-  pagination: PaginationOptions;
+  pagination: PaginationDto;
+  filter?: QuoteListFilterDto;
 };
 
 export abstract class QuoteRepository {

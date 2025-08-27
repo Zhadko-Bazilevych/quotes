@@ -93,7 +93,9 @@ export function QuotePaginationBar(
 ): JSX.Element {
   const { page, pageSize, totalPages, total } = props;
 
-  const navigate = useNavigate();
+  const navigate = useNavigate({
+    from: quoteListRoute.fullPath,
+  });
 
   const {
     renderPrev,
@@ -120,16 +122,16 @@ export function QuotePaginationBar(
           <PaginationItem className="max-sm:hidden">
             <PaginationPrevious
               title="Go to previous page (Ctrl + Left Arrow)"
-              to={quoteListRoute.to}
-              search={{ page: page - 1, pageSize }}
+              from={quoteListRoute.fullPath}
+              search={(prev) => ({ ...prev, page: page - 1 })}
             />
           </PaginationItem>
         )}
 
         <PaginationItem>
           <PaginationLink
-            to={quoteListRoute.to}
-            search={{ page: 1, pageSize }}
+            from={quoteListRoute.fullPath}
+            search={(prev) => ({ ...prev, page: 1 })}
             isActive={page === 1}
           >
             <span className={cn(renderLeftChevronsOnMobile && 'max-sm:hidden')}>
@@ -149,14 +151,14 @@ export function QuotePaginationBar(
           </PaginationItem>
         )}
 
-        {pages.map((currentPage) => (
-          <PaginationItem key={currentPage}>
+        {pages.map((pageNumber) => (
+          <PaginationItem key={pageNumber}>
             <PaginationLink
-              to={quoteListRoute.to}
-              search={{ page: currentPage, pageSize }}
-              isActive={currentPage === page}
+              from={quoteListRoute.fullPath}
+              search={(prev) => ({ ...prev, page: pageNumber })}
+              isActive={pageNumber === page}
             >
-              {currentPage}
+              {pageNumber}
             </PaginationLink>
           </PaginationItem>
         ))}
@@ -169,8 +171,8 @@ export function QuotePaginationBar(
         {renderLast && (
           <PaginationItem>
             <PaginationLink
-              to={quoteListRoute.to}
-              search={{ page: totalPages, pageSize }}
+              from={quoteListRoute.fullPath}
+              search={(prev) => ({ ...prev, page: totalPages })}
               isActive={page === totalPages}
             >
               <span
@@ -192,8 +194,8 @@ export function QuotePaginationBar(
           <PaginationItem className="max-sm:hidden">
             <PaginationNext
               title="Go to next page (Ctrl + Right Arrow)"
-              to={quoteListRoute.to}
-              search={{ page: page + 1, pageSize }}
+              from={quoteListRoute.fullPath}
+              search={(prev) => ({ ...prev, page: page + 1 })}
             />
           </PaginationItem>
         )}
@@ -204,17 +206,17 @@ export function QuotePaginationBar(
           title="Go to previous page (Ctrl + Left Arrow)"
           className="sm:hidden"
           disabled={!renderPrev}
-          to={quoteListRoute.to}
-          search={{ page: page - 1, pageSize }}
+          from={quoteListRoute.fullPath}
+          search={(prev) => ({ ...prev, page: page - 1 })}
         />
         <Select
-          onValueChange={(value) => {
+          onValueChange={(pageSize) => {
             void navigate({
-              to: quoteListRoute.to,
-              search: {
+              search: (prev) => ({
+                ...prev,
                 page: 1,
-                pageSize: Number(value),
-              },
+                pageSize: Number(pageSize),
+              }),
             });
           }}
           defaultValue={isSizeDefault ? String(pageSize) : undefined}
@@ -234,8 +236,8 @@ export function QuotePaginationBar(
           title="Go to next page (Ctrl + Right Arrow)"
           className="sm:hidden"
           disabled={!renderNext}
-          to={quoteListRoute.to}
-          search={{ page: page + 1, pageSize }}
+          from={quoteListRoute.fullPath}
+          search={(prev) => ({ ...prev, page: page + 1 })}
         />
       </div>
     </Pagination>

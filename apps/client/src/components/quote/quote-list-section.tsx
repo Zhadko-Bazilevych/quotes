@@ -9,19 +9,22 @@ import { UnexpectedError } from '@/components/ui/unexpected-error';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
+import { QuoteSearch } from '@/components/quote/quote-search';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
 const QuotePaginationBar = React.memo(BaseQuotePaginationBar);
 
 export function QuoteListSection(): JSX.Element {
-  const navigate = useNavigate();
-  const { pageSize, page } = useSearch({
+  const navigate = useNavigate({
+    from: quoteListRoute.fullPath,
+  });
+  const { pageSize, page, q } = useSearch({
     from: quoteListRoute.fullPath,
   });
   const { data, isError, isLoading } = useQuotes({
-    pageSize,
-    page,
+    pagination: { pageSize, page },
+    filter: { q },
   });
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
@@ -50,20 +53,18 @@ export function QuoteListSection(): JSX.Element {
 
       if (e.key === 'ArrowRight') {
         void navigate({
-          to: '/',
-          search: {
+          search: (prev) => ({
+            ...prev,
             page: Math.min(page + 1, data.totalPages),
-            pageSize: pageSize,
-          },
+          }),
         });
       }
       if (e.key === 'ArrowLeft') {
         void navigate({
-          to: '/',
-          search: {
+          search: (prev) => ({
+            ...prev,
             page: Math.max(1, page - 1),
-            pageSize: pageSize,
-          },
+          }),
         });
       }
     });
@@ -87,6 +88,7 @@ export function QuoteListSection(): JSX.Element {
 
   return (
     <section className="flex flex-col gap-3">
+      <QuoteSearch placeholder="Search quotes..." />
       {isLoading && <QuoteListSkeleton pageSize={pageSize} />}
       {data &&
         data.data.map((quote) => {

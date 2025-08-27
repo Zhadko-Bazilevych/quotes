@@ -30,6 +30,9 @@ export type QuoteListDto = ListResponse<QuoteDto>;
 
 export type QuoteList = ListResponse<Quote>;
 
-export type GetQuotesQuery = { page?: number; pageSize?: number };
+export type GetQuotesQuery = {
+  pagination: { page?: number; pageSize?: number };
+  filter?: { q?: string };
+};
 export type CreateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
