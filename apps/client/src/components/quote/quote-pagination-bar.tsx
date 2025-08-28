@@ -225,8 +225,8 @@ export function QuotePaginationBar(
             <SelectValue placeholder={`${pageSize} / page`} />
           </SelectTrigger>
           <SelectContent>
-            {PAGINATION.PAGE_SIZES.map((variant, idx) => (
-              <SelectItem key={idx} value={String(variant)}>
+            {PAGINATION.PAGE_SIZES.map((variant) => (
+              <SelectItem key={variant} value={String(variant)}>
                 {`${variant} / page`}
               </SelectItem>
             ))}
