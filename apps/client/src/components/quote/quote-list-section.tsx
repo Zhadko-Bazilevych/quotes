@@ -19,12 +19,13 @@ export function QuoteListSection(): JSX.Element {
   const navigate = useNavigate({
     from: quoteListRoute.fullPath,
   });
-  const { pageSize, page, q } = useSearch({
+  const { pageSize, page, q, sort } = useSearch({
     from: quoteListRoute.fullPath,
   });
   const { data, isError, isLoading } = useQuotes({
     pagination: { pageSize, page },
     filter: { q },
+    sort,
   });
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);

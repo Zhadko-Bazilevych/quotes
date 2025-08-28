@@ -3,21 +3,45 @@ import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { quoteListRoute } from '@/routes/route-tree';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useCallback, useState, type JSX } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Button } from '../ui/button';
+import React from 'react';
 
 export type SearchProps = {} & Omit<
   React.ComponentProps<'input'>,
   'onChange' | 'value'
 >;
 
-export function QuoteSearch(props: SearchProps): JSX.Element {
+const sortOptions = [
+  'author',
+  'user',
+  'createdAt',
+  'updatedAt',
+  '-author',
+  '-user',
+  '-createdAt',
+  '-updatedAt',
+] as const;
+
+export const QuoteSearch = React.memo(function QuoteSearch(
+  props: SearchProps,
+): JSX.Element {
   const navigate = useNavigate({
     from: '/',
   });
-  const { q: initialQ = '' } = useSearch({
+  const { q: initialQ = '', sort = [] } = useSearch({
     from: quoteListRoute.fullPath,
   });
 
-  const [q, setQ] = useState<string>(initialQ);
+  const availableSorts = sortOptions.filter((so) => !sort.includes(so));
+
+  const [q, setQ] = useState(initialQ);
 
   const onChange = useCallback(
     (value: string) => {
@@ -30,7 +54,7 @@ export function QuoteSearch(props: SearchProps): JSX.Element {
   const debouncedChange = useDebouncedCallback(onChange, 500);
 
   return (
-    <div className="flex w-full items-center gap-2">
+    <div className="flex w-full flex-col items-center gap-3">
       <Input
         onChange={(e) => {
           setQ(e.target.value);
@@ -39,6 +63,71 @@ export function QuoteSearch(props: SearchProps): JSX.Element {
         value={q}
         {...props}
       />
+      <div className="flex flex-wrap gap-2">
+        {sort.map((appliedSort) => {
+          const options = [appliedSort, ...availableSorts];
+          return (
+            <Select
+              key={appliedSort}
+              value={appliedSort}
+              onValueChange={(newSort) => {
+                // todo: get existing sort by index and insert the new one there
+                void navigate({
+                  search: (prev) => ({
+                    ...prev,
+                    sort: [
+                      // @ts-expect-error asdfadfdf asdf asdf
+                      ...prev.sort.filter((s) => s !== appliedSort),
+                      newSort,
+                    ],
+                  }),
+                });
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={appliedSort} />
+              </SelectTrigger>
+              <SelectContent>
+                {options.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          );
+        })}
+        <Button
+          onClick={() => {
+            if (!availableSorts.length) {
+              return;
+            }
+
+            void navigate({
+              search: (prev) => ({
+                ...prev,
+                // @ts-expect-error asdfadfdf asdf asdf
+                sort: [...prev.sort, availableSorts[0]],
+              }),
+            });
+          }}
+        >
+          add
+        </Button>
+        <Button
+          onClick={() => {
+            void navigate({
+              search: (prev) => ({
+                ...prev,
+                // @ts-expect-error asdfadfdf asdf asdf
+                sort: prev.sort.slice(0, -1),
+              }),
+            });
+          }}
+        >
+          remove
+        </Button>
+      </div>
     </div>
   );
-}
+});

@@ -15,7 +15,12 @@ export class QuoteApi extends BaseApi {
   async getList(query?: GetQuotesQuery): Promise<QuoteList> {
     const url = this.buildUrl('quotes');
     const { data, total, page, pageSize, totalPages } =
-      await Client.get<QuoteListDto>(url, { query });
+      await Client.get<QuoteListDto>(url, {
+        query: {
+          ...query,
+          sort: (query?.sort ?? []).join(',') || undefined,
+        },
+      });
 
     return {
       data: data.map((quote) => QuoteMapper.toDomain(quote)),
