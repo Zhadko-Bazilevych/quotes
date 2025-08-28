@@ -34,7 +34,8 @@ function buildSortSchema<const T extends ReadonlyArray<string>>(fields: T) {
           };
         })
         .array(),
-    );
+    )
+    .optional();
 }
 
 const quoteListSortSchema = buildSortSchema([
