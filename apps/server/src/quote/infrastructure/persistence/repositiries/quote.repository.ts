@@ -132,7 +132,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
           .clearOrderBy()
           .select((eb) => eb.fn.countAll<number>().as('total'))
           .executeTakeFirstOrThrow();
-        console.log(baseQuery.compile());
+
         return {
           data,
           total,
