@@ -9,13 +9,13 @@ import {
 
 const rootRoute = createRootRoute({
   component: () => <App />,
+  validateSearch: quoteListQuerySchema,
 });
 
 export const quoteListRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: QuoteList,
-  validateSearch: quoteListQuerySchema,
 });
 
 export const routeTree = rootRoute.addChildren([quoteListRoute]);
