@@ -1,24 +1,41 @@
 import { PAGINATION } from '@/utils/constants';
 import z from 'zod';
 
+export const sortFields = ['author', 'user', 'createdAt', 'updatedAt'] as const;
+export type SortField = (typeof sortFields)[number];
+
+export const sortOrders = ['asc', 'desc'] as const;
+export type SortOrder = (typeof sortOrders)[number];
+
+const sortOptionSchema = z.object({
+  field: z.literal(sortFields),
+  order: z.literal(sortOrders),
+});
+
+export type SortOption = z.infer<typeof sortOptionSchema>;
+
 export const quoteListQuerySchema = z.object({
   page: z.int32().positive().catch(1),
   pageSize: z.int32().positive().catch(PAGINATION.DEFAULT_PAGE_SIZE),
   q: z.string().optional().catch(''),
-  sort: z
-    .literal([
-      'author',
-      'user',
-      'createdAt',
-      'updatedAt',
-      '-author',
-      '-user',
-      '-createdAt',
-      '-updatedAt',
-    ])
+  sort: sortOptionSchema
     .array()
-    .transform((sort) => [...new Set(sort)])
-    .catch(['-createdAt']),
-});
+    .max(sortFields.length)
+    .transform((sortOptionsInput) => {
+      const deduplicatedSortOptions: SortOption[] = [];
 
-export type QuoteListSearchDto = z.infer<typeof quoteListQuerySchema>;
+      for (let i = 0; i < sortOptionsInput.length; i++) {
+        const sortOption = sortOptionsInput[i];
+        const duplicateSortOption = deduplicatedSortOptions.find(
+          (dso) => dso.field === sortOption.field,
+        );
+
+        if (!duplicateSortOption) {
+          deduplicatedSortOptions.push(sortOption);
+        }
+      }
+
+      return deduplicatedSortOptions;
+    })
+    .catch([]),
+});

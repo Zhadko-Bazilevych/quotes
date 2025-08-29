@@ -11,23 +11,23 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import {
   ArrowDownNarrowWideIcon,
+  ArrowDownWideNarrowIcon,
   ArrowUpNarrowWideIcon,
+  ArrowUpWideNarrowIcon,
   XIcon,
 } from 'lucide-react';
+import {
+  sortFields,
+  type SortField,
+  type SortOption,
+} from '@/pages/quote-list-schema';
+import { cn } from '@/lib/utils';
 
-const sortOptions = ['author', 'user', 'createdAt', 'updatedAt'] as const;
-
-type SortOption = (typeof sortOptions)[number];
-
-const namesMap = {
+const namesMap: Record<SortField, string> = {
   author: 'Author',
   user: 'User',
   createdAt: 'Created At',
   updatedAt: 'UpdatedAt',
-  '-author': 'Author',
-  '-user': 'User',
-  '-createdAt': 'Created At',
-  '-updatedAt': 'UpdatedAt',
 };
 
 export function QuoteOrder(): JSX.Element {
@@ -35,128 +35,145 @@ export function QuoteOrder(): JSX.Element {
     from: quoteListRoute.fullPath,
   });
 
-  const sort = useSearch({
+  const sortOptions = useSearch({
     from: quoteListRoute.fullPath,
     select: ({ sort }) => sort,
   });
 
-  const availableSorts = sortOptions.filter(
-    (so) => !sort.includes(so) && !sort.includes(`-${so}`),
+  const availableSorts = sortFields.filter(
+    (sortField) => !sortOptions.some((s) => s.field === sortField),
   );
 
-  return (
-    <div className="flex flex-col flex-wrap gap-2">
-      {sort.map((appliedSort) => {
-        const options = [appliedSort, ...availableSorts];
-        return (
-          <div key={appliedSort} className="flex gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => {
-                void navigate({
-                  search: (prev) => {
-                    const index = prev.sort.indexOf(appliedSort);
-                    if (index === -1) {
-                      return prev;
-                    }
-                    const newSort = appliedSort.startsWith('-')
-                      ? appliedSort.slice(1)
-                      : `-${appliedSort}`;
-                    return {
-                      ...prev,
-                      sort: [
-                        ...prev.sort.slice(0, index),
-                        newSort as SortOption,
-                        ...prev.sort.slice(index + 1),
-                      ],
-                    };
-                  },
-                });
-              }}
-            >
-              {sortOptions.includes(appliedSort as SortOption) ? (
-                <ArrowUpNarrowWideIcon />
-              ) : (
-                <ArrowDownNarrowWideIcon />
-              )}
-            </Button>
-            <Select
-              value={appliedSort}
-              onValueChange={(newSort: SortOption) => {
-                void navigate({
-                  search: (prev) => {
-                    const index = prev.sort.indexOf(appliedSort);
-                    if (index === -1) {
-                      return prev;
-                    }
-                    if (appliedSort.startsWith('-')) {
-                      newSort = '-' + newSort;
-                    }
-                    return {
-                      ...prev,
-                      sort: [
-                        ...prev.sort.slice(0, index),
-                        newSort,
-                        ...prev.sort.slice(index + 1),
-                      ],
-                    };
-                  },
-                });
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={namesMap[appliedSort]} />
-              </SelectTrigger>
-              <SelectContent>
-                {options.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {namesMap[option]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => {
-                void navigate({
-                  search: (prev) => {
-                    const index = prev.sort.indexOf(appliedSort);
-                    if (index === -1) {
-                      return prev;
-                    }
-                    return {
-                      ...prev,
-                      sort: [
-                        ...prev.sort.slice(0, index),
-                        ...prev.sort.slice(index + 1),
-                      ],
-                    };
-                  },
-                });
-              }}
-            >
-              <XIcon className="text-destructive" />
-            </Button>
-          </div>
+  const updateSort = (oldField: SortField, sortOption: SortOption): void => {
+    void navigate({
+      search: (prevSearch) => {
+        const index = prevSearch.sort.findIndex(
+          (prevSortOption) => prevSortOption.field === oldField,
         );
-      })}
+        if (index === -1) {
+          return prevSearch;
+        }
+
+        return {
+          ...prevSearch,
+          sort: [
+            ...prevSearch.sort.slice(0, index),
+            sortOption,
+            ...prevSearch.sort.slice(index + 1),
+          ],
+        };
+      },
+    });
+  };
+
+  const deleteSortOption = (sortField: SortField): void => {
+    void navigate({
+      search: (prevSearch) => {
+        const index = prevSearch.sort.findIndex(
+          (prevSortOption) => prevSortOption.field === sortField,
+        );
+        if (index === -1) {
+          return prevSearch;
+        }
+
+        return {
+          ...prevSearch,
+          sort: [
+            ...prevSearch.sort.slice(0, index),
+            ...prevSearch.sort.slice(index + 1),
+          ],
+        };
+      },
+    });
+  };
+
+  const addSortOption = (sortField: SortField): void => {
+    void navigate({
+      search: (prevSearch) => {
+        const exists = prevSearch.sort.some(
+          (prevSortOption) => prevSortOption.field === sortField,
+        );
+        if (exists) {
+          return prevSearch;
+        }
+        return {
+          ...prevSearch,
+          sort: [...prevSearch.sort, { field: sortField, order: 'asc' }],
+        };
+      },
+    });
+  };
+
+  return (
+    <div className="flex flex-col flex-wrap gap-3">
+      <div
+        className={cn('flex flex-wrap gap-2', !sortOptions.length && 'hidden')}
+      >
+        {sortOptions.map((appliedSort) => {
+          const options = [appliedSort.field, ...availableSorts];
+
+          return (
+            <div key={appliedSort.field} className="flex">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  updateSort(appliedSort.field, {
+                    field: appliedSort.field,
+                    order: appliedSort.order === 'desc' ? 'asc' : 'desc',
+                  });
+                }}
+                className="rounded-r-none border-r-0"
+              >
+                {appliedSort.order === 'asc' ? (
+                  <ArrowUpWideNarrowIcon />
+                ) : (
+                  <ArrowDownWideNarrowIcon />
+                )}
+              </Button>
+              <Select
+                value={appliedSort.field}
+                onValueChange={(sortField: SortField) => {
+                  updateSort(appliedSort.field, {
+                    field: sortField,
+                    order: appliedSort.order,
+                  });
+                }}
+              >
+                <SelectTrigger className="w-32 rounded-none">
+                  <SelectValue placeholder={namesMap[appliedSort.field]} />
+                </SelectTrigger>
+                <SelectContent>
+                  {options.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {namesMap[option]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-l-none border-l-0"
+                onClick={() => deleteSortOption(appliedSort.field)}
+              >
+                <XIcon className="text-destructive" />
+              </Button>
+            </div>
+          );
+        })}
+      </div>
       <Button
         onClick={() => {
           if (!availableSorts.length) {
             return;
           }
 
-          void navigate({
-            search: (prev) => ({
-              ...prev,
-              sort: [...prev.sort, availableSorts[0]],
-            }),
-          });
+          addSortOption(availableSorts[0]);
         }}
+        disabled={!availableSorts.length}
       >
-        add
+        Add sort
       </Button>
     </div>
   );

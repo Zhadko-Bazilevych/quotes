@@ -39,6 +39,7 @@ export const QuoteSearch = React.memo(function QuoteSearch(
         debouncedChange(e.target.value);
       }}
       value={q}
+      name="quoteSearchInput"
       {...props}
     />
   );
