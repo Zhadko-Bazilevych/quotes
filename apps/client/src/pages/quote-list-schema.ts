@@ -17,7 +17,6 @@ export const quoteListQuerySchema = z.object({
       '-updatedAt',
     ])
     .array()
-    .nonempty()
     .transform((sort) => [...new Set(sort)])
     .catch(['-createdAt']),
 });
