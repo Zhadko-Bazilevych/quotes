@@ -10,6 +10,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { QuoteSearch } from '@/components/quote/quote-search';
+import { QuoteOrder } from './quote-order';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
@@ -90,6 +91,7 @@ export function QuoteListSection(): JSX.Element {
   return (
     <section className="flex flex-col gap-3">
       <QuoteSearch placeholder="Search quotes..." />
+      <QuoteOrder />
       {isLoading && <QuoteListSkeleton pageSize={pageSize} />}
       {data &&
         data.data.map((quote) => {
