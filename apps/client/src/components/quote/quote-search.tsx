@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '../ui/button';
 import React from 'react';
+import type { QuoteListSearchDto } from '@/pages/quote-list-schema';
 
 export type SearchProps = {} & Omit<
   React.ComponentProps<'input'>,
@@ -33,7 +34,7 @@ export const QuoteSearch = React.memo(function QuoteSearch(
   props: SearchProps,
 ): JSX.Element {
   const navigate = useNavigate({
-    from: '/',
+    from: quoteListRoute.fullPath,
   });
   const { q: initialQ = '', sort = [] } = useSearch({
     from: quoteListRoute.fullPath,
@@ -73,7 +74,6 @@ export const QuoteSearch = React.memo(function QuoteSearch(
               onValueChange={(newSort) => {
                 // todo: get existing sort by index and insert the new one there
                 void navigate({
-                  search: (prev) => ({
                     ...prev,
                     sort: [
                       // @ts-expect-error asdfadfdf asdf asdf
@@ -81,6 +81,7 @@ export const QuoteSearch = React.memo(function QuoteSearch(
                       newSort,
                     ],
                   }),
+                  search: (prev: QuoteListSearchDto) => {
                 });
               }}
             >
@@ -104,9 +105,8 @@ export const QuoteSearch = React.memo(function QuoteSearch(
             }
 
             void navigate({
-              search: (prev) => ({
+              search: (prev: QuoteListSearchDto) => ({
                 ...prev,
-                // @ts-expect-error asdfadfdf asdf asdf
                 sort: [...prev.sort, availableSorts[0]],
               }),
             });
@@ -117,9 +117,8 @@ export const QuoteSearch = React.memo(function QuoteSearch(
         <Button
           onClick={() => {
             void navigate({
-              search: (prev) => ({
+              search: (prev: QuoteListSearchDto) => ({
                 ...prev,
-                // @ts-expect-error asdfadfdf asdf asdf
                 sort: prev.sort.slice(0, -1),
               }),
             });

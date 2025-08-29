@@ -21,3 +21,5 @@ export const quoteListQuerySchema = z.object({
     .transform((sort) => [...new Set(sort)])
     .catch(['-createdAt']),
 });
+
+export type QuoteListSearchDto = z.infer<typeof quoteListQuerySchema>;
