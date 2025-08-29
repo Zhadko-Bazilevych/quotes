@@ -10,9 +10,7 @@ import { type JSX } from 'react';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import {
-  ArrowDownNarrowWideIcon,
   ArrowDownWideNarrowIcon,
-  ArrowUpNarrowWideIcon,
   ArrowUpWideNarrowIcon,
   XIcon,
 } from 'lucide-react';

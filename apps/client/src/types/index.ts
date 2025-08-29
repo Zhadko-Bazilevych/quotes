@@ -1,4 +1,4 @@
-import type { SortOption } from "@/pages/quote-list-schema";
+import type { SortOption } from '@/pages/quote-list-schema';
 
 export type Quote = {
   id: number;
