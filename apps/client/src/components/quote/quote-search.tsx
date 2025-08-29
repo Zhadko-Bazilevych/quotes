@@ -72,16 +72,21 @@ export const QuoteSearch = React.memo(function QuoteSearch(
               key={appliedSort}
               value={appliedSort}
               onValueChange={(newSort) => {
-                // todo: get existing sort by index and insert the new one there
                 void navigate({
-                    ...prev,
-                    sort: [
-                      // @ts-expect-error asdfadfdf asdf asdf
-                      ...prev.sort.filter((s) => s !== appliedSort),
-                      newSort,
-                    ],
-                  }),
                   search: (prev: QuoteListSearchDto) => {
+                    const index = prev.sort.indexOf(appliedSort);
+                    if (index === -1) {
+                      return prev;
+                    }
+                    return {
+                      ...prev,
+                      sort: [
+                        ...prev.sort.slice(0, index),
+                        newSort,
+                        ...prev.sort.slice(index + 1),
+                      ],
+                    };
+                  },
                 });
               }}
             >
