@@ -1,3 +1,5 @@
+import type { SortOption } from '@/pages/quote-list-schema';
+
 export type Quote = {
   id: number;
   author: string;
@@ -33,6 +35,7 @@ export type QuoteList = ListResponse<Quote>;
 export type GetQuotesQuery = {
   pagination: { page?: number; pageSize?: number };
   filter?: { q?: string };
+  sort?: SortOption[];
 };
 export type CreateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;

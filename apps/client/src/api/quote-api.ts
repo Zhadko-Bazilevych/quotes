@@ -14,8 +14,21 @@ import { QuoteMapper } from '@/mappers/quote';
 export class QuoteApi extends BaseApi {
   async getList(query?: GetQuotesQuery): Promise<QuoteList> {
     const url = this.buildUrl('quotes');
+    const sort =
+      query?.sort
+        ?.map((sortOption) =>
+          sortOption.order === 'asc'
+            ? sortOption.field
+            : `-${sortOption.field}`,
+        )
+        .join(',') || undefined;
     const { data, total, page, pageSize, totalPages } =
-      await Client.get<QuoteListDto>(url, { query });
+      await Client.get<QuoteListDto>(url, {
+        query: {
+          ...query,
+          sort,
+        },
+      });
 
     return {
       data: data.map((quote) => QuoteMapper.toDomain(quote)),

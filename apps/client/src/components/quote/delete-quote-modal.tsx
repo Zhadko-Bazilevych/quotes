@@ -54,7 +54,7 @@ export default function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline" size="icon">
-          <Trash2Icon className="text-red-500" />
+          <Trash2Icon className="text-destructive" />
         </Button>
       </DialogTrigger>
       <DialogContent

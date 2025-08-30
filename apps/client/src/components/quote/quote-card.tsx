@@ -13,7 +13,9 @@ export type QuoteCardProps = {
   setIsQuoteListVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function QuoteCard(props: QuoteCardProps): JSX.Element {
+export const QuoteCard = React.memo(function QuoteCard(
+  props: QuoteCardProps,
+): JSX.Element {
   const { quote, onEdit, setIsQuoteListVisible } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -92,4 +94,4 @@ export function QuoteCard(props: QuoteCardProps): JSX.Element {
       )}
     </div>
   );
-}
+});
