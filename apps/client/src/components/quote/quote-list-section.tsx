@@ -1,21 +1,16 @@
-import { QuoteCard as BaseQuoteCard } from '@/components/quote/quote-card';
-import { UpdateQuoteForm as BaseUpdateQuoteForm } from '@/components/quote/form/update-quote-form';
-import { QuotePaginationBar as BaseQuotePaginationBar } from '@/components/quote/quote-pagination-bar';
+import { QuoteCard } from '@/components/quote/quote-card';
+import { UpdateQuoteForm } from '@/components/quote/form/update-quote-form';
+import { QuotePaginationBar } from '@/components/quote/quote-pagination-bar';
 import { useCallback, useEffect, useState, type JSX } from 'react';
 import { useQuotes } from '@/hooks/use-quotes';
-import React from 'react';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { QuoteSearch } from '@/components/quote/quote-search';
-import { QuoteOrder as BaseQuoteOrder } from './quote-order';
-
-const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
-const QuoteCard = React.memo(BaseQuoteCard);
-const QuotePaginationBar = React.memo(BaseQuotePaginationBar);
-const QuoteOrder = React.memo(BaseQuoteOrder);
+import { QuoteOrder } from './quote-order';
+import { keepPreviousData } from '@tanstack/react-query';
 
 export function QuoteListSection(): JSX.Element {
   const navigate = useNavigate({
@@ -24,11 +19,15 @@ export function QuoteListSection(): JSX.Element {
   const { pageSize, page, q, sort } = useSearch({
     from: quoteListRoute.fullPath,
   });
-  const { data, isError, isLoading } = useQuotes({
-    pagination: { pageSize, page },
-    filter: { q },
-    sort,
-  });
+  const { data, isError, isFetching, isPlaceholderData, isLoading } = useQuotes(
+    {
+      pagination: { pageSize, page },
+      filter: { q },
+      sort,
+    },
+    { placeholderData: keepPreviousData },
+  );
+  const isFetchingNewData = isLoading || (isFetching && isPlaceholderData);
 
   const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
 
@@ -93,9 +92,9 @@ export function QuoteListSection(): JSX.Element {
     <section className="flex flex-col gap-3">
       <QuoteSearch placeholder="Search quotes..." />
       <QuoteOrder />
-      {isLoading && <QuoteListSkeleton pageSize={pageSize} />}
-      {data &&
-        data.data.map((quote) => {
+      {isFetchingNewData && <QuoteListSkeleton pageSize={pageSize} />}
+      {!isFetchingNewData &&
+        data?.data.map((quote) => {
           if (editingIds.includes(quote.id)) {
             return (
               <UpdateQuoteForm

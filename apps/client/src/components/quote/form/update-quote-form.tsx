@@ -5,13 +5,16 @@ import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
 import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
+import React from 'react';
 
 type UpdateQuoteFormProps = {
   quote: Quote;
   onCancel: (id: number) => void;
 };
 
-export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
+export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
+  props: UpdateQuoteFormProps,
+): JSX.Element {
   const { quote, onCancel } = props;
   const methods = useForm<UpdateQuoteData>({
     values: {
@@ -51,4 +54,4 @@ export function UpdateQuoteForm(props: UpdateQuoteFormProps): JSX.Element {
       </div>
     </Form>
   );
-}
+});

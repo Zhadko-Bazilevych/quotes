@@ -20,6 +20,7 @@ import {
   type SortOption,
 } from '@/pages/quote-list-schema';
 import { cn } from '@/lib/utils';
+import React from 'react';
 
 const namesMap: Record<SortField, string> = {
   author: 'Author',
@@ -28,7 +29,7 @@ const namesMap: Record<SortField, string> = {
   updatedAt: 'UpdatedAt',
 };
 
-export function QuoteOrder(): JSX.Element {
+export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
   const sortOptions = useSearch({
     from: quoteListRoute.fullPath,
     select: ({ sort }) => sort,
@@ -171,4 +172,4 @@ export function QuoteOrder(): JSX.Element {
       </Button>
     </div>
   );
-}
+});

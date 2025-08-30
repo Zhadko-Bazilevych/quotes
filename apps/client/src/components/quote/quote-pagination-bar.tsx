@@ -15,12 +15,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { quoteListRoute } from '@/routes/route-tree';
-import { useNavigate } from '@tanstack/react-router';
+import { quoteListRoute, router } from '@/routes/route-tree';
 import { ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react';
 import type { JSX } from 'react';
 import { PAGINATION } from '@/utils/constants';
 import { range } from '@/utils/range';
+import React from 'react';
 
 type PaginationConfig = {
   renderPrev: boolean;
@@ -88,14 +88,10 @@ export type QuotePaginationBarProps = {
   totalPages: number;
 };
 
-export function QuotePaginationBar(
+export const QuotePaginationBar = React.memo(function QuotePaginationBar(
   props: QuotePaginationBarProps,
 ): JSX.Element {
   const { page, pageSize, totalPages, total } = props;
-
-  const navigate = useNavigate({
-    from: quoteListRoute.fullPath,
-  });
 
   const {
     renderPrev,
@@ -211,7 +207,8 @@ export function QuotePaginationBar(
         />
         <Select
           onValueChange={(pageSize) => {
-            void navigate({
+            void router.navigate({
+              from: quoteListRoute.fullPath,
               search: (prev) => ({
                 ...prev,
                 page: 1,
@@ -242,4 +239,4 @@ export function QuotePaginationBar(
       </div>
     </Pagination>
   );
-}
+});
