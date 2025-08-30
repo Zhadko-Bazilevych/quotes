@@ -42,7 +42,10 @@ export function QuoteOrder(): JSX.Element {
     (sortField) => !sortOptions.some((s) => s.field === sortField),
   );
 
-  const updateSort = (oldField: SortField, sortOption: SortOption): void => {
+  const updateSortOption = (
+    oldField: SortField,
+    sortOption: SortOption,
+  ): void => {
     void navigate({
       search: (prevSearch) => {
         const index = prevSearch.sort.findIndex(
@@ -67,19 +70,13 @@ export function QuoteOrder(): JSX.Element {
   const deleteSortOption = (sortField: SortField): void => {
     void navigate({
       search: (prevSearch) => {
-        const index = prevSearch.sort.findIndex(
-          (prevSortOption) => prevSortOption.field === sortField,
+        const newSortOptions = prevSearch.sort.filter(
+          (prevSortOption) => prevSortOption.field !== sortField,
         );
-        if (index === -1) {
-          return prevSearch;
-        }
 
         return {
           ...prevSearch,
-          sort: [
-            ...prevSearch.sort.slice(0, index),
-            ...prevSearch.sort.slice(index + 1),
-          ],
+          sort: newSortOptions,
         };
       },
     });
@@ -116,7 +113,7 @@ export function QuoteOrder(): JSX.Element {
                 variant="outline"
                 size="icon"
                 onClick={() => {
-                  updateSort(appliedSort.field, {
+                  updateSortOption(appliedSort.field, {
                     field: appliedSort.field,
                     order: appliedSort.order === 'desc' ? 'asc' : 'desc',
                   });
@@ -132,7 +129,7 @@ export function QuoteOrder(): JSX.Element {
               <Select
                 value={appliedSort.field}
                 onValueChange={(sortField: SortField) => {
-                  updateSort(appliedSort.field, {
+                  updateSortOption(appliedSort.field, {
                     field: sortField,
                     order: appliedSort.order,
                   });
