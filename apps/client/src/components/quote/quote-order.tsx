@@ -7,8 +7,8 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { type JSX } from 'react';
-import { useNavigate, useSearch } from '@tanstack/react-router';
-import { quoteListRoute } from '@/routes/route-tree';
+import { useSearch } from '@tanstack/react-router';
+import { quoteListRoute, router } from '@/routes/route-tree';
 import {
   ArrowDownWideNarrowIcon,
   ArrowUpWideNarrowIcon,
@@ -29,10 +29,6 @@ const namesMap: Record<SortField, string> = {
 };
 
 export function QuoteOrder(): JSX.Element {
-  const navigate = useNavigate({
-    from: quoteListRoute.fullPath,
-  });
-
   const sortOptions = useSearch({
     from: quoteListRoute.fullPath,
     select: ({ sort }) => sort,
@@ -46,7 +42,8 @@ export function QuoteOrder(): JSX.Element {
     oldField: SortField,
     sortOption: SortOption,
   ): void => {
-    void navigate({
+    void router.navigate({
+      from: quoteListRoute.fullPath,
       search: (prevSearch) => {
         const index = prevSearch.sort.findIndex(
           (prevSortOption) => prevSortOption.field === oldField,
@@ -68,7 +65,8 @@ export function QuoteOrder(): JSX.Element {
   };
 
   const deleteSortOption = (sortField: SortField): void => {
-    void navigate({
+    void router.navigate({
+      from: quoteListRoute.fullPath,
       search: (prevSearch) => {
         const newSortOptions = prevSearch.sort.filter(
           (prevSortOption) => prevSortOption.field !== sortField,
@@ -83,7 +81,8 @@ export function QuoteOrder(): JSX.Element {
   };
 
   const addSortOption = (sortField: SortField): void => {
-    void navigate({
+    void router.navigate({
+      from: quoteListRoute.fullPath,
       search: (prevSearch) => {
         const exists = prevSearch.sort.some(
           (prevSortOption) => prevSortOption.field === sortField,

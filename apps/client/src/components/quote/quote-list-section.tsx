@@ -10,11 +10,12 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { QuoteSearch } from '@/components/quote/quote-search';
-import { QuoteOrder } from './quote-order';
+import { QuoteOrder as BaseQuoteOrder } from './quote-order';
 
 const UpdateQuoteForm = React.memo(BaseUpdateQuoteForm);
 const QuoteCard = React.memo(BaseQuoteCard);
 const QuotePaginationBar = React.memo(BaseQuotePaginationBar);
+const QuoteOrder = React.memo(BaseQuoteOrder);
 
 export function QuoteListSection(): JSX.Element {
   const navigate = useNavigate({
