@@ -19,7 +19,6 @@ import {
   type SortField,
   type SortOption,
 } from '@/pages/quote-list-schema';
-import { cn } from '@/lib/utils';
 import React from 'react';
 
 const namesMap: Record<SortField, string> = {
@@ -100,76 +99,74 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col flex-wrap gap-3">
-      <div
-        className={cn('flex flex-wrap gap-2', !sortOptions.length && 'hidden')}
-      >
-        {sortOptions.map((appliedSort) => {
-          const options = [appliedSort.field, ...availableSorts];
+    <div className="flex flex-wrap gap-3">
+      {sortOptions.map((appliedSort) => {
+        const options = [appliedSort.field, ...availableSorts];
 
-          return (
-            <div key={appliedSort.field} className="flex">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => {
-                  updateSortOption(appliedSort.field, {
-                    field: appliedSort.field,
-                    order: appliedSort.order === 'desc' ? 'asc' : 'desc',
-                  });
-                }}
-                className="rounded-r-none border-r-0"
-              >
-                {appliedSort.order === 'asc' ? (
-                  <ArrowUpWideNarrowIcon />
-                ) : (
-                  <ArrowDownWideNarrowIcon />
-                )}
-              </Button>
-              <Select
-                value={appliedSort.field}
-                onValueChange={(sortField: SortField) => {
-                  updateSortOption(appliedSort.field, {
-                    field: sortField,
-                    order: appliedSort.order,
-                  });
-                }}
-              >
-                <SelectTrigger className="w-32 rounded-none">
-                  <SelectValue placeholder={namesMap[appliedSort.field]} />
-                </SelectTrigger>
-                <SelectContent>
-                  {options.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {namesMap[option]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-l-none border-l-0"
-                onClick={() => deleteSortOption(appliedSort.field)}
-              >
-                <XIcon className="text-destructive" />
-              </Button>
-            </div>
-          );
-        })}
-      </div>
-      <Button
-        onClick={() => {
-          if (!availableSorts.length) {
-            return;
-          }
+        return (
+          <div key={appliedSort.field} className="flex max-sm:flex-1">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                updateSortOption(appliedSort.field, {
+                  field: appliedSort.field,
+                  order: appliedSort.order === 'desc' ? 'asc' : 'desc',
+                });
+              }}
+              className="rounded-r-none border-r-0"
+            >
+              {appliedSort.order === 'asc' ? (
+                <ArrowUpWideNarrowIcon />
+              ) : (
+                <ArrowDownWideNarrowIcon />
+              )}
+            </Button>
+            <Select
+              value={appliedSort.field}
+              onValueChange={(sortField: SortField) => {
+                updateSortOption(appliedSort.field, {
+                  field: sortField,
+                  order: appliedSort.order,
+                });
+              }}
+            >
+              <SelectTrigger className="flex min-w-32 flex-1 rounded-none">
+                <SelectValue placeholder={namesMap[appliedSort.field]} />
+              </SelectTrigger>
+              <SelectContent>
+                {options.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {namesMap[option]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-l-none border-l-0"
+              onClick={() => deleteSortOption(appliedSort.field)}
+            >
+              <XIcon className="text-destructive" />
+            </Button>
+          </div>
+        );
+      })}
+      {!!availableSorts.length && (
+        <Button
+          className="flex min-w-50 p-0 max-sm:flex-1"
+          onClick={() => {
+            if (!availableSorts.length) {
+              return;
+            }
 
-          addSortOption(availableSorts[0]);
-        }}
-        disabled={!availableSorts.length}
-      >
-        Add sort
-      </Button>
+            addSortOption(availableSorts[0]);
+          }}
+        >
+          Add sort
+        </Button>
+      )}
     </div>
   );
 });
