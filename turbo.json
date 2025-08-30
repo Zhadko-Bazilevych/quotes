@@ -5,15 +5,9 @@
       "dependsOn": ["^build"],
       "outputs": ["./dist"]
     },
-    "code:lint": {
-      "dependsOn": ["^code:lint"]
-    },
-    "code:lint:autofix": {
-      "dependsOn": ["^code:lint:autofix"]
-    },
-    "check-types": {
-      "dependsOn": ["^check-typeps"]
-    },
+    "code:lint": {},
+    "code:lint:autofix": {},
+    "check-types": {},
     "code:check": {
       "dependsOn": ["code:lint", "check-types"]
     },
