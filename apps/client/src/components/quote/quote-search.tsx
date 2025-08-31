@@ -30,7 +30,7 @@ export const QuoteSearch = React.memo(function QuoteSearch(
     },
     [navigate],
   );
-  const debouncedChange = useDebouncedCallback(onChange, 500);
+  const { debouncedChange } = useDebouncedCallback(onChange, 500);
 
   return (
     <Input

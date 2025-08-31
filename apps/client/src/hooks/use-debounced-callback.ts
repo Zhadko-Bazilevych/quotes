@@ -4,10 +4,13 @@ import { useCallback, useRef } from 'react';
 export function useDebouncedCallback<T extends (...args: any[]) => void>(
   cb: T,
   delay: number,
-): (...args: Parameters<T>) => void {
+): {
+  debouncedChange: (...args: Parameters<T>) => void;
+  debouncedClear: () => void;
+} {
   const timeout = useRef<number | undefined>(undefined);
 
-  return useCallback(
+  const debouncedChange = useCallback(
     (...args: Parameters<T>) => {
       const later = (): void => {
         clearTimeout(timeout.current);
@@ -19,4 +22,8 @@ export function useDebouncedCallback<T extends (...args: any[]) => void>(
     },
     [cb, delay],
   );
+
+  const debouncedClear = () => clearTimeout(timeout.current);
+
+  return { debouncedChange, debouncedClear };
 }
