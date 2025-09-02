@@ -1,13 +1,15 @@
 import { useCallback, useRef } from 'react';
 
+type useDebouncedCallbackReturn<T extends (...args: any[]) => void> = {
+  debouncedChange: (...args: Parameters<T>) => void;
+  cancel: () => void;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useDebouncedCallback<T extends (...args: any[]) => void>(
   cb: T,
   delay: number,
-): {
-  debouncedChange: (...args: Parameters<T>) => void;
-  debouncedClear: () => void;
-} {
+): useDebouncedCallbackReturn<T> {
   const timeout = useRef<number | undefined>(undefined);
 
   const debouncedChange = useCallback(
@@ -23,7 +25,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => void>(
     [cb, delay],
   );
 
-  const debouncedClear = () => clearTimeout(timeout.current);
+  const cancel = () => clearTimeout(timeout.current);
 
-  return { debouncedChange, debouncedClear };
+  return { debouncedChange, cancel };
 }
