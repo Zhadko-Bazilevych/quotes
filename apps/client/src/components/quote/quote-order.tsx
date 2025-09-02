@@ -11,7 +11,6 @@ import { useSearch } from '@tanstack/react-router';
 import { quoteListRoute, router } from '@/routes/route-tree';
 import {
   ArrowDownWideNarrowIcon,
-  ArrowLeftIcon,
   ArrowRightIcon,
   ArrowUpWideNarrowIcon,
   XIcon,
@@ -22,6 +21,7 @@ import {
   type SortOption,
 } from '@/pages/quote-list-schema';
 import React from 'react';
+import { cn } from '@/lib/utils';
 
 const namesMap: Record<SortField, string> = {
   author: 'Author',
@@ -192,14 +192,15 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
             {sortOptions.length > 1 && (
               <div className="bg-card border-border absolute left-1/2 hidden -translate-x-1/2 -translate-y-full justify-center overflow-hidden rounded-t-md border border-b-0 group-hover:flex peer-data-[state=open]:flex">
                 {index > 0 && (
-                  <ShiftOptionLeftButton
+                  <ShiftOptionButton
                     onClick={() => {
                       shiftSortOption(appliedSort.field, 'left');
                     }}
+                    className="rotate-180"
                   />
                 )}
                 {index < sortOptions.length - 1 && (
-                  <ShiftOptionRightButton
+                  <ShiftOptionButton
                     onClick={() => {
                       shiftSortOption(appliedSort.field, 'right');
                     }}
@@ -228,30 +229,23 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
   );
 });
 
-type ShiftOptionProps = {
+type ShiftOptionButtonProps = {
   onClick: () => void;
+  className?: string;
 };
 
-const ShiftOptionLeftButton = (props: ShiftOptionProps): JSX.Element => {
-  const { onClick } = props;
+const ShiftOptionButton = ({
+  className,
+  ...rest
+}: ShiftOptionButtonProps): JSX.Element => {
   return (
     <Button
       variant="ghost"
-      className="border-input pointer-events-auto size-6 rounded-none"
-      onClick={onClick}
-    >
-      <ArrowLeftIcon />
-    </Button>
-  );
-};
-
-const ShiftOptionRightButton = (props: ShiftOptionProps): JSX.Element => {
-  const { onClick } = props;
-  return (
-    <Button
-      variant="ghost"
-      className="border-input pointer-events-auto size-6 rounded-none"
-      onClick={onClick}
+      className={cn(
+        'border-input pointer-events-auto size-6 rounded-none',
+        className,
+      )}
+      {...rest}
     >
       <ArrowRightIcon />
     </Button>
