@@ -1,19 +1,16 @@
 import { useCallback, useRef } from 'react';
 
-type useDebouncedCallbackReturn<T extends (...args: any[]) => void> = {
-  debouncedChange: (...args: Parameters<T>) => void;
-  cancel: () => void;
-};
+export type UseDebouncedCallbackReturn<
+  TCallback extends (...args: Parameters<TCallback>) => void,
+> = [debounce: (...args: Parameters<TCallback>) => void, cancel: () => void];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useDebouncedCallback<T extends (...args: any[]) => void>(
-  cb: T,
-  delay: number,
-): useDebouncedCallbackReturn<T> {
+export function useDebouncedCallback<
+  TCallback extends (...args: Parameters<TCallback>) => void,
+>(cb: TCallback, delay: number): UseDebouncedCallbackReturn<TCallback> {
   const timeout = useRef<number | undefined>(undefined);
 
-  const debouncedChange = useCallback(
-    (...args: Parameters<T>) => {
+  const debounce = useCallback(
+    (...args: Parameters<TCallback>) => {
       const later = (): void => {
         clearTimeout(timeout.current);
         cb(...args);
@@ -25,7 +22,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => void>(
     [cb, delay],
   );
 
-  const cancel = () => clearTimeout(timeout.current);
+  const cancel = (): void => clearTimeout(timeout.current);
 
-  return { debouncedChange, cancel };
+  return [debounce, cancel];
 }

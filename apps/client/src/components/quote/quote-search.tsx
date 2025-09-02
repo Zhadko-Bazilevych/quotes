@@ -32,10 +32,7 @@ export const QuoteSearch = React.memo(function QuoteSearch(
     },
     [navigate],
   );
-  const { debouncedChange, debouncedClear } = useDebouncedCallback(
-    onChange,
-    500,
-  );
+  const [debouncedChange, clear] = useDebouncedCallback(onChange, 500);
 
   return (
     <div className="relative">
@@ -53,7 +50,7 @@ export const QuoteSearch = React.memo(function QuoteSearch(
         variant="ghost"
         size="icon"
         onClick={() => {
-          debouncedClear();
+          clear();
           setQ('');
           onChange('');
         }}
