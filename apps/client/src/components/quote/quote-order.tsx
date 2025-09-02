@@ -196,11 +196,12 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
                     onClick={() => {
                       shiftSortOption(appliedSort.field, 'left');
                     }}
-                    className="rotate-180"
+                    className="rotate-180 max-[428px]:rotate-270"
                   />
                 )}
                 {index < sortOptions.length - 1 && (
                   <ShiftOptionButton
+                    className="max-[428px]:rotate-90"
                     onClick={() => {
                       shiftSortOption(appliedSort.field, 'right');
                     }}
