@@ -100,7 +100,7 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
     });
   };
 
-  const swapSortOptions = (
+  const shiftSortOption = (
     sortField: SortField,
     direction: 'left' | 'right',
   ): void => {
@@ -170,7 +170,7 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
                 });
               }}
             >
-              <SelectTrigger className="flex min-w-32 flex-1 rounded-none">
+              <SelectTrigger className="peer lex min-w-32 flex-1 rounded-none">
                 <SelectValue placeholder={namesMap[appliedSort.field]} />
               </SelectTrigger>
               <SelectContent>
@@ -190,28 +190,20 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
               <XIcon className="text-destructive" />
             </Button>
             {sortOptions.length > 1 && (
-              <div className="bg-card border-border absolute left-1/2 hidden -translate-x-1/2 -translate-y-full justify-center overflow-hidden rounded-t-md border border-b-0 group-hover:flex">
+              <div className="bg-card border-border absolute left-1/2 hidden -translate-x-1/2 -translate-y-full justify-center overflow-hidden rounded-t-md border border-b-0 group-hover:flex peer-data-[state=open]:flex">
                 {index > 0 && (
-                  <Button
-                    variant="ghost"
-                    className="border-input size-6 rounded-none"
+                  <ShiftOptionLeftButton
                     onClick={() => {
-                      swapSortOptions(appliedSort.field, 'left');
+                      shiftSortOption(appliedSort.field, 'left');
                     }}
-                  >
-                    <ArrowLeftIcon />
-                  </Button>
+                  />
                 )}
                 {index < sortOptions.length - 1 && (
-                  <Button
-                    variant="ghost"
-                    className="border-input size-6 rounded-none"
+                  <ShiftOptionRightButton
                     onClick={() => {
-                      swapSortOptions(appliedSort.field, 'right');
+                      shiftSortOption(appliedSort.field, 'right');
                     }}
-                  >
-                    <ArrowRightIcon />
-                  </Button>
+                  />
                 )}
               </div>
             )}
@@ -235,3 +227,33 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
     </div>
   );
 });
+
+type ShiftOptionProps = {
+  onClick: () => void;
+};
+
+const ShiftOptionLeftButton = (props: ShiftOptionProps): JSX.Element => {
+  const { onClick } = props;
+  return (
+    <Button
+      variant="ghost"
+      className="border-input pointer-events-auto size-6 rounded-none"
+      onClick={onClick}
+    >
+      <ArrowLeftIcon />
+    </Button>
+  );
+};
+
+const ShiftOptionRightButton = (props: ShiftOptionProps): JSX.Element => {
+  const { onClick } = props;
+  return (
+    <Button
+      variant="ghost"
+      className="border-input pointer-events-auto size-6 rounded-none"
+      onClick={onClick}
+    >
+      <ArrowRightIcon />
+    </Button>
+  );
+};
