@@ -1,7 +1,9 @@
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { quoteListRoute } from '@/routes/route-tree';
 import { useNavigate, useSearch } from '@tanstack/react-router';
+import { XIcon } from 'lucide-react';
 import React, { useCallback, useState, type JSX } from 'react';
 
 export type SearchProps = {} & Omit<
@@ -30,17 +32,31 @@ export const QuoteSearch = React.memo(function QuoteSearch(
     },
     [navigate],
   );
-  const debouncedChange = useDebouncedCallback(onChange, 500);
+  const [debouncedChange, clear] = useDebouncedCallback(onChange, 500);
 
   return (
-    <Input
-      onChange={(e) => {
-        setQ(e.target.value);
-        debouncedChange(e.target.value);
-      }}
-      value={q}
-      name="quoteSearchInput"
-      {...props}
-    />
+    <div className="relative">
+      <Input
+        onChange={(e) => {
+          setQ(e.target.value);
+          debouncedChange(e.target.value);
+        }}
+        value={q}
+        name="quoteSearchInput"
+        {...props}
+      />
+      <Button
+        className="absolute top-0 right-0"
+        variant="ghost"
+        size="icon"
+        onClick={() => {
+          clear();
+          setQ('');
+          onChange('');
+        }}
+      >
+        <XIcon />
+      </Button>
+    </div>
   );
 });

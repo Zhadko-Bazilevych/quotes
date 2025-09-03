@@ -1,14 +1,16 @@
 import { useCallback, useRef } from 'react';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useDebouncedCallback<T extends (...args: any[]) => void>(
-  cb: T,
-  delay: number,
-): (...args: Parameters<T>) => void {
+export type UseDebouncedCallbackReturn<
+  TCallback extends (...args: Parameters<TCallback>) => void,
+> = [debounce: (...args: Parameters<TCallback>) => void, cancel: () => void];
+
+export function useDebouncedCallback<
+  TCallback extends (...args: Parameters<TCallback>) => void,
+>(cb: TCallback, delay: number): UseDebouncedCallbackReturn<TCallback> {
   const timeout = useRef<number | undefined>(undefined);
 
-  return useCallback(
-    (...args: Parameters<T>) => {
+  const debounce = useCallback(
+    (...args: Parameters<TCallback>) => {
       const later = (): void => {
         clearTimeout(timeout.current);
         cb(...args);
@@ -19,4 +21,8 @@ export function useDebouncedCallback<T extends (...args: any[]) => void>(
     },
     [cb, delay],
   );
+
+  const cancel = (): void => clearTimeout(timeout.current);
+
+  return [debounce, cancel];
 }

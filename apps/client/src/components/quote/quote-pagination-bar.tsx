@@ -105,7 +105,7 @@ export const QuotePaginationBar = React.memo(function QuotePaginationBar(
   } = getPaginationConfig({ page, totalPages });
   const isSizeDefault = PAGINATION.PAGE_SIZES.includes(pageSize);
 
-  const firstItemIndex = (page - 1) * pageSize + 1;
+  const firstItemIndex = total ? (page - 1) * pageSize + 1 : 0;
   const lastItemIndex = Math.min(page * pageSize, total);
 
   return (
