@@ -100,18 +100,14 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
     });
   };
 
-  const shiftSortOption = (
-    sortField: SortField,
-    direction: 'left' | 'right',
-  ): void => {
-    const offset = direction === 'left' ? -1 : 1;
+  const shiftSortOption = (sortField: SortField, direction: -1 | 1): void => {
     void router.navigate({
       from: quoteListRoute.fullPath,
       search: (prevSearch) => {
         const index = prevSearch.sort.findIndex(
           (prevSortOption) => prevSortOption.field === sortField,
         );
-        const targetIndex = index + offset;
+        const targetIndex = index + direction;
         if (
           index < 0 ||
           index > prevSearch.sort.length ||
@@ -194,7 +190,7 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
                 {index > 0 && (
                   <ShiftOptionButton
                     onClick={() => {
-                      shiftSortOption(appliedSort.field, 'left');
+                      shiftSortOption(appliedSort.field, -1);
                     }}
                     className="rotate-180 max-[428px]:rotate-270"
                   />
@@ -203,7 +199,7 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
                   <ShiftOptionButton
                     className="max-[428px]:rotate-90"
                     onClick={() => {
-                      shiftSortOption(appliedSort.field, 'right');
+                      shiftSortOption(appliedSort.field, 1);
                     }}
                   />
                 )}
