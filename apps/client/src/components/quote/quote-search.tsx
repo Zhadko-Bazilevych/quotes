@@ -45,18 +45,20 @@ export const QuoteSearch = React.memo(function QuoteSearch(
         name="quoteSearchInput"
         {...props}
       />
-      <Button
-        className="absolute top-0 right-0"
-        variant="ghost"
-        size="icon"
-        onClick={() => {
-          clear();
-          setQ('');
-          onChange('');
-        }}
-      >
-        <XIcon />
-      </Button>
+      <div className="bg-background absolute top-0 right-0 rounded-r-md">
+        <Button
+          className="bg-input/30 border-input rounded-l-none border"
+          variant="secondary"
+          size="icon"
+          onClick={() => {
+            clear();
+            setQ('');
+            onChange('');
+          }}
+        >
+          <XIcon />
+        </Button>
+      </div>
     </div>
   );
 });
