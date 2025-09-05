@@ -47,9 +47,23 @@ export function QuoteListSection(): JSX.Element {
       return;
     }
 
+    // TODO: add useHotkeys hook
     return addEventListenerWithCleaup('keydown', (e) => {
       const isCtrl = e.ctrlKey || e.metaKey;
       if (!isCtrl) {
+        return;
+      }
+      const el = document.activeElement;
+      if (!el) {
+        return;
+      }
+
+      const isEditableElementFocused =
+        el.tagName === 'INPUT' ||
+        el.tagName === 'TEXTAREA' ||
+        (el as HTMLElement).isContentEditable;
+
+      if (isEditableElementFocused) {
         return;
       }
 
