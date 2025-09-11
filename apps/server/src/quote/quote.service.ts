@@ -33,9 +33,14 @@ export class QuoteService {
       'content',
       'context',
     ]);
-    const parsed = queryParser.parse(quoteListQueryDto.filter?.q ?? '');
-    console.log(parsed);
-    return this.quoteRepository.getList(quoteListQueryDto);
+    const { pagination, filter, sort } = quoteListQueryDto;
+    const parsed = queryParser.parse(filter?.q ?? '');
+
+    return this.quoteRepository.getList({
+      pagination,
+      sort,
+      filter: parsed,
+    });
   }
 
   create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
