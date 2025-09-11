@@ -4,7 +4,7 @@ import z from 'zod';
 
 const quoteListFilterSchema = z
   .object({
-    q: z.string().max(100).optional(),
+    q: z.string().trim().max(100).optional(),
   })
   .optional();
 
