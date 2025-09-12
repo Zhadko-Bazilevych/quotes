@@ -14,6 +14,7 @@ import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
 import { Quote } from './domain/quote';
 import { QuoteRepository } from './infrastructure/persistence/repositiries/quote-repository.interface';
 import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
+import { Parser } from 'src/parser';
 
 @Injectable()
 export class QuoteService {
@@ -26,7 +27,15 @@ export class QuoteService {
   getList(
     quoteListQueryDto: QuoteListQueryDto,
   ): ResultAsync<QuoteList, GetQuoteListError> {
-    return this.quoteRepository.getList(quoteListQueryDto);
+    const parser = new Parser(['user', 'author', 'content', 'context']);
+    const { pagination, filter, sort } = quoteListQueryDto;
+    const parsed = parser.parse(filter?.q ?? '');
+
+    return this.quoteRepository.getList({
+      pagination,
+      sort,
+      filter: parsed,
+    });
   }
 
   create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {

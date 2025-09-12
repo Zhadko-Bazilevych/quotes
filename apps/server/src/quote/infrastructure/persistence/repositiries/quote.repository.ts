@@ -13,14 +13,17 @@ import type {
 } from 'src/quote/quote.types';
 import type {
   GetQuoteListOptions,
+  QuoteListFilter,
   QuoteRepository,
 } from './quote-repository.interface';
-import { KyselyService } from 'src/database/kysely.service';
+import { Database, KyselyService } from 'src/database/kysely.service';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
 import { QuoteNotFoundError } from 'src/quote/quote.errors';
 import { getOffset, getTotalPages } from 'src/utils/query';
 import { Injectable } from '@nestjs/common';
 import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
+import { ExpressionWrapper, SqlBool } from 'kysely';
+import { KeywordSearch } from 'src/parser';
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {
@@ -99,7 +102,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
   ): ResultAsync<QuoteList, GetQuoteListError> {
     const {
       pagination: { page, pageSize },
-      filter: { q } = {},
+      filter,
       sort = [{ field: 'id', order: 'desc' }],
     } = options;
 
@@ -108,16 +111,37 @@ export class KyselyQuoteRepository implements QuoteRepository {
         const offset = getOffset(page, pageSize);
 
         let baseQuery = trx.selectFrom('quote');
-        if (q) {
-          baseQuery = baseQuery.where((eb) =>
-            eb.or([
-              eb('author', 'ilike', `%${q}%`),
-              eb('content', 'ilike', `%${q}%`),
-              eb('context', 'ilike', `%${q}%`),
-              eb('user', 'ilike', `%${q}%`),
-            ]),
-          );
+        if (filter) {
+          baseQuery = baseQuery.where((eb) => {
+            const expressions: ExpressionWrapper<Database, 'quote', SqlBool>[] =
+              [];
+            for (const [key, values] of Object.entries(filter) as [
+              keyof QuoteListFilter,
+              KeywordSearch[],
+            ][]) {
+              if (!values.length) {
+                continue;
+              }
+
+              expressions.push(
+                eb.or(
+                  values.map((value) =>
+                    eb(
+                      key,
+                      value.include
+                        ? ('ilike' as const)
+                        : ('not ilike' as const),
+                      `%${value.value}%`,
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            return eb.and(expressions);
+          });
         }
+
         for (const sorter of sort) {
           baseQuery = baseQuery.orderBy(sorter.field, sorter.order);
         }
