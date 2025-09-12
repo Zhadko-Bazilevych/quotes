@@ -7,7 +7,7 @@ export type ParsedQuery<TKeyword extends string> = {
   [K in TKeyword]: KeywordSearch[];
 };
 
-export class QueryParser<TKeyword extends string> {
+export class Parser<TKeyword extends string> {
   constructor(private readonly keywords: TKeyword[]) {}
 
   parse(q: string): ParsedQuery<TKeyword> {
