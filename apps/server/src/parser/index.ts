@@ -13,10 +13,7 @@ export class Parser<TKeyword extends string> {
   constructor(private readonly keywords: TKeyword[]) {}
 
   parse(q: string): ParsedQuery<TKeyword> {
-    const lex = new Lexer(
-      q,
-      this.keywords.map((keyword) => ({ literal: keyword, type: 'KEYWORD' })),
-    );
+    const lex = new Lexer(q, this.keywords);
     console.log(lex.readAll());
     q = q.trim();
     const res: ParsedQuery<TKeyword> = this.keywords.reduce(
