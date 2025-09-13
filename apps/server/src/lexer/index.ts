@@ -1,16 +1,25 @@
+type TokenType =
+  | 'quotes'
+  | 'minus'
+  | 'colon'
+  | 'keyword'
+  | 'unique'
+  | 'eof'
+  | 'unknown';
+const keyChars = '"-: ' as const;
+
 type Token = {
-  type: string;
+  type: TokenType;
   literal: string;
 };
 
-export class Lexer<TToken extends Token> {
+export class Lexer {
   char: string | undefined;
   position = 0;
-  nextPosition = 1;
 
   constructor(
     private readonly input: string,
-    private readonly tokens: TToken[],
+    private readonly keywords: string[],
   ) {
     if (input) {
       this.char = input[0];
@@ -18,18 +27,27 @@ export class Lexer<TToken extends Token> {
   }
 
   readChar(): void {
-    if (this.nextPosition >= this.input.length) {
+    if (this.position >= this.input.length) {
       this.char = undefined;
-    } else {
-      this.char = this.input[this.nextPosition];
+      return;
     }
-    this.position = this.nextPosition;
-    this.nextPosition++;
+    this.position++;
+    this.char = this.input[this.position];
   }
 
   isAlphanumeric(): boolean {
     if (this.char) {
       return /^[a-z0-9]$/i.test(this.char);
+    }
+    return false;
+  }
+
+  isKeyChar(): boolean {
+    if (!this.char) {
+      return false;
+    }
+    if (keyChars.includes(this.char)) {
+      return true;
     }
     return false;
   }
@@ -40,21 +58,48 @@ export class Lexer<TToken extends Token> {
     }
   }
 
-  getLiteralType(literal: string): string {
-    return (
-      this.tokens.find((item) => item.literal === literal)?.type ?? 'UNIQUE'
-    );
-  }
-
-  readNext(): Token {
+  readLiteral(): string {
     const start = this.position;
-    this.readChar();
-    while (this.isAlphanumeric()) {
+    while (this.char && !this.isKeyChar()) {
+      console.log('read', this.char);
       this.readChar();
     }
     const literal = this.input.slice(start, this.position);
-    const type = this.getLiteralType(literal);
-    return { literal, type };
+    return literal;
+  }
+
+  isKeyword(literal: string): boolean {
+    return this.keywords.includes(literal);
+  }
+
+  readNext(): Token {
+    this.skipWhitespace();
+    let token: Token;
+    switch (this.char) {
+      case '-': {
+        token = { literal: this.char, type: 'colon' };
+        break;
+      }
+      case ':': {
+        token = { literal: this.char, type: 'colon' };
+        break;
+      }
+      case '"': {
+        token = { literal: this.char, type: 'quotes' };
+        break;
+      }
+      case undefined: {
+        token = { literal: '', type: 'eof' };
+        break;
+      }
+      default: {
+        const literal = this.readLiteral();
+        const type = this.isKeyword(literal) ? 'keyword' : 'unique';
+        return { literal, type };
+      }
+    }
+    this.readChar();
+    return token;
   }
 
   readAll(): Token[] {
