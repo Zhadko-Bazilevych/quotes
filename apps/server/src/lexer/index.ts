@@ -1,25 +1,27 @@
-type TokenType =
-  | 'quotes'
-  | 'minus'
-  | 'colon'
-  | 'keyword'
-  | 'unique'
-  | 'eof'
-  | 'unknown';
-const keyChars = '"-: ' as const;
+type TokenType = 'quotes' | 'minus' | 'colon' | 'keyword' | 'unique' | 'eof';
+
+const keyChars = ['"', '-', ':', ' '] as const;
+type KeyChar = (typeof keyChars)[number];
+type SafeKeyword<TKeyword extends string> = 'invalid' extends {
+  [K in TKeyword]: K extends `${string}${KeyChar}${string}`
+    ? 'invalid'
+    : 'valid';
+}[TKeyword]
+  ? never
+  : TKeyword;
 
 type Token = {
   type: TokenType;
   literal: string;
 };
 
-export class Lexer {
+export class Lexer<Tkeyword extends string> {
   char: string | undefined;
   position = 0;
 
   constructor(
     private readonly input: string,
-    private readonly keywords: string[],
+    private readonly keywords: SafeKeyword<Tkeyword>[],
   ) {
     if (input) {
       this.char = input[0];
@@ -46,7 +48,7 @@ export class Lexer {
     if (!this.char) {
       return false;
     }
-    if (keyChars.includes(this.char)) {
+    if (keyChars.includes(this.char as KeyChar)) {
       return true;
     }
     return false;
@@ -61,7 +63,6 @@ export class Lexer {
   readLiteral(): string {
     const start = this.position;
     while (this.char && !this.isKeyChar()) {
-      console.log('read', this.char);
       this.readChar();
     }
     const literal = this.input.slice(start, this.position);
@@ -69,7 +70,7 @@ export class Lexer {
   }
 
   isKeyword(literal: string): boolean {
-    return this.keywords.includes(literal);
+    return this.keywords.includes(literal as SafeKeyword<Tkeyword>);
   }
 
   readNext(): Token {
