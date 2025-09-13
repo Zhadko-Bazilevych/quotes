@@ -1,4 +1,11 @@
-type TokenType = 'quotes' | 'minus' | 'colon' | 'keyword' | 'unique' | 'eof';
+type TokenType =
+  | 'quotes'
+  | 'minus'
+  | 'colon'
+  | 'space'
+  | 'keyword'
+  | 'unique'
+  | 'eof';
 
 const keyChars = ['"', '-', ':', ' '] as const;
 type KeyChar = (typeof keyChars)[number];
@@ -37,13 +44,6 @@ export class Lexer<Tkeyword extends string> {
     this.char = this.input[this.position];
   }
 
-  isAlphanumeric(): boolean {
-    if (this.char) {
-      return /^[a-z0-9]$/i.test(this.char);
-    }
-    return false;
-  }
-
   isKeyChar(): boolean {
     if (!this.char) {
       return false;
@@ -52,12 +52,6 @@ export class Lexer<Tkeyword extends string> {
       return true;
     }
     return false;
-  }
-
-  skipWhitespace(): void {
-    while (this.char === ' ') {
-      this.readChar();
-    }
   }
 
   readLiteral(): string {
@@ -74,7 +68,6 @@ export class Lexer<Tkeyword extends string> {
   }
 
   readNext(): Token {
-    this.skipWhitespace();
     let token: Token;
     switch (this.char) {
       case '-': {
@@ -87,6 +80,10 @@ export class Lexer<Tkeyword extends string> {
       }
       case '"': {
         token = { literal: this.char, type: 'quotes' };
+        break;
+      }
+      case ' ': {
+        token = { literal: this.char, type: 'space' };
         break;
       }
       case undefined: {
