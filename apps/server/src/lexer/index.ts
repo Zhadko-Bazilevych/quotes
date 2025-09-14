@@ -30,6 +30,7 @@ export class Lexer<Tkeyword extends string> {
     private readonly input: string,
     private readonly keywords: SafeKeyword<Tkeyword>[],
   ) {
+    input = input.trim();
     if (input) {
       this.char = input[0];
     }
