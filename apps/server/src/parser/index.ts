@@ -1,4 +1,4 @@
-import { Lexer } from 'src/lexer';
+import type { Lexer, Token } from 'src/lexer';
 
 export type KeywordSearch = {
   value: string;
@@ -7,70 +7,113 @@ export type KeywordSearch = {
 
 export type ParsedQuery<TKeyword extends string> = {
   [K in TKeyword]: KeywordSearch[];
+} & {
+  common: KeywordSearch[];
 };
 
-export class Parser<TKeyword extends string> {
-  constructor(private readonly keywords: TKeyword[]) {}
+type Expression<TKeyword extends string> = {
+  field?: TKeyword | 'common';
+} & KeywordSearch;
 
-  parse(q: string): ParsedQuery<TKeyword> {
-    const lex = new Lexer(q, ['user', 'author', 'content', 'content']);
-    console.log(lex.readAll());
-    q = q.trim();
-    const res: ParsedQuery<TKeyword> = this.keywords.reduce(
+export class Parser<TKeyword extends string> {
+  private currentToken: Token;
+  private peekToken: Token;
+
+  private currentExpression: Expression<TKeyword>;
+  private expressions: ParsedQuery<TKeyword>;
+
+  constructor(private readonly lexer: Lexer<TKeyword>) {
+    this.currentToken = this.lexer.readNext();
+    this.peekToken = this.lexer.readNext();
+
+    this.currentExpression = {
+      field: undefined,
+      value: '',
+      include: true,
+    };
+    this.expressions = this.lexer.keywords.reduce(
       (acc, curr) => ({
         [curr]: [],
         ...acc,
       }),
-      {} as ParsedQuery<TKeyword>,
+      { common: [] } as ParsedQuery<TKeyword>,
     );
-
-    let currentKeyword: TKeyword | null = null;
-    let wordStart = 0;
-    for (let i = 0; i < q.length; i++) {
-      const char = q[i];
-
-      if (char === ' ') {
-        const word = q.slice(wordStart, i + 1).trim();
-        wordStart = i + 1;
-        if (word && currentKeyword) {
-          const keywordSearch = this.getKeywordSearch(word);
-          if (keywordSearch) {
-            res[currentKeyword].push(keywordSearch);
-          }
-        }
-      } else if (char === ':') {
-        const word = q.slice(wordStart, i);
-        wordStart = i + 1;
-        if (this.isKeyword(word)) {
-          currentKeyword = word;
-        }
-      }
-    }
-    const word = q.slice(wordStart).trim();
-    if (word && currentKeyword) {
-      const keywordSearch = this.getKeywordSearch(word);
-      if (keywordSearch) {
-        res[currentKeyword].push(keywordSearch);
-      }
-    }
-
-    return res;
   }
 
-  private getKeywordSearch(word: string): KeywordSearch | null {
-    const include = !word.startsWith('-');
-    word = include ? word : word.slice(1);
-    if (!word) {
-      return null;
-    }
+  nextToken(): void {
+    this.currentToken = this.peekToken;
+    this.peekToken = this.lexer.readNext();
+  }
 
-    return {
-      value: word,
-      include,
+  clearExpression(): void {
+    this.currentExpression = {
+      field: undefined,
+      value: '',
+      include: true,
     };
   }
 
-  private isKeyword(word: string): word is TKeyword {
-    return this.keywords.includes(word as TKeyword);
+  pushExpression(): void {
+    if (!this.currentExpression.value) {
+      this.clearExpression();
+      return;
+    }
+    if (!this.currentExpression.field) {
+      this.currentExpression.field = 'common';
+    }
+    this.expressions[this.currentExpression.field].push({
+      value: this.currentExpression.value,
+      include: this.currentExpression.include,
+    });
+    this.clearExpression();
+  }
+
+  parse(): ParsedQuery<TKeyword> {
+    while (this.currentToken.type !== 'eof') {
+      switch (this.currentToken.type) {
+        case 'minus': {
+          this.pushExpression();
+          this.currentExpression.include = false;
+          break;
+        }
+        case 'colon': {
+          this.clearExpression();
+          break;
+        }
+        case 'keyword': {
+          if (this.peekToken.type !== 'colon') {
+            if (this.currentExpression.value) {
+              this.pushExpression();
+            }
+            this.currentExpression.value = this.currentToken.literal;
+            break;
+          }
+
+          if (this.currentExpression.value) {
+            this.pushExpression();
+            this.currentExpression.field = this.currentToken
+              .literal as TKeyword;
+          } else if (this.currentExpression.field) {
+            this.currentExpression.value = this.currentToken.literal;
+          } else {
+            this.currentExpression.field = this.currentToken
+              .literal as TKeyword;
+          }
+          this.nextToken();
+          break;
+        }
+        case 'unique':
+        case 'string': {
+          if (this.currentExpression.value) {
+            this.pushExpression();
+          }
+          this.currentExpression.value = this.currentToken.literal;
+          break;
+        }
+      }
+      this.nextToken();
+    }
+    this.pushExpression();
+    return this.expressions;
   }
 }
