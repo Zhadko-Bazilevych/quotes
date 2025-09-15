@@ -16,16 +16,17 @@ export type Token = {
 };
 
 export class Lexer<Tkeyword extends string> {
+  private readonly input: string;
   char: string | undefined;
   position = 0;
 
   constructor(
-    private readonly input: string,
+    input: string,
     readonly keywords: SafeKeyword<Tkeyword>[],
   ) {
-    input = input.trim();
-    if (input) {
-      this.char = input[0];
+    this.input = input.trim();
+    if (this.input) {
+      this.char = this.input[0];
     }
   }
 
