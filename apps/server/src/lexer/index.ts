@@ -89,7 +89,7 @@ export class Lexer<Tkeyword extends string> {
     let token: Token;
     switch (this.char) {
       case '-': {
-        token = { literal: this.char, type: 'colon' };
+        token = { literal: this.char, type: 'minus' };
         break;
       }
       case ':': {
