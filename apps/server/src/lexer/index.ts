@@ -68,9 +68,15 @@ export class Lexer<Tkeyword extends string> {
     this.readChar();
     const start = this.position;
     while (this.char && this.char !== '"') {
+      if (this.char === '\\') {
+        this.readChar();
+      }
       this.readChar();
     }
-    const string = this.input.slice(start, this.position);
+    let string = this.input.slice(start, this.position);
+    this.readChar();
+
+    string = string.replace(/\\(.)/g, '$1');
     return string;
   }
 
