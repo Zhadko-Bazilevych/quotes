@@ -1,10 +1,10 @@
 type TokenType =
-  | 'quotes'
   | 'minus'
   | 'colon'
   | 'space'
   | 'keyword'
   | 'unique'
+  | 'string'
   | 'eof';
 
 const keyChars = ['"', '-', ':', ' '] as const;
@@ -28,7 +28,7 @@ export class Lexer<Tkeyword extends string> {
 
   constructor(
     private readonly input: string,
-    private readonly keywords: SafeKeyword<Tkeyword>[],
+    readonly keywords: SafeKeyword<Tkeyword>[],
   ) {
     input = input.trim();
     if (input) {
@@ -64,6 +64,16 @@ export class Lexer<Tkeyword extends string> {
     return literal;
   }
 
+  readString(): string {
+    this.readChar();
+    const start = this.position;
+    while (this.char && this.char !== '"') {
+      this.readChar();
+    }
+    const string = this.input.slice(start, this.position);
+    return string;
+  }
+
   isKeyword(literal: string): boolean {
     return this.keywords.includes(literal as SafeKeyword<Tkeyword>);
   }
@@ -80,8 +90,8 @@ export class Lexer<Tkeyword extends string> {
         break;
       }
       case '"': {
-        token = { literal: this.char, type: 'quotes' };
-        break;
+        const string = this.readString();
+        return { literal: string, type: 'string' };
       }
       case ' ': {
         token = { literal: this.char, type: 'space' };
