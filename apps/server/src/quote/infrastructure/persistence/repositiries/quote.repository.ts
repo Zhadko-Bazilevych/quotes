@@ -122,6 +122,28 @@ export class KyselyQuoteRepository implements QuoteRepository {
               if (!values.length) {
                 continue;
               }
+              if (key === 'common') {
+                expressions.push(
+                  eb.and(
+                    values.map((value) => {
+                      const op = value.include
+                        ? ('ilike' as const)
+                        : ('not ilike' as const);
+                      const expr = [
+                        eb('user', op, `%${value.value}%`),
+                        eb('author', op, `%${value.value}%`),
+                        eb('content', op, `%${value.value}%`),
+                        eb('context', op, `%${value.value}%`),
+                      ];
+                      if (value.include) {
+                        return eb.or(expr);
+                      }
+                      return eb.and(expr);
+                    }),
+                  ),
+                );
+                continue;
+              }
 
               expressions.push(
                 eb.or(
