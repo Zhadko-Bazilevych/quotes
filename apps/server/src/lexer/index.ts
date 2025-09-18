@@ -50,10 +50,7 @@ export class Lexer<Tkeyword extends string> {
     if (!this.char) {
       return false;
     }
-    if (keyChars.includes(this.char as KeyChar)) {
-      return true;
-    }
-    return false;
+    return keyChars.includes(this.char as KeyChar);
   }
 
   readLiteral(): string {
