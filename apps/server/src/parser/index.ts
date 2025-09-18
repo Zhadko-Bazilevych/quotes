@@ -12,7 +12,7 @@ export type ParsedQuery<TKeyword extends string> = {
 };
 
 type Expression<TKeyword extends string> = {
-  field?: TKeyword | 'common';
+  field: TKeyword | 'common';
 } & KeywordSearch;
 
 export class Parser<TKeyword extends string> {
@@ -27,7 +27,7 @@ export class Parser<TKeyword extends string> {
     this.peekToken = this.lexer.readNext();
 
     this.currentExpression = {
-      field: undefined,
+      field: 'common',
       value: '',
       include: true,
     };
@@ -45,17 +45,18 @@ export class Parser<TKeyword extends string> {
     this.peekToken = this.lexer.readNext();
   }
 
-  clearExpression(): void {
-    this.currentExpression = {
-      field: undefined,
-      value: '',
-      include: true,
-    };
+  clearValue(): void {
+    this.currentExpression.include = true;
+    this.currentExpression.value = '';
   }
 
-  pushExpression(): void {
+  concatLiteral(): void {
+    this.currentExpression.value += this.currentToken.literal;
+  }
+
+  pushValue(): void {
     if (!this.currentExpression.value) {
-      this.clearExpression();
+      this.clearValue();
       return;
     }
     if (!this.currentExpression.field) {
@@ -65,55 +66,68 @@ export class Parser<TKeyword extends string> {
       value: this.currentExpression.value,
       include: this.currentExpression.include,
     });
-    this.clearExpression();
+    this.clearValue();
   }
 
   parse(): ParsedQuery<TKeyword> {
     while (this.currentToken.type !== 'eof') {
       switch (this.currentToken.type) {
+        case 'space': {
+          this.pushValue();
+          break;
+        }
         case 'minus': {
-          this.pushExpression();
+          if (this.currentExpression.value) {
+            this.concatLiteral();
+            break;
+          }
+          if (
+            this.peekToken.type === 'space' ||
+            this.peekToken.type === 'eof'
+          ) {
+            break;
+          }
+          if (!this.currentExpression.include) {
+            this.concatLiteral();
+            break;
+          }
           this.currentExpression.include = false;
           break;
         }
-        case 'colon': {
-          this.clearExpression();
-          break;
-        }
         case 'keyword': {
-          if (this.peekToken.type !== 'colon') {
-            if (this.currentExpression.value) {
-              this.pushExpression();
-            }
-            this.currentExpression.value = this.currentToken.literal;
+          if (this.currentExpression.value || !this.currentExpression.include) {
+            this.concatLiteral();
             break;
           }
-
-          if (this.currentExpression.value) {
-            this.pushExpression();
+          if (this.peekToken.type === 'colon') {
             this.currentExpression.field = this.currentToken
               .literal as TKeyword;
-          } else if (this.currentExpression.field) {
-            this.currentExpression.value = this.currentToken.literal;
-          } else {
-            this.currentExpression.field = this.currentToken
-              .literal as TKeyword;
+            this.nextToken();
+            break;
           }
-          this.nextToken();
+          this.concatLiteral();
           break;
         }
-        case 'unique':
+        case 'colon': {
+          this.concatLiteral();
+          break;
+        }
+        case 'unique': {
+          this.concatLiteral();
+          break;
+        }
         case 'string': {
           if (this.currentExpression.value) {
-            this.pushExpression();
+            this.pushValue();
           }
-          this.currentExpression.value = this.currentToken.literal;
+          this.concatLiteral();
+          this.pushValue();
           break;
         }
       }
       this.nextToken();
     }
-    this.pushExpression();
+    this.pushValue();
     return this.expressions;
   }
 }
