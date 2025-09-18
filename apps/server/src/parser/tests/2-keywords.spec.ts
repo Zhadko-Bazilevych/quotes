@@ -23,6 +23,36 @@ describe('keywords', () => {
     });
   });
 
+  it('single colon', () => {
+    const parser = getParser(': :: :::');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [
+        { value: ':', include: true },
+        { value: '::', include: true },
+        { value: ':::', include: true },
+      ],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('keyworded colons', () => {
+    const parser = getParser('user:: content::: author:: :: :::');
+    expect(parser.parse()).toEqual({
+      author: [
+        { value: ':', include: true },
+        { value: '::', include: true },
+        { value: ':::', include: true },
+      ],
+      common: [],
+      content: [{ value: '::', include: true }],
+      context: [],
+      user: [{ value: ':', include: true }],
+    });
+  });
+
   it('every keyword', () => {
     const parser = getParser(
       'user:test1 content:test2 context:test3 author:test4',
@@ -61,15 +91,45 @@ describe('keywords', () => {
     });
   });
 
+  it('multiple values after keyword', () => {
+    const parser = getParser(
+      'abc user:test1 content:test2 test3 context:test4 test5 test6 author:test7 test8',
+    );
+    expect(parser.parse()).toEqual({
+      author: [
+        { value: 'test7', include: true },
+        { value: 'test8', include: true },
+      ],
+      common: [{ value: 'abc', include: true }],
+      content: [
+        { value: 'test2', include: true },
+        { value: 'test3', include: true },
+      ],
+      context: [
+        { value: 'test4', include: true },
+        { value: 'test5', include: true },
+        { value: 'test6', include: true },
+      ],
+      user: [{ value: 'test1', include: true }],
+    });
+  });
+
   it('spaces between keyword and value', () => {
     const parser = getParser(
       ' user:test1  content:  test2 context   :test3  author   :   test4  ',
     );
     expect(parser.parse()).toEqual({
-      author: [{ value: 'test4', include: true }],
+      author: [],
       common: [],
-      content: [{ value: 'test2', include: true }],
-      context: [{ value: 'test3', include: true }],
+      content: [
+        { value: 'test2', include: true },
+        { value: 'context', include: true },
+        { value: ':test3', include: true },
+        { value: 'author', include: true },
+        { value: ':', include: true },
+        { value: 'test4', include: true },
+      ],
+      context: [],
       user: [{ value: 'test1', include: true }],
     });
   });
@@ -84,25 +144,6 @@ describe('keywords', () => {
       content: [{ value: 'content', include: true }],
       context: [{ value: 'user', include: true }],
       user: [{ value: 'author', include: true }],
-    });
-  });
-
-  it('keyworded tokens mixed with common', () => {
-    const parser = getParser(
-      'abc user:test1 content:test2 def context:test3 ghi jkl author:test4 mno',
-    );
-    expect(parser.parse()).toEqual({
-      author: [{ value: 'test4', include: true }],
-      common: [
-        { value: 'abc', include: true },
-        { value: 'def', include: true },
-        { value: 'ghi', include: true },
-        { value: 'jkl', include: true },
-        { value: 'mno', include: true },
-      ],
-      content: [{ value: 'test2', include: true }],
-      context: [{ value: 'test3', include: true }],
-      user: [{ value: 'test1', include: true }],
     });
   });
 });
