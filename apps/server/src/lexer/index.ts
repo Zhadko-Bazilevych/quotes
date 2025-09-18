@@ -68,11 +68,17 @@ export class Lexer<Tkeyword extends string> {
   readString(): string {
     this.readChar();
     const start = this.position;
+    const startChar = this.char;
     while (this.char && this.char !== '"') {
       if (this.char === '\\') {
         this.readChar();
       }
       this.readChar();
+    }
+    if (!this.char) {
+      this.position = start;
+      this.char = startChar;
+      return '"';
     }
     let string = this.input.slice(start, this.position);
     this.readChar();
@@ -101,8 +107,9 @@ export class Lexer<Tkeyword extends string> {
         break;
       }
       case '"': {
-        const string = this.readString();
-        return { literal: string, type: 'string' };
+        const literal = this.readString();
+        const type = literal === '"' ? 'unique' : 'string';
+        return { literal, type };
       }
       case undefined: {
         token = { literal: '', type: 'eof' };
