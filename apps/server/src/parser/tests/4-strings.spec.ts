@@ -70,11 +70,14 @@ describe('strings', () => {
     });
   });
 
-  it('wrong placed minus', () => {
+  it('incorrectly placed minus', () => {
     const parser = getParser('-user:"hello world"');
     expect(parser.parse()).toEqual({
       author: [],
-      common: [{ value: '-user:hello world', include: true }],
+      common: [
+        { value: 'user:', include: false },
+        { value: 'hello world', include: true },
+      ],
       content: [],
       context: [],
       user: [],

@@ -5,7 +5,7 @@ describe('exclude', () => {
     const parser = getParser('-');
     expect(parser.parse()).toEqual({
       author: [],
-      common: [{ value: '-', include: true }],
+      common: [],
       content: [],
       context: [],
       user: [],
@@ -34,14 +34,36 @@ describe('exclude', () => {
     });
   });
 
+  it('exclude keyword as a value with colon', () => {
+    const parser = getParser('-user:');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [{ value: 'user:', include: false }],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('exclude keyworded token incorrectly', () => {
+    const parser = getParser('-user:test1');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [{ value: 'user:test1', include: false }],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
   it('minus as a value', () => {
-    const parser = getParser('user:-');
+    const parser = getParser('user: - ');
     expect(parser.parse()).toEqual({
       author: [],
       common: [],
       content: [],
       context: [],
-      user: [{ value: '-', include: true }],
+      user: [],
     });
   });
 
@@ -87,11 +109,7 @@ describe('exclude', () => {
     const parser = getParser('  -  abc -  user:test1   test2');
     expect(parser.parse()).toEqual({
       author: [],
-      common: [
-        { value: '-', include: true },
-        { value: 'abc', include: true },
-        { value: '-', include: true },
-      ],
+      common: [{ value: 'abc', include: true }],
       content: [],
       context: [],
       user: [
@@ -102,10 +120,13 @@ describe('exclude', () => {
   });
 
   it('multiple minuses in a row', () => {
-    const parser = getParser('---');
+    const parser = getParser('--- ----');
     expect(parser.parse()).toEqual({
       author: [],
-      common: [{ value: '---', include: true }],
+      common: [
+        { value: '--', include: false },
+        { value: '---', include: false },
+      ],
       content: [],
       context: [],
       user: [],
@@ -116,9 +137,10 @@ describe('exclude', () => {
     const parser = getParser('--user:test1');
     expect(parser.parse()).toEqual({
       author: [],
-      common: [],
+      common: [{ value: '-user:test1', include: false }],
+      content: [],
       context: [],
-      user: [{ value: '--user:test1', include: true }],
+      user: [],
     });
   });
 
