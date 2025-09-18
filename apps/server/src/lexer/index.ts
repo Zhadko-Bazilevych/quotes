@@ -1,4 +1,11 @@
-type TokenType = 'minus' | 'colon' | 'keyword' | 'unique' | 'string' | 'eof';
+type TokenType =
+  | 'minus'
+  | 'colon'
+  | 'space'
+  | 'keyword'
+  | 'unique'
+  | 'string'
+  | 'eof';
 
 const keyChars = ['"', '-', ':', ' '] as const;
 type KeyChar = (typeof keyChars)[number];
@@ -78,17 +85,13 @@ export class Lexer<Tkeyword extends string> {
     return this.keywords.includes(literal as SafeKeyword<Tkeyword>);
   }
 
-  skipWhitespace(): void {
-    while (this.char === ' ') {
-      this.readChar();
-    }
-  }
-
   readNext(): Token {
-    this.skipWhitespace();
-
     let token: Token;
     switch (this.char) {
+      case ' ': {
+        token = { literal: this.char, type: 'space' };
+        break;
+      }
       case '-': {
         token = { literal: this.char, type: 'minus' };
         break;
