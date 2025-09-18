@@ -23,6 +23,50 @@ describe('strings', () => {
     });
   });
 
+  it('empty string', () => {
+    const parser = getParser('""');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('empty string follewed by value', () => {
+    const parser = getParser('"" abc');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [{ value: 'abc', include: true }],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('empty string followed by keyword', () => {
+    const parser = getParser('"" context:test1');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [],
+      content: [],
+      context: [{ value: 'test1', include: true }],
+      user: [],
+    });
+  });
+
+  it('exclude empty string followed by value', () => {
+    const parser = getParser('author:-""test1');
+    expect(parser.parse()).toEqual({
+      author: [{ value: 'test1', include: true }],
+      common: [],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
   it('not closed quotes', () => {
     const parser = getParser('"abc def');
     expect(parser.parse()).toEqual({

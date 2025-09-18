@@ -16,7 +16,7 @@ import type {
 import type { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 export type QuoteListFilter = ParsedQuery<
-  'user' | 'author' | 'content' | 'context'
+  'user' | 'author' | 'content' | 'context' | 'common'
 >;
 
 export type GetQuoteListOptions = {

@@ -1,7 +1,7 @@
 import { Lexer } from 'src/lexer';
 import { Parser } from 'src/parser';
 
-const lexerKeys = ['user', 'author', 'content', 'context'];
+const lexerKeys = ['user', 'author', 'content', 'context', 'common'];
 type LexerKey = (typeof lexerKeys)[number];
 
 export function getParser(input: string): Parser<LexerKey> {

@@ -146,4 +146,70 @@ describe('keywords', () => {
       user: [{ value: 'author', include: true }],
     });
   });
+
+  it('multiple keywords followed with colon', () => {
+    const parser = getParser('user:content: test1');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [],
+      content: [{ value: 'test1', include: true }],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('multiple same keywords followed with colon', () => {
+    const parser = getParser('user:user:');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('using common keyword', () => {
+    const parser = getParser('common:test1');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [{ value: 'test1', include: true }],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('using common keyword as value', () => {
+    const parser = getParser('common');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [{ value: 'common', include: true }],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('using common as value keyworded with common', () => {
+    const parser = getParser('common:common');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [{ value: 'common', include: true }],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('multiple common keywords followed with colon', () => {
+    const parser = getParser('common:common: test1');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [{ value: 'test1', include: true }],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
 });

@@ -181,4 +181,26 @@ describe('exclude', () => {
       user: [],
     });
   });
+
+  it('exclude common as value', () => {
+    const parser = getParser('-common');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [{ value: 'common', include: false }],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
+
+  it('exclude common as value keyworded with common', () => {
+    const parser = getParser('common:-common');
+    expect(parser.parse()).toEqual({
+      author: [],
+      common: [{ value: 'common', include: false }],
+      content: [],
+      context: [],
+      user: [],
+    });
+  });
 });
