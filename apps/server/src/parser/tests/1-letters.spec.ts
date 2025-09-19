@@ -1,51 +1,42 @@
 import { getParser } from 'src/parser/tests';
 
 describe('letters only', () => {
-  it('single word', () => {
-    const parser = getParser('abc');
+  it('empty query', () => {
+    const parser = getParser('', ['user', 'common']);
     expect(parser.parse()).toEqual({
-      author: [],
-      common: [{ value: 'abc', include: true }],
-      content: [],
-      context: [],
-      user: [],
+      user: { include: [], exclude: [] },
+      common: { include: [], exclude: [] },
     });
   });
 
-  it('empty query', () => {
+  it('always return common field', () => {
     const parser = getParser('');
     expect(parser.parse()).toEqual({
-      author: [],
-      common: [],
-      content: [],
-      context: [],
-      user: [],
+      common: { include: [], exclude: [] },
+    });
+  });
+
+  it('single word', () => {
+    const parser = getParser('abc', ['user']);
+    expect(parser.parse()).toEqual({
+      user: { include: [], exclude: [] },
+      common: { include: ['abc'], exclude: [] },
     });
   });
 
   it('only spaces', () => {
-    const parser = getParser('     ');
+    const parser = getParser('     ', ['user']);
     expect(parser.parse()).toEqual({
-      author: [],
-      common: [],
-      content: [],
-      context: [],
-      user: [],
+      user: { include: [], exclude: [] },
+      common: { include: [], exclude: [] },
     });
   });
 
   it('multiple words', () => {
-    const parser = getParser(' abc def   ghi ');
+    const parser = getParser(' abc def   ghi ', ['user']);
     expect(parser.parse()).toEqual({
-      author: [],
-      common: [
-        { value: 'abc', include: true },
-        { value: 'def', include: true },
-        { value: 'ghi', include: true },
-      ],
-      content: [],
-      context: [],
-      user: [],
+      common: { include: ['abc', 'def', 'ghi'], exclude: [] },
+      user: { include: [], exclude: [] },
     });
   });
 });
