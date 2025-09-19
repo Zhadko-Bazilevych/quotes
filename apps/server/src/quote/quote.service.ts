@@ -12,9 +12,13 @@ import { CreateQuoteDto } from './dto/create-quote.dto';
 import { ResultAsync } from 'neverthrow';
 import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
 import { Quote } from './domain/quote';
-import { QuoteRepository } from './infrastructure/persistence/repositiries/quote-repository.interface';
+import {
+  QuoteListFilter,
+  QuoteRepository,
+} from './infrastructure/persistence/repositiries/quote-repository.interface';
 import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
 import { Parser } from 'src/parser';
+import { Lexer } from 'src/lexer';
 
 @Injectable()
 export class QuoteService {
@@ -27,9 +31,19 @@ export class QuoteService {
   getList(
     quoteListQueryDto: QuoteListQueryDto,
   ): ResultAsync<QuoteList, GetQuoteListError> {
-    const parser = new Parser(['user', 'author', 'content', 'context']);
     const { pagination, filter, sort } = quoteListQueryDto;
-    const parsed = parser.parse(filter?.q ?? '');
+    let parsed: QuoteListFilter | undefined;
+
+    if (filter?.q) {
+      const lexer = new Lexer(filter.q, [
+        'user',
+        'author',
+        'content',
+        'context',
+      ]);
+      const parser = new Parser(lexer);
+      parsed = parser.parse();
+    }
 
     return this.quoteRepository.getList({
       pagination,

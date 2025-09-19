@@ -1,72 +1,138 @@
+import type { Lexer, SafeKeyword, Token } from 'src/lexer';
+
 export type KeywordSearch = {
-  value: string;
-  include: boolean;
+  include: string[];
+  exclude: string[];
 };
 
 export type ParsedQuery<TKeyword extends string> = {
-  [K in TKeyword]: KeywordSearch[];
+  [K in TKeyword]: KeywordSearch;
+} & {
+  common: KeywordSearch;
 };
 
-export class Parser<TKeyword extends string> {
-  constructor(private readonly keywords: TKeyword[]) {}
+type Expression<TKeyword extends string> = {
+  value: string;
+  include: boolean;
+  field: TKeyword | 'common';
+};
 
-  parse(q: string): ParsedQuery<TKeyword> {
-    q = q.trim();
-    const res: ParsedQuery<TKeyword> = this.keywords.reduce(
+export class Parser<
+  TKeywordInput extends string,
+  TKeyword extends SafeKeyword<TKeywordInput | 'common'>,
+> {
+  private currentToken: Token;
+  private peekToken: Token;
+
+  private currentExpression: Expression<TKeyword>;
+  private expressions: ParsedQuery<TKeyword>;
+
+  constructor(private readonly lexer: Lexer<TKeywordInput, TKeyword>) {
+    this.currentToken = this.lexer.readNext();
+    this.peekToken = this.lexer.readNext();
+
+    this.currentExpression = {
+      field: 'common',
+      value: '',
+      include: true,
+    };
+    this.expressions = this.lexer.keywords.reduce(
       (acc, curr) => ({
-        [curr]: [],
+        [curr]: { include: [], exclude: [] },
         ...acc,
       }),
-      {} as ParsedQuery<TKeyword>,
+      { common: { include: [], exclude: [] } } as ParsedQuery<TKeyword>,
     );
+  }
 
-    let currentKeyword: TKeyword | null = null;
-    let wordStart = 0;
-    for (let i = 0; i < q.length; i++) {
-      const char = q[i];
+  nextToken(): void {
+    this.currentToken = this.peekToken;
+    this.peekToken = this.lexer.readNext();
+  }
 
-      if (char === ' ') {
-        const word = q.slice(wordStart, i + 1).trim();
-        wordStart = i + 1;
-        if (word && currentKeyword) {
-          const keywordSearch = this.getKeywordSearch(word);
-          if (keywordSearch) {
-            res[currentKeyword].push(keywordSearch);
+  clearValue(): void {
+    this.currentExpression.include = true;
+    this.currentExpression.value = '';
+  }
+
+  concatLiteral(): void {
+    this.currentExpression.value += this.currentToken.literal;
+  }
+
+  pushValue(): void {
+    if (!this.currentExpression.value) {
+      this.clearValue();
+      return;
+    }
+    if (!this.currentExpression.field) {
+      this.currentExpression.field = 'common';
+    }
+    const listType = this.currentExpression.include ? 'include' : 'exclude';
+    this.expressions[this.currentExpression.field][listType].push(
+      this.currentExpression.value,
+    );
+    this.clearValue();
+  }
+
+  parse(): ParsedQuery<TKeyword> {
+    while (this.currentToken.type !== 'eof') {
+      switch (this.currentToken.type) {
+        case 'space': {
+          this.pushValue();
+          break;
+        }
+        case 'minus': {
+          if (this.currentExpression.value) {
+            this.concatLiteral();
+            break;
           }
+          if (
+            this.peekToken.type === 'space' ||
+            this.peekToken.type === 'eof'
+          ) {
+            break;
+          }
+          if (!this.currentExpression.include) {
+            this.concatLiteral();
+            break;
+          }
+          this.currentExpression.include = false;
+          break;
         }
-      } else if (char === ':') {
-        const word = q.slice(wordStart, i);
-        wordStart = i + 1;
-        if (this.isKeyword(word)) {
-          currentKeyword = word;
+        case 'keyword': {
+          if (this.currentExpression.value || !this.currentExpression.include) {
+            this.concatLiteral();
+            break;
+          }
+          if (this.peekToken.type === 'colon') {
+            this.currentExpression.field = this.currentToken
+              .literal as TKeyword;
+            this.nextToken();
+            break;
+          }
+          this.concatLiteral();
+          break;
+        }
+        case 'colon': {
+          this.concatLiteral();
+          break;
+        }
+        case 'unique': {
+          this.concatLiteral();
+          break;
+        }
+        case 'string': {
+          if (this.currentExpression.value) {
+            this.pushValue();
+          }
+          this.concatLiteral();
+          this.pushValue();
+          break;
         }
       }
+      this.nextToken();
     }
-    const word = q.slice(wordStart).trim();
-    if (word && currentKeyword) {
-      const keywordSearch = this.getKeywordSearch(word);
-      if (keywordSearch) {
-        res[currentKeyword].push(keywordSearch);
-      }
-    }
-
-    return res;
-  }
-
-  private getKeywordSearch(word: string): KeywordSearch | null {
-    const include = !word.startsWith('-');
-    word = include ? word : word.slice(1);
-    if (!word) {
-      return null;
-    }
-
-    return {
-      value: word,
-      include,
-    };
-  }
-
-  private isKeyword(word: string): word is TKeyword {
-    return this.keywords.includes(word as TKeyword);
+    this.pushValue();
+    return this.expressions;
   }
 }
