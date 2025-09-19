@@ -7,6 +7,7 @@
     "start:dev": "turbo run start:dev",
     "code:check": "turbo run code:check",
     "code:lint": "turbo run code:lint",
+    "test": "turbo run test",
     "code:lint:autofix": "turbo run code:lint:autofix"
   },
   "devDependencies": {

@@ -8,6 +8,7 @@
     "code:lint": {},
     "code:lint:autofix": {},
     "check-types": {},
+    "test": {},
     "code:check": {
       "dependsOn": ["code:lint", "check-types"]
     },
