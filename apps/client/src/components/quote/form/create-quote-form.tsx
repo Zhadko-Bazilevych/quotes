@@ -5,6 +5,8 @@ import { useCreateQuoteMutation } from '@/hooks/use-create-quote';
 import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { quoteSchema } from '@/components/quote/form/quote-schema';
 
 type CreateQuoteFormProps = {
   onCancel: () => void;
@@ -14,6 +16,8 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
   const { onCancel: toggleEdit } = props;
   const methods = useForm<CreateQuoteData>({
     mode: 'onBlur',
+    criteriaMode: 'all',
+    resolver: zodResolver(quoteSchema),
   });
 
   const mutation = useCreateQuoteMutation({
