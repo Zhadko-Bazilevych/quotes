@@ -1,28 +1,33 @@
-import type { Lexer, Token } from 'src/lexer';
+import type { Lexer, SafeKeyword, Token } from 'src/lexer';
 
 export type KeywordSearch = {
-  value: string;
-  include: boolean;
+  include: string[];
+  exclude: string[];
 };
 
 export type ParsedQuery<TKeyword extends string> = {
-  [K in TKeyword]: KeywordSearch[];
+  [K in TKeyword]: KeywordSearch;
 } & {
-  common: KeywordSearch[];
+  common: KeywordSearch;
 };
 
 type Expression<TKeyword extends string> = {
+  value: string;
+  include: boolean;
   field: TKeyword | 'common';
-} & KeywordSearch;
+};
 
-export class Parser<TKeyword extends string> {
+export class Parser<
+  TKeywordInput extends string,
+  TKeyword extends SafeKeyword<TKeywordInput | 'common'>,
+> {
   private currentToken: Token;
   private peekToken: Token;
 
   private currentExpression: Expression<TKeyword>;
   private expressions: ParsedQuery<TKeyword>;
 
-  constructor(private readonly lexer: Lexer<TKeyword>) {
+  constructor(private readonly lexer: Lexer<TKeywordInput, TKeyword>) {
     this.currentToken = this.lexer.readNext();
     this.peekToken = this.lexer.readNext();
 
@@ -33,10 +38,10 @@ export class Parser<TKeyword extends string> {
     };
     this.expressions = this.lexer.keywords.reduce(
       (acc, curr) => ({
-        [curr]: [],
+        [curr]: { include: [], exclude: [] },
         ...acc,
       }),
-      { common: [] } as ParsedQuery<TKeyword>,
+      { common: { include: [], exclude: [] } } as ParsedQuery<TKeyword>,
     );
   }
 
@@ -62,10 +67,10 @@ export class Parser<TKeyword extends string> {
     if (!this.currentExpression.field) {
       this.currentExpression.field = 'common';
     }
-    this.expressions[this.currentExpression.field].push({
-      value: this.currentExpression.value,
-      include: this.currentExpression.include,
-    });
+    const listType = this.currentExpression.include ? 'include' : 'exclude';
+    this.expressions[this.currentExpression.field][listType].push(
+      this.currentExpression.value,
+    );
     this.clearValue();
   }
 

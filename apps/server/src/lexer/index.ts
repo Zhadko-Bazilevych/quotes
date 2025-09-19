@@ -9,7 +9,7 @@ type TokenType =
 
 const keyChars = ['"', '-', ':', ' '] as const;
 type KeyChar = (typeof keyChars)[number];
-type SafeKeyword<TKeyword extends string> = 'invalid' extends {
+export type SafeKeyword<TKeyword extends string> = 'invalid' extends {
   [K in TKeyword]: K extends `${string}${KeyChar}${string}`
     ? 'invalid'
     : 'valid';
@@ -22,15 +22,21 @@ export type Token = {
   literal: string;
 };
 
-export class Lexer<Tkeyword extends string> {
+export class Lexer<
+  TKeywordInput extends string,
+  TKeyword extends SafeKeyword<TKeywordInput | 'common'>,
+> {
   private readonly input: string;
+  readonly keywords: TKeyword[];
   char: string | undefined;
   position = 0;
 
-  constructor(
-    input: string,
-    readonly keywords: SafeKeyword<Tkeyword>[],
-  ) {
+  constructor(input: string, keywords: TKeyword[]) {
+    this.keywords = [...keywords];
+    if (!keywords.includes('common' as TKeyword)) {
+      this.keywords.push('common' as TKeyword);
+    }
+
     this.input = input.trim();
     if (this.input) {
       this.char = this.input[0];
@@ -90,7 +96,7 @@ export class Lexer<Tkeyword extends string> {
   }
 
   isKeyword(literal: string): boolean {
-    return this.keywords.includes(literal as SafeKeyword<Tkeyword>);
+    return this.keywords.includes(literal as TKeyword);
   }
 
   readNext(): Token {

@@ -40,7 +40,6 @@ export class QuoteService {
         'author',
         'content',
         'context',
-        'common',
       ]);
       const parser = new Parser(lexer);
       parsed = parser.parse();
