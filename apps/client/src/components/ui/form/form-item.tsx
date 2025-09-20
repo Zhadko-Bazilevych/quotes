@@ -3,7 +3,6 @@ import {
   useFormContext,
   type FieldPath,
   type FieldValues,
-  type RegisterOptions,
   type UseFormRegisterReturn,
 } from 'react-hook-form';
 
@@ -18,44 +17,32 @@ type FormItemProps<
 > = {
   name: TFieldName;
   label: string;
-  rules: RegisterOptions<TFieldValues, TFieldName>;
   render: (props: FormElementProps<TFieldName>) => React.ReactNode;
 };
 
 export function FormItem<T extends FieldValues>(
   props: FormItemProps<T>,
 ): React.ReactNode {
-  const { name, label, rules, render } = props;
+  const { name, label, render } = props;
   const {
     register,
     formState: { errors: formErrors },
   } = useFormContext<T>();
   const id = useId();
   const uniqueName = `${id}-${name}`;
-
-  let errorList = {};
-  if (formErrors[name]?.types) {
-    errorList = formErrors[name].types;
-  } else if (formErrors[name]?.type) {
-    errorList = { message: formErrors[name].message };
-  }
-  const errors = Object.entries<string>(errorList).map(([type, message]) => ({
-    type,
-    message,
-  }));
+  const errorMap = formErrors[name]?.types ?? {};
 
   return (
     <div className="flex flex-col">
       <label htmlFor={uniqueName}>{label}: </label>
-      {render({ ...register(name, rules), id: uniqueName })}
-      {errors.map(({ type, message }) => {
-        return (
-          <span key={type} className="text-red-500">
-            {message}
-          </span>
-        );
-      })}
-      {!errors.length && <div className="h-6"></div>}
+      {render({ ...register(name), id: uniqueName })}
+      <div className="mb-1 min-h-5 text-sm text-red-500">
+        {Object.values(errorMap)
+          .flat()
+          .map((msg, i) => (
+            <p key={i}>{msg}</p>
+          ))}
+      </div>
     </div>
   );
 }

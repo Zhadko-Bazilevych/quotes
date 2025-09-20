@@ -6,6 +6,8 @@ import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import React from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { quoteSchema } from '@/components/quote/form/quote-schema';
 
 type UpdateQuoteFormProps = {
   quote: Quote;
@@ -24,7 +26,8 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
       user: quote.user,
     },
     mode: 'all',
-    criteriaMode: 'firstError',
+    criteriaMode: 'all',
+    resolver: zodResolver(quoteSchema),
   });
 
   const mutation = useUpdateQuoteMutation({
