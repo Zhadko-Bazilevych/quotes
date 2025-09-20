@@ -36,7 +36,7 @@ export function FormItem<T extends FieldValues>(
     <div className="flex flex-col">
       <label htmlFor={uniqueName}>{label}: </label>
       {render({ ...register(name), id: uniqueName })}
-      <div className="min-h-6 text-red-500">
+      <div className="mb-1 min-h-5 text-sm text-red-500">
         {Object.values(errorMap)
           .flat()
           .map((msg, i) => (
