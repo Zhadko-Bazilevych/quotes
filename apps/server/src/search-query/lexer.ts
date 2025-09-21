@@ -10,7 +10,7 @@ export class Lexer<
   char: string | undefined;
   position = 0;
 
-  constructor(input: string, keywords: readonly TKeyword[] | TKeyword[]) {
+  constructor(input: string, keywords: TKeyword[] = []) {
     this.keywords = [...keywords];
     if (!keywords.includes('common' as TKeyword)) {
       this.keywords.push('common' as TKeyword);
