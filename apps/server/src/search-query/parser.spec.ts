@@ -1,5 +1,5 @@
-import { Lexer, type SafeKeyword } from 'src/lexer';
-import { Parser } from 'src/parser';
+import { Lexer, type SafeKeyword } from 'src/search-query/lexer';
+import { Parser } from 'src/search-query/parser';
 
 function getParser<
   TKeywordInput extends string,

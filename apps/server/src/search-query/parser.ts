@@ -1,4 +1,4 @@
-import type { Lexer, SafeKeyword, Token } from 'src/lexer';
+import type { Lexer, SafeKeyword, Token } from 'src/search-query/lexer';
 
 export type KeywordSearch = {
   include: string[];

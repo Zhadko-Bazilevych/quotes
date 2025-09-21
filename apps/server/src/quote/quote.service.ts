@@ -17,8 +17,8 @@ import {
   QuoteRepository,
 } from './infrastructure/persistence/repositiries/quote-repository.interface';
 import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
-import { Parser } from 'src/parser';
-import { Lexer } from 'src/lexer';
+import { Parser } from 'src/search-query/parser';
+import { Lexer } from 'src/search-query/lexer';
 
 @Injectable()
 export class QuoteService {
