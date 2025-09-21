@@ -16,6 +16,12 @@ export type Token = {
   literal: string;
 };
 
+export type DefaultKeyword = 'common';
+
+export type WithDefaultKeyword<TKeyword extends string> =
+  | TKeyword
+  | DefaultKeyword;
+
 export type SafeKeyword<TKeyword extends string> = 'invalid' extends {
   [K in TKeyword]: K extends `${string}${KeyChar | '\\'}${string}`
     ? 'invalid'
@@ -30,11 +36,11 @@ export type KeywordSearch = {
 };
 
 export type ParsedQuery<TKeyword extends string> = {
-  [K in TKeyword | 'common']: KeywordSearch;
+  [K in WithDefaultKeyword<TKeyword>]: KeywordSearch;
 };
 
 export type Expression<TKeyword extends string> = {
   value: string;
   include: boolean;
-  field: TKeyword | 'common';
+  field: WithDefaultKeyword<TKeyword>;
 };

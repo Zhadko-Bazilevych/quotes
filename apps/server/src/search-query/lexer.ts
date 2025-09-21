@@ -1,9 +1,14 @@
 import { keyChars } from './search-query.constants';
-import type { SafeKeyword, KeyChar, Token } from './search-query.types';
+import type {
+  SafeKeyword,
+  KeyChar,
+  Token,
+  WithDefaultKeyword,
+} from './search-query.types';
 
 export class Lexer<
   TKeywordInput extends string,
-  TKeyword extends SafeKeyword<TKeywordInput | 'common'>,
+  TKeyword extends WithDefaultKeyword<SafeKeyword<TKeywordInput>>,
 > {
   private readonly input: string;
   readonly keywords: TKeyword[];

@@ -1,10 +1,10 @@
 import { Lexer } from 'src/search-query/lexer';
 import { Parser } from 'src/search-query/parser';
-import type { SafeKeyword } from './search-query.types';
+import type { SafeKeyword, WithDefaultKeyword } from './search-query.types';
 
 function getParser<
   TKeywordInput extends string,
-  TKeyword extends SafeKeyword<TKeywordInput | 'common'>,
+  TKeyword extends WithDefaultKeyword<SafeKeyword<TKeywordInput>>,
 >(input: string, keywords: TKeyword[] = []): Parser<TKeywordInput, TKeyword> {
   const lexer = new Lexer(input, keywords);
   return new Parser(lexer);

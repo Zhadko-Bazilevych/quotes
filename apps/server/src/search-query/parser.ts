@@ -4,11 +4,12 @@ import type {
   ParsedQuery,
   SafeKeyword,
   Token,
+  WithDefaultKeyword,
 } from './search-query.types';
 
 export class Parser<
   TKeywordInput extends string,
-  TKeyword extends SafeKeyword<TKeywordInput | 'common'>,
+  TKeyword extends WithDefaultKeyword<SafeKeyword<TKeywordInput>>,
 > {
   private currentToken: Token;
   private peekToken: Token;
