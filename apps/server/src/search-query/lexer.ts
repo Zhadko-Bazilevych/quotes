@@ -1,26 +1,5 @@
-type TokenType =
-  | 'minus'
-  | 'colon'
-  | 'space'
-  | 'keyword'
-  | 'unique'
-  | 'string'
-  | 'eof';
-
-const keyChars = ['"', '-', ':', ' '] as const;
-type KeyChar = (typeof keyChars)[number];
-export type SafeKeyword<TKeyword extends string> = 'invalid' extends {
-  [K in TKeyword]: K extends `${string}${KeyChar}${string}`
-    ? 'invalid'
-    : 'valid';
-}[TKeyword]
-  ? never
-  : TKeyword;
-
-export type Token = {
-  type: TokenType;
-  literal: string;
-};
+import { keyChars } from './search-query.constants';
+import type { SafeKeyword, KeyChar, Token } from './search-query.types';
 
 export class Lexer<
   TKeywordInput extends string,
@@ -56,6 +35,7 @@ export class Lexer<
     if (!this.char) {
       return false;
     }
+
     return keyChars.includes(this.char as KeyChar);
   }
 

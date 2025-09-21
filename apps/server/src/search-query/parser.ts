@@ -1,21 +1,10 @@
-import type { Lexer, SafeKeyword, Token } from 'src/search-query/lexer';
-
-export type KeywordSearch = {
-  include: string[];
-  exclude: string[];
-};
-
-export type ParsedQuery<TKeyword extends string> = {
-  [K in TKeyword]: KeywordSearch;
-} & {
-  common: KeywordSearch;
-};
-
-type Expression<TKeyword extends string> = {
-  value: string;
-  include: boolean;
-  field: TKeyword | 'common';
-};
+import type { Lexer } from 'src/search-query/lexer';
+import type {
+  Expression,
+  ParsedQuery,
+  SafeKeyword,
+  Token,
+} from './search-query.types';
 
 export class Parser<
   TKeywordInput extends string,
