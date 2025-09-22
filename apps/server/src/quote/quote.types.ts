@@ -19,7 +19,7 @@ export type DeleteQuoteError = QuoteNotFoundError | UnexpectedError;
 
 export type QuoteSearchQueryKeywords =
   (typeof QUOTE_SEARCH_QUERY_KEYWORDS)[number];
-export type QuoteSearchQuerySearvice = SearchQueryService<
+export type QuoteSearchQueryService = SearchQueryService<
   QuoteSearchQueryKeywords,
   MakeKeywords<QuoteSearchQueryKeywords>
 >;

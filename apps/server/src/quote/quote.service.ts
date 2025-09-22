@@ -6,7 +6,7 @@ import {
   GetQuoteListError,
   QuoteId,
   QuoteList,
-  QuoteSearchQuerySearvice,
+  QuoteSearchQueryService,
   UpdateQuoteError,
 } from 'src/quote/quote.types';
 import { CreateQuoteDto } from './dto/create-quote.dto';
@@ -22,7 +22,7 @@ export class QuoteService {
   constructor(
     private readonly quoteRepository: QuoteRepository,
     @Inject(QUOTE_SEARCH_QUERY_SERVICE)
-    private readonly quoteSearchQueryService: QuoteSearchQuerySearvice,
+    private readonly quoteSearchQueryService: QuoteSearchQueryService,
   ) {}
 
   getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError> {
