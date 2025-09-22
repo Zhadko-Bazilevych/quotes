@@ -121,15 +121,15 @@ export class KyselyQuoteRepository implements QuoteRepository {
             const expressions: BoolExpression[] = [];
             for (const key of keys) {
               const { include, exclude } = restFilters[key];
-              for (const value of include) {
-                expressions.push(eb(key, 'ilike', `%${value}%`));
-              }
-              const excludeExpressions: BoolExpression[] = [];
               for (const value of exclude) {
-                excludeExpressions.push(eb(key, 'not ilike', `%${value}%`));
+                expressions.push(eb(key, 'not ilike', `%${value}%`));
               }
-              if (excludeExpressions.length) {
-                expressions.push(eb.or(excludeExpressions));
+              const includeExpressions: BoolExpression[] = [];
+              for (const value of include) {
+                includeExpressions.push(eb(key, 'ilike', `%${value}%`));
+              }
+              if (includeExpressions.length) {
+                expressions.push(eb.or(includeExpressions));
               }
             }
             const { include, exclude } = common;
