@@ -8,27 +8,26 @@ export class Lexer<
   private readonly input: string;
   readonly keywords: TKeyword[];
   char: string | undefined;
+  peekChar: string | undefined;
   position = 0;
 
-  constructor(input: string, keywords: readonly TKeyword[] | TKeyword[]) {
+  constructor(input: string, keywords: readonly TKeyword[] | TKeyword[] = []) {
     this.keywords = [...keywords];
     if (!keywords.includes('common' as TKeyword)) {
       this.keywords.push('common' as TKeyword);
     }
-
     this.input = input.trim();
-    if (this.input) {
-      this.char = this.input[0];
-    }
+
+    this.char = this.input[0];
+    this.peekChar = this.input[1];
   }
 
   readChar(): void {
-    if (this.position >= this.input.length) {
-      this.char = undefined;
-      return;
+    if (this.position < this.input.length) {
+      this.position++;
     }
-    this.position++;
     this.char = this.input[this.position];
+    this.peekChar = this.input[this.position + 1];
   }
 
   isKeyChar(): boolean {
@@ -40,39 +39,51 @@ export class Lexer<
   }
 
   readLiteral(): string {
-    const start = this.position;
+    let literal: string = '';
     while (this.char && !this.isKeyChar()) {
       if (this.char === '\\') {
+        if (this.peekChar === 'n') {
+          literal += '\n';
+        } else {
+          literal += this.peekChar ?? '';
+        }
         this.readChar();
+        this.readChar();
+        continue;
       }
+      literal += this.char;
       this.readChar();
     }
-
-    let literal = this.input.slice(start, this.position);
-    literal = literal.replace(/\\(.)/g, '$1');
     return literal;
   }
 
   readString(): string {
     this.readChar();
     const start = this.position;
-    const startChar = this.char;
+
+    let literal: string = '';
     while (this.char && this.char !== '"') {
       if (this.char === '\\') {
+        if (this.peekChar === 'n') {
+          literal += '\n';
+        } else {
+          literal += this.peekChar ?? '';
+        }
         this.readChar();
+        this.readChar();
+        continue;
       }
+      literal += this.char;
       this.readChar();
     }
     if (!this.char) {
-      this.position = start;
-      this.char = startChar;
+      this.position = start - 1;
+      this.readChar();
       return '"';
     }
-    let string = this.input.slice(start, this.position);
-    this.readChar();
 
-    string = string.replace(/\\(.)/g, '$1');
-    return string;
+    this.readChar();
+    return literal;
   }
 
   isKeyword(literal: string): boolean {
