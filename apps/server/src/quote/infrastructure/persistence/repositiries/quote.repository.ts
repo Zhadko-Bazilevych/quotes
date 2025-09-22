@@ -23,7 +23,6 @@ import { getOffset, getTotalPages } from 'src/utils/query';
 import { Injectable } from '@nestjs/common';
 import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
 import { ExpressionWrapper, SqlBool } from 'kysely';
-import { KeywordSearch } from 'src/parser';
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {
@@ -100,6 +99,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
   getList(
     options: GetQuoteListOptions,
   ): ResultAsync<QuoteList, GetQuoteListError> {
+    type BoolExpression = ExpressionWrapper<Database, 'quote', SqlBool>;
     const {
       pagination: { page, pageSize },
       filter,
@@ -112,32 +112,39 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         let baseQuery = trx.selectFrom('quote');
         if (filter) {
+          const { common, ...restFilters } = filter;
+          const keys = Object.keys(restFilters) as Exclude<
+            keyof QuoteListFilter,
+            'common'
+          >[];
           baseQuery = baseQuery.where((eb) => {
-            const expressions: ExpressionWrapper<Database, 'quote', SqlBool>[] =
-              [];
-            for (const [key, values] of Object.entries(filter) as [
-              keyof QuoteListFilter,
-              KeywordSearch[],
-            ][]) {
-              if (!values.length) {
-                continue;
+            const expressions: BoolExpression[] = [];
+            for (const key of keys) {
+              const { include, exclude } = restFilters[key];
+              for (const value of include) {
+                expressions.push(eb(key, 'ilike', `%${value}%`));
               }
-
-              expressions.push(
-                eb.or(
-                  values.map((value) =>
-                    eb(
-                      key,
-                      value.include
-                        ? ('ilike' as const)
-                        : ('not ilike' as const),
-                      `%${value.value}%`,
-                    ),
-                  ),
-                ),
-              );
+              const excludeExpressions: BoolExpression[] = [];
+              for (const value of exclude) {
+                excludeExpressions.push(eb(key, 'not ilike', `%${value}%`));
+              }
+              if (excludeExpressions.length) {
+                expressions.push(eb.or(excludeExpressions));
+              }
             }
-
+            const { include, exclude } = common;
+            for (const key of keys) {
+              for (const value of exclude) {
+                expressions.push(eb(key, 'not ilike', `%${value}%`));
+              }
+            }
+            for (const value of include) {
+              const includeExpressions: BoolExpression[] = [];
+              for (const key of keys) {
+                includeExpressions.push(eb(key, 'ilike', `%${value}%`));
+              }
+              expressions.push(eb.or(includeExpressions));
+            }
             return eb.and(expressions);
           });
         }
@@ -145,7 +152,6 @@ export class KyselyQuoteRepository implements QuoteRepository {
         for (const sorter of sort) {
           baseQuery = baseQuery.orderBy(sorter.field, sorter.order);
         }
-
         const data = await baseQuery
           .selectAll()
           .offset(offset)

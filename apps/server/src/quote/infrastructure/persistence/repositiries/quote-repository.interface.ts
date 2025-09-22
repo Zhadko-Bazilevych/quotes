@@ -1,5 +1,5 @@
 import type { ResultAsync } from 'neverthrow';
-import type { ParsedQuery } from 'src/parser';
+import type { ParsedQuery } from 'src/search-query/search-query.types';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { QuoteListSortDto } from 'src/quote/dto/quote-list-query.dto';
@@ -11,13 +11,12 @@ import type {
   GetQuoteListError,
   QuoteId,
   QuoteList,
+  QuoteSearchQueryKeywords,
   UpdateQuoteError,
 } from 'src/quote/quote.types';
 import type { PaginationDto } from 'src/utils/dto/pagination.dto';
 
-export type QuoteListFilter = ParsedQuery<
-  'user' | 'author' | 'content' | 'context'
->;
+export type QuoteListFilter = ParsedQuery<QuoteSearchQueryKeywords>;
 
 export type GetQuoteListOptions = {
   pagination: PaginationDto;
