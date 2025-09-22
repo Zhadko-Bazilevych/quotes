@@ -5,27 +5,39 @@ describe('Lexer', () => {
   describe('readNext', () => {
     it('returns `eof` token every `readNext()` call on empty input', () => {
       const lexer = new Lexer('');
-      expect(lexer.readNext()).toEqual({ literal: '', type: 'eof' });
-      expect(lexer.readNext()).toEqual({ literal: '', type: 'eof' });
-      expect(lexer.readNext()).toEqual({ literal: '', type: 'eof' });
+      expect(lexer.readNext()).toStrictEqual({ literal: '', type: 'eof' });
+      expect(lexer.readNext()).toStrictEqual({ literal: '', type: 'eof' });
+      expect(lexer.readNext()).toStrictEqual({ literal: '', type: 'eof' });
     });
 
     it('lexes a single literal as `unique` token', () => {
       const lexer = new Lexer('abc');
-      expect(lexer.readNext()).toEqual({ literal: 'abc', type: 'unique' });
-      expect(lexer.readNext()).toEqual({ literal: '', type: 'eof' });
-      expect(lexer.readNext()).toEqual({ literal: '', type: 'eof' });
+      expect(lexer.readNext()).toStrictEqual({
+        literal: 'abc',
+        type: 'unique',
+      });
+      expect(lexer.readNext()).toStrictEqual({ literal: '', type: 'eof' });
+      expect(lexer.readNext()).toStrictEqual({ literal: '', type: 'eof' });
     });
 
     it('lexes multiple literals and returns `space` token for every space', () => {
       const lexer = new Lexer('  abc def  ghi  ');
-      expect(lexer.readNext()).toEqual({ literal: 'abc', type: 'unique' });
-      expect(lexer.readNext()).toEqual({ literal: ' ', type: 'space' });
-      expect(lexer.readNext()).toEqual({ literal: 'def', type: 'unique' });
-      expect(lexer.readNext()).toEqual({ literal: ' ', type: 'space' });
-      expect(lexer.readNext()).toEqual({ literal: ' ', type: 'space' });
-      expect(lexer.readNext()).toEqual({ literal: 'ghi', type: 'unique' });
-      expect(lexer.readNext()).toEqual({ literal: '', type: 'eof' });
+      expect(lexer.readNext()).toStrictEqual({
+        literal: 'abc',
+        type: 'unique',
+      });
+      expect(lexer.readNext()).toStrictEqual({ literal: ' ', type: 'space' });
+      expect(lexer.readNext()).toStrictEqual({
+        literal: 'def',
+        type: 'unique',
+      });
+      expect(lexer.readNext()).toStrictEqual({ literal: ' ', type: 'space' });
+      expect(lexer.readNext()).toStrictEqual({ literal: ' ', type: 'space' });
+      expect(lexer.readNext()).toStrictEqual({
+        literal: 'ghi',
+        type: 'unique',
+      });
+      expect(lexer.readNext()).toStrictEqual({ literal: '', type: 'eof' });
     });
   });
 
@@ -33,13 +45,13 @@ describe('Lexer', () => {
     it("doesn't return any token for empty input", () => {
       const lexer = new Lexer('');
       const res: Token[] = [];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes a single literal as `unique` token', () => {
       const lexer = new Lexer('abc');
       const res: Token[] = [{ literal: 'abc', type: 'unique' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes multiple literals and returns `space` token for every space', () => {
@@ -52,19 +64,19 @@ describe('Lexer', () => {
         { literal: ' ', type: 'space' },
         { literal: 'ghi', type: 'unique' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes a single minus as `minus` token', () => {
       const lexer = new Lexer('-');
       const res: Token[] = [{ literal: '-', type: 'minus' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes a single colon as `colon` token', () => {
       const lexer = new Lexer(':');
       const res: Token[] = [{ literal: ':', type: 'colon' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes every keychar separately even in complex combinations', () => {
@@ -78,7 +90,7 @@ describe('Lexer', () => {
         { literal: '-', type: 'minus' },
         { literal: ':', type: 'colon' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes keychars, located between unique literals separately', () => {
@@ -92,25 +104,25 @@ describe('Lexer', () => {
         { literal: '-', type: 'minus' },
         { literal: 'common', type: 'keyword' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes `common` keyword without passing it to lexer', () => {
       const lexer = new Lexer('common');
       const res: Token[] = [{ literal: 'common', type: 'keyword' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes `common` keyword when empty keyword array passed', () => {
       const lexer = new Lexer('common', []);
       const res: Token[] = [{ literal: 'common', type: 'keyword' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes custom keyword passed into a lexer', () => {
       const lexer = new Lexer('user', ['user']);
       const res: Token[] = [{ literal: 'user', type: 'keyword' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes multiple custom keywords passed into a lexer', () => {
@@ -124,7 +136,7 @@ describe('Lexer', () => {
         { literal: ' ', type: 'space' },
         { literal: 'user', type: 'keyword' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('treats multiple keywords written without spaces as `unique` literal', () => {
@@ -143,7 +155,7 @@ describe('Lexer', () => {
         },
       ];
 
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes multiple keywords mixed with unique literals', () => {
@@ -161,37 +173,37 @@ describe('Lexer', () => {
         { literal: ' ', type: 'space' },
         { literal: 'klm', type: 'unique' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes word in quotes as `string` token', () => {
       const lexer = new Lexer('"hello"');
       const res: Token[] = [{ literal: 'hello', type: 'string' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes empty string as token with empty literal', () => {
       const lexer = new Lexer('""');
       const res: Token[] = [{ literal: '', type: 'string' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes string with spaces as single token', () => {
       const lexer = new Lexer('"hello world"');
       const res: Token[] = [{ literal: 'hello world', type: 'string' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes string containing keywords as `string` token', () => {
       const lexer = new Lexer('"common user"', ['user']);
       const res: Token[] = [{ literal: 'common user', type: 'string' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes string containing key characters as `string` token', () => {
       const lexer = new Lexer('"user:abc-def"', ['user']);
       const res: Token[] = [{ literal: 'user:abc-def', type: 'string' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes multiple strings separated with space', () => {
@@ -201,7 +213,7 @@ describe('Lexer', () => {
         { literal: ' ', type: 'space' },
         { literal: 'world', type: 'string' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes multiple not separated strings or separated with unique literals', () => {
@@ -212,7 +224,7 @@ describe('Lexer', () => {
         { literal: 'cruel', type: 'string' },
         { literal: 'world', type: 'string' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes multiple strings separated with key characters', () => {
@@ -224,13 +236,13 @@ describe('Lexer', () => {
         { literal: ':', type: 'colon' },
         { literal: 'world', type: 'string' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes single double-quote character as `unique` token', () => {
       const lexer = new Lexer('"');
       const res: Token[] = [{ literal: '"', type: 'unique' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes not closed quotes as `unique` token', () => {
@@ -241,7 +253,7 @@ describe('Lexer', () => {
         { literal: ' ', type: 'space' },
         { literal: 'world', type: 'unique' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes only last quotes as `unique` token if their amount is odd', () => {
@@ -251,49 +263,49 @@ describe('Lexer', () => {
         { literal: 'world', type: 'unique' },
         { literal: '"', type: 'unique' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('escapes quotes inside `unique` token with backslash', () => {
       const lexer = new Lexer('ab\\"c');
       const res: Token[] = [{ literal: 'ab"c', type: 'unique' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('escapes quotes inside string with backslash', () => {
       const lexer = new Lexer('"hello\\"world"');
       const res: Token[] = [{ literal: 'hello"world', type: 'string' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('escapes space character with backslash', () => {
       const lexer = new Lexer('hello\\ world');
       const res: Token[] = [{ literal: 'hello world', type: 'unique' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('escapes any character with backslash', () => {
       const lexer = new Lexer('hel\\lo');
       const res: Token[] = [{ literal: 'hello', type: 'unique' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('escapes backslash with backslash', () => {
       const lexer = new Lexer('a\\\\bc');
       const res: Token[] = [{ literal: 'a\\bc', type: 'unique' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('escapes multiple backslashes with backslashes', () => {
       const lexer = new Lexer('a\\\\\\\\bc');
       const res: Token[] = [{ literal: 'a\\\\bc', type: 'unique' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('remove backslash if it escape nothing in the end of input', () => {
       const lexer = new Lexer('abc\\');
       const res: Token[] = [{ literal: 'abc', type: 'unique' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('escapes quotes in the end of input', () => {
@@ -302,19 +314,19 @@ describe('Lexer', () => {
         { literal: '"', type: 'unique' },
         { literal: 'hello"', type: 'unique' },
       ];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('escapes \\n and \\\\n as \\n', () => {
       const lexer = new Lexer('\nhello\\\ncruel\nworld\n');
       const res: Token[] = [{ literal: 'hello\ncruel\nworld', type: 'unique' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
 
     it('lexes escape sequenced as they are', () => {
       const lexer = new Lexer('"\t\r\b\f\v\u03C0"');
       const res: Token[] = [{ literal: '\t\r\b\f\v\u03C0', type: 'string' }];
-      expect(lexer.readAll()).toEqual(res);
+      expect(lexer.readAll()).toStrictEqual(res);
     });
   });
 });
