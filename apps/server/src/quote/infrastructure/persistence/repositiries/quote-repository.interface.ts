@@ -11,13 +11,12 @@ import type {
   GetQuoteListError,
   QuoteId,
   QuoteList,
+  QuoteSearchQueryKeywords,
   UpdateQuoteError,
 } from 'src/quote/quote.types';
 import type { PaginationDto } from 'src/utils/dto/pagination.dto';
 
-export type QuoteListFilter = ParsedQuery<
-  'user' | 'author' | 'content' | 'context' | 'common'
->;
+export type QuoteListFilter = ParsedQuery<QuoteSearchQueryKeywords>;
 
 export type GetQuoteListOptions = {
   pagination: PaginationDto;

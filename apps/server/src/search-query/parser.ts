@@ -1,15 +1,14 @@
 import type { Lexer } from 'src/search-query/lexer';
 import type {
   Expression,
+  MakeKeywords,
   ParsedQuery,
-  SafeKeyword,
   Token,
-  WithDefaultKeyword,
 } from './search-query.types';
 
 export class Parser<
   TKeywordInput extends string,
-  TKeyword extends WithDefaultKeyword<SafeKeyword<TKeywordInput>>,
+  TKeyword extends MakeKeywords<TKeywordInput>,
 > {
   private currentToken: Token;
   private peekToken: Token;

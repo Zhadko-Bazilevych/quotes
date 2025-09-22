@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   CreateQuoteError,
   DeleteQuoteError,
@@ -6,23 +6,24 @@ import {
   GetQuoteListError,
   QuoteId,
   QuoteList,
+  QuoteSearchQuerySearvice,
   UpdateQuoteError,
 } from 'src/quote/quote.types';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { ResultAsync } from 'neverthrow';
 import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
 import { Quote } from './domain/quote';
-import {
-  QuoteListFilter,
-  QuoteRepository,
-} from './infrastructure/persistence/repositiries/quote-repository.interface';
+import { QuoteRepository } from './infrastructure/persistence/repositiries/quote-repository.interface';
 import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
-import { Parser } from 'src/search-query/parser';
-import { Lexer } from 'src/search-query/lexer';
+import { QUOTE_SEARCH_QUERY_SERVICE } from './quote.constants';
 
 @Injectable()
 export class QuoteService {
-  constructor(private readonly quoteRepository: QuoteRepository) {}
+  constructor(
+    private readonly quoteRepository: QuoteRepository,
+    @Inject(QUOTE_SEARCH_QUERY_SERVICE)
+    private readonly quoteSearchQueryService: QuoteSearchQuerySearvice,
+  ) {}
 
   getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError> {
     return this.quoteRepository.getOne(id);
@@ -32,23 +33,14 @@ export class QuoteService {
     quoteListQueryDto: QuoteListQueryDto,
   ): ResultAsync<QuoteList, GetQuoteListError> {
     const { pagination, filter, sort } = quoteListQueryDto;
-    let parsed: QuoteListFilter | undefined;
-
-    if (filter?.q) {
-      const lexer = new Lexer(filter.q, [
-        'user',
-        'author',
-        'content',
-        'context',
-      ]);
-      const parser = new Parser(lexer);
-      parsed = parser.parse();
-    }
+    const parsedSearchQuery = this.quoteSearchQueryService.parse(
+      filter?.q ?? '',
+    );
 
     return this.quoteRepository.getList({
       pagination,
       sort,
-      filter: parsed,
+      filter: parsedSearchQuery,
     });
   }
 

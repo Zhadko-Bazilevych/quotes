@@ -1,21 +1,16 @@
 import { keyChars } from './search-query.constants';
-import type {
-  SafeKeyword,
-  KeyChar,
-  Token,
-  WithDefaultKeyword,
-} from './search-query.types';
+import type { KeyChar, Token, MakeKeywords } from './search-query.types';
 
 export class Lexer<
   TKeywordInput extends string,
-  TKeyword extends WithDefaultKeyword<SafeKeyword<TKeywordInput>>,
+  TKeyword extends MakeKeywords<TKeywordInput>,
 > {
   private readonly input: string;
   readonly keywords: TKeyword[];
   char: string | undefined;
   position = 0;
 
-  constructor(input: string, keywords: TKeyword[]) {
+  constructor(input: string, keywords: readonly TKeyword[] | TKeyword[]) {
     this.keywords = [...keywords];
     if (!keywords.includes('common' as TKeyword)) {
       this.keywords.push('common' as TKeyword);
