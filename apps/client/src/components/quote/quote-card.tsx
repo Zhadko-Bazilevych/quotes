@@ -55,7 +55,7 @@ export const QuoteCard = React.memo(function QuoteCard(
           Created: {formatDatetime(quote.createdAt)}
         </span>
       </div>
-      <p className="wrap-break-word">{quote.content}</p>
+      <p className="wrap-break-word whitespace-pre-wrap">{quote.content}</p>
       <div className="flex justify-between">
         <Button
           className="self-start"
@@ -81,7 +81,9 @@ export const QuoteCard = React.memo(function QuoteCard(
       {isDetailsOpen && (
         <div className="flex flex-col gap-2">
           <div>
-            <p className="wrap-break-word">{quote.context}</p>
+            <p className="wrap-break-word whitespace-pre-wrap">
+              {quote.context}
+            </p>
             <span>Sender: {quote.user}</span>
           </div>
           <div>
