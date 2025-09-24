@@ -5,7 +5,7 @@ import type { ListResponse } from 'src/utils/types';
 import type { Brand } from 'src/utils/types';
 import type { QUOTE_SEARCH_QUERY_KEYWORDS } from './quote.constants';
 import type { SearchQueryService } from 'src/search-query/search-query.service';
-import type { MakeKeywords } from 'src/search-query/search-query.types';
+import type { KeywordToken } from 'src/search-query/search-query.types';
 
 export type QuoteId = Brand<number, 'QuoteId'>;
 
@@ -18,8 +18,8 @@ export type UpdateQuoteError = QuoteNotFoundError | UnexpectedError;
 export type DeleteQuoteError = QuoteNotFoundError | UnexpectedError;
 
 export type QuoteSearchQueryKeywords =
-  (typeof QUOTE_SEARCH_QUERY_KEYWORDS)[number];
+  (typeof QUOTE_SEARCH_QUERY_KEYWORDS)[number]['literal'];
 export type QuoteSearchQueryService = SearchQueryService<
   QuoteSearchQueryKeywords,
-  MakeKeywords<QuoteSearchQueryKeywords>
+  KeywordToken<QuoteSearchQueryKeywords>
 >;

@@ -1,14 +1,12 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { SearchQueryService } from './search-query.service';
-import { MakeKeywords } from './search-query.types';
+import { KeywordToken } from 'src/search-query/search-query.types';
 
 @Module({})
 export class SearchQueryModule {
-  static register<TKeywordInput extends string>(
+  static register<TLiteral extends string>(
     token: symbol,
-    keywords:
-      | readonly MakeKeywords<TKeywordInput>[]
-      | MakeKeywords<TKeywordInput>[],
+    keywords: readonly KeywordToken<TLiteral>[] | KeywordToken<TLiteral>[],
   ): DynamicModule {
     return {
       module: SearchQueryModule,
@@ -16,8 +14,8 @@ export class SearchQueryModule {
         {
           provide: token,
           useFactory: (): SearchQueryService<
-            TKeywordInput,
-            MakeKeywords<TKeywordInput>
+            TLiteral,
+            KeywordToken<TLiteral>
           > => new SearchQueryService(keywords),
         },
       ],

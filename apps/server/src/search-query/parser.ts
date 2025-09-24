@@ -1,36 +1,38 @@
 import type { Lexer } from 'src/search-query/lexer';
 import type {
   Expression,
-  MakeKeywords,
+  KeywordLiteral,
+  KeywordToken,
   ParsedQuery,
   Token,
 } from './search-query.types';
 
 export class Parser<
-  TKeywordInput extends string,
-  TKeyword extends MakeKeywords<TKeywordInput>,
+  TKeywordLiteral extends string,
+  TKeyword extends KeywordToken<TKeywordLiteral>,
 > {
   private currentToken: Token;
   private peekToken: Token;
 
-  private currentExpression: Expression<TKeyword>;
-  private expressions: ParsedQuery<TKeyword>;
+  private currentExpression: Expression<TKeywordLiteral>;
+  private expressions: ParsedQuery<TKeywordLiteral>;
 
-  constructor(private readonly lexer: Lexer<TKeywordInput, TKeyword>) {
+  constructor(private readonly lexer: Lexer<TKeywordLiteral, TKeyword>) {
     this.currentToken = this.lexer.readNext();
     this.peekToken = this.lexer.readNext();
 
     this.currentExpression = {
       field: 'common',
+      type: 'string',
       value: '',
       include: true,
     };
     this.expressions = this.lexer.keywords.reduce(
       (acc, curr) => ({
-        [curr]: { include: [], exclude: [] },
+        [curr['literal']]: { include: [], exclude: [] },
         ...acc,
       }),
-      { common: { include: [], exclude: [] } } as ParsedQuery<TKeyword>,
+      { common: { include: [], exclude: [] } } as ParsedQuery<TKeywordLiteral>,
     );
   }
 
@@ -57,13 +59,13 @@ export class Parser<
       this.currentExpression.field = 'common';
     }
     const listType = this.currentExpression.include ? 'include' : 'exclude';
-    this.expressions[this.currentExpression.field][listType].push(
-      this.currentExpression.value,
-    );
+    this.expressions[this.currentExpression.field][listType].push({
+      value: this.currentExpression.value,
+    });
     this.clearValue();
   }
 
-  parse(): ParsedQuery<TKeyword> {
+  parse(): ParsedQuery<TKeywordLiteral> {
     while (this.currentToken.type !== 'eof') {
       switch (this.currentToken.type) {
         case 'space': {
@@ -95,7 +97,7 @@ export class Parser<
           }
           if (this.peekToken.type === 'colon') {
             this.currentExpression.field = this.currentToken
-              .literal as TKeyword;
+              .literal as KeywordLiteral<TKeywordLiteral>;
             this.nextToken();
             break;
           }

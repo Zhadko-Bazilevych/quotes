@@ -31,21 +31,40 @@ export type SafeKeyword<TKeyword extends string> = 'invalid' extends {
   ? never
   : TKeyword;
 
-export type MakeKeywords<TKeyword extends string> = WithDefaultKeyword<
-  SafeKeyword<TKeyword>
+export type KeywordLiteral<TLiteral extends string> = WithDefaultKeyword<
+  SafeKeyword<TLiteral>
 >;
 
-export type KeywordSearch = {
-  include: string[];
-  exclude: string[];
+export type KeywordValuesType = 'unique' | 'string' | 'number' | 'date';
+
+export type KeywordToken<TLiteral extends string> = {
+  literal: KeywordLiteral<TLiteral>;
+  type: KeywordValuesType;
 };
 
-export type ParsedQuery<TKeyword extends string> = {
-  [K in WithDefaultKeyword<TKeyword>]: KeywordSearch;
+export type SearchValueOperations = '>' | '>=' | '<' | '<=' | '=';
+export type SearchValueDateTypes = 'h' | 'd' | 'm' | 'y';
+
+export type SearchValueToken = {
+  value: string;
+  //Followed optional fields are for KeywordValuesType == `date` | `number`
+  operation?: SearchValueOperations;
+  dateType?: SearchValueDateTypes;
+  //TODO: Make it so it know automaticly if they are exist based on type
+};
+
+export type KeywordSearch = {
+  //type: KeywordValuesType => type can be get from keywordTokens passed to lexer but quote.service (thus kysely) doesn't get them
+  include: SearchValueToken[];
+  exclude: SearchValueToken[];
+};
+
+export type ParsedQuery<TLiteral extends string> = {
+  [K in KeywordLiteral<TLiteral>]: KeywordSearch;
 };
 
 export type Expression<TKeyword extends string> = {
-  value: string;
+  type: KeywordValuesType;
   include: boolean;
-  field: WithDefaultKeyword<TKeyword>;
-};
+  field: KeywordLiteral<TKeyword>;
+} & SearchValueToken;

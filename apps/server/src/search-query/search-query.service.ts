@@ -1,21 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Lexer } from './lexer';
 import { Parser } from './parser';
-import type {
-  ParsedQuery,
-  SafeKeyword,
-  WithDefaultKeyword,
-} from './search-query.types';
+import type { KeywordToken, ParsedQuery } from './search-query.types';
 
 @Injectable()
 export class SearchQueryService<
-  TKeywordInput extends string,
-  TKeyword extends WithDefaultKeyword<SafeKeyword<TKeywordInput>>,
+  TKeywordLiteral extends string,
+  TKeyword extends KeywordToken<TKeywordLiteral>,
 > {
   constructor(private readonly keywords: readonly TKeyword[] | TKeyword[]) {}
 
-  parse(search: string): ParsedQuery<TKeyword> {
-    const lexer = new Lexer(search, this.keywords);
+  parse(search: string): ParsedQuery<TKeywordLiteral> {
+    //TODO: Can Lexer have generic types implicitly
+    const lexer = new Lexer<TKeywordLiteral, TKeyword>(search, this.keywords);
     const parser = new Parser(lexer);
     return parser.parse();
   }

@@ -1,12 +1,12 @@
 import { Lexer } from 'src/search-query/lexer';
 import { Parser } from 'src/search-query/parser';
-import type { SafeKeyword, WithDefaultKeyword } from './search-query.types';
+import type { KeywordToken } from './search-query.types';
 
 function getParser<
-  TKeywordInput extends string,
-  TKeyword extends WithDefaultKeyword<SafeKeyword<TKeywordInput>>,
->(input: string, keywords: TKeyword[] = []): Parser<TKeywordInput, TKeyword> {
-  const lexer = new Lexer(input, keywords);
+  TKeywordLiteral extends string,
+  TKeyword extends KeywordToken<TKeywordLiteral>,
+>(input: string, keywords: TKeyword[] = []): Parser<TKeywordLiteral, TKeyword> {
+  const lexer = new Lexer<TKeywordLiteral, TKeyword>(input, keywords);
   return new Parser(lexer);
 }
 
@@ -129,44 +129,44 @@ describe('Parser.parse', () => {
   });
 
   it('parses multiple keywords', () => {
-    const parser = getParser('user:test1 content:test2 author:test3', [
+    const parser = getParser('user:testA content:testB author:testC', [
       'user',
       'content',
       'author',
     ]);
     expect(parser.parse()).toStrictEqual({
-      author: { include: [{ value: 'test3', isStrict: false }], exclude: [] },
+      author: { include: [{ value: 'testC', isStrict: false }], exclude: [] },
       common: { include: [], exclude: [] },
-      content: { include: [{ value: 'test2', isStrict: false }], exclude: [] },
-      user: { include: [{ value: 'test1', isStrict: false }], exclude: [] },
+      content: { include: [{ value: 'testB', isStrict: false }], exclude: [] },
+      user: { include: [{ value: 'testA', isStrict: false }], exclude: [] },
     });
   });
 
   it('parses multiple keywords of same type into one keyword', () => {
     const parser = getParser(
-      'author:test1 content:test2 user:test3 user:test4 content:test5 author:test6',
+      'author:testA content:testB user:testC user:testD content:testE author:testF',
       ['user', 'content', 'author'],
     );
     expect(parser.parse()).toStrictEqual({
       author: {
         include: [
-          { value: 'test1', isStrict: false },
-          { value: 'test6', isStrict: false },
+          { value: 'testA', isStrict: false },
+          { value: 'testF', isStrict: false },
         ],
         exclude: [],
       },
       common: { include: [], exclude: [] },
       content: {
         include: [
-          { value: 'test2', isStrict: false },
-          { value: 'test5', isStrict: false },
+          { value: 'testB', isStrict: false },
+          { value: 'testE', isStrict: false },
         ],
         exclude: [],
       },
       user: {
         include: [
-          { value: 'test3', isStrict: false },
-          { value: 'test4', isStrict: false },
+          { value: 'testC', isStrict: false },
+          { value: 'testD', isStrict: false },
         ],
         exclude: [],
       },
@@ -175,30 +175,30 @@ describe('Parser.parse', () => {
 
   it('parses multiple values after a keyword', () => {
     const parser = getParser(
-      'test1 test2 user:test1 content:test2 test3 author:test4 test5 test6',
+      'testA testB user:testA content:testB testC author:testD testE testF',
       ['user', 'content', 'author'],
     );
     expect(parser.parse()).toStrictEqual({
       common: {
         include: [
-          { value: 'test1', isStrict: false },
-          { value: 'test2', isStrict: false },
+          { value: 'testA', isStrict: false },
+          { value: 'testB', isStrict: false },
         ],
         exclude: [],
       },
-      user: { include: [{ value: 'test1', isStrict: false }], exclude: [] },
+      user: { include: [{ value: 'testA', isStrict: false }], exclude: [] },
       content: {
         include: [
-          { value: 'test2', isStrict: false },
-          { value: 'test3', isStrict: false },
+          { value: 'testB', isStrict: false },
+          { value: 'testC', isStrict: false },
         ],
         exclude: [],
       },
       author: {
         include: [
-          { value: 'test4', isStrict: false },
-          { value: 'test5', isStrict: false },
-          { value: 'test6', isStrict: false },
+          { value: 'testD', isStrict: false },
+          { value: 'testE', isStrict: false },
+          { value: 'testF', isStrict: false },
         ],
         exclude: [],
       },
@@ -206,7 +206,7 @@ describe('Parser.parse', () => {
   });
 
   it('removes spaces between keyword and value', () => {
-    const parser = getParser(' user:test1  content:  test2 author   :test3  ', [
+    const parser = getParser(' user:testA  content:  testB author   :testC  ', [
       'user',
       'content',
       'author',
@@ -216,13 +216,13 @@ describe('Parser.parse', () => {
       common: { include: [], exclude: [] },
       content: {
         include: [
-          { value: 'test2', isStrict: false },
+          { value: 'testB', isStrict: false },
           { value: 'author', isStrict: false },
-          { value: ':test3', isStrict: false },
+          { value: ':testC', isStrict: false },
         ],
         exclude: [],
       },
-      user: { include: [{ value: 'test1', isStrict: false }], exclude: [] },
+      user: { include: [{ value: 'testA', isStrict: false }], exclude: [] },
     });
   });
 
@@ -246,10 +246,10 @@ describe('Parser.parse', () => {
   });
 
   it('parses into the last keyword when there are multiple keywords followed by a colon', () => {
-    const parser = getParser('user:content: test1', ['user', 'content']);
+    const parser = getParser('user:content: testA', ['user', 'content']);
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
-      content: { include: [{ value: 'test1', isStrict: false }], exclude: [] },
+      content: { include: [{ value: 'testA', isStrict: false }], exclude: [] },
       user: { include: [], exclude: [] },
     });
   });
@@ -263,9 +263,9 @@ describe('Parser.parse', () => {
   });
 
   it('always parses a `common` keyword', () => {
-    const parser = getParser('common:test1');
+    const parser = getParser('common:testA');
     expect(parser.parse()).toStrictEqual({
-      common: { include: [{ value: 'test1', isStrict: false }], exclude: [] },
+      common: { include: [{ value: 'testA', isStrict: false }], exclude: [] },
     });
   });
 
@@ -308,11 +308,11 @@ describe('Parser.parse', () => {
   });
 
   it('excludes keyword with a value that is prefixed with a `-`', () => {
-    const parser = getParser('-user:test1', ['user']);
+    const parser = getParser('-user:testA', ['user']);
     expect(parser.parse()).toStrictEqual({
       common: {
         include: [],
-        exclude: [{ value: 'user:test1', isStrict: false }],
+        exclude: [{ value: 'user:testA', isStrict: false }],
       },
       user: { include: [], exclude: [] },
     });
@@ -327,40 +327,40 @@ describe('Parser.parse', () => {
   });
 
   it('exclude multiple keyworded tokens', () => {
-    const parser = getParser('user:-test1 content:-test2', ['user', 'content']);
+    const parser = getParser('user:-testA content:-testB', ['user', 'content']);
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
-      content: { include: [], exclude: [{ value: 'test2', isStrict: false }] },
-      user: { include: [], exclude: [{ value: 'test1', isStrict: false }] },
+      content: { include: [], exclude: [{ value: 'testB', isStrict: false }] },
+      user: { include: [], exclude: [{ value: 'testA', isStrict: false }] },
     });
   });
 
   it('excludes only values prefixed with `-`', () => {
-    const parser = getParser('user:test1 -test2 content:-test3 test4 ', [
+    const parser = getParser('user:testA -testB content:-testC testD ', [
       'user',
       'content',
     ]);
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       content: {
-        include: [{ value: 'test4', isStrict: false }],
-        exclude: [{ value: 'test3', isStrict: false }],
+        include: [{ value: 'testD', isStrict: false }],
+        exclude: [{ value: 'testC', isStrict: false }],
       },
       user: {
-        include: [{ value: 'test1', isStrict: false }],
-        exclude: [{ value: 'test2', isStrict: false }],
+        include: [{ value: 'testA', isStrict: false }],
+        exclude: [{ value: 'testB', isStrict: false }],
       },
     });
   });
 
   it('skips `-` surrounded by whitespaces', () => {
-    const parser = getParser('  -  abc -  user:test1   test2', ['user']);
+    const parser = getParser('  -  abc -  user:testA   testB', ['user']);
     expect(parser.parse()).toStrictEqual({
       common: { include: [{ value: 'abc', isStrict: false }], exclude: [] },
       user: {
         include: [
-          { value: 'test1', isStrict: false },
-          { value: 'test2', isStrict: false },
+          { value: 'testA', isStrict: false },
+          { value: 'testB', isStrict: false },
         ],
         exclude: [],
       },
@@ -376,19 +376,19 @@ describe('Parser.parse', () => {
   });
 
   it('excludes all `-` after the first `-` together with a value', () => {
-    const parser = getParser('user:--test1', ['user']);
+    const parser = getParser('user:--testA', ['user']);
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
-      user: { include: [], exclude: [{ value: '-test1', isStrict: false }] },
+      user: { include: [], exclude: [{ value: '-testA', isStrict: false }] },
     });
   });
 
   it('excludes kyeword with a value prefixed with `-`', () => {
-    const parser = getParser('--user:test1', ['user']);
+    const parser = getParser('--user:testA', ['user']);
     expect(parser.parse()).toStrictEqual({
       common: {
         include: [],
-        exclude: [{ value: '-user:test1', isStrict: false }],
+        exclude: [{ value: '-user:testA', isStrict: false }],
       },
       user: { include: [], exclude: [] },
     });
@@ -455,18 +455,18 @@ describe('Parser.parse', () => {
   });
 
   it('parses an empty string followed by a keyword with a value', () => {
-    const parser = getParser('"" user:test1', ['user']);
+    const parser = getParser('"" user:testA', ['user']);
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
-      user: { include: [{ value: 'test1', isStrict: false }], exclude: [] },
+      user: { include: [{ value: 'testA', isStrict: false }], exclude: [] },
     });
   });
 
   it('skips an excluded empty `""` followed by a value', () => {
-    const parser = getParser('user:-""test1', ['user']);
+    const parser = getParser('user:-""testA', ['user']);
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
-      user: { include: [{ value: 'test1', isStrict: false }], exclude: [] },
+      user: { include: ['testA'], exclude: [] },
     });
   });
 
@@ -517,7 +517,7 @@ describe('Parser.parse', () => {
       common: { include: [], exclude: [] },
       user: {
         include: [],
-        exclude: [{ value: 'hello world', isStrict: true }],
+        exclude: [{ value: '20', isStrict: true }],
       },
     });
   });
