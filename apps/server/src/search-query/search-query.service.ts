@@ -17,7 +17,6 @@ export class SearchQueryService<
   parse(search: string): ParsedQuery<TKeyword> {
     const lexer = new Lexer(search, this.keywords);
     const parser = new Parser(lexer);
-
     return parser.parse();
   }
 }

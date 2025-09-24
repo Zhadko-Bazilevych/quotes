@@ -9,6 +9,7 @@ export type TokenType =
   | 'keyword'
   | 'unique'
   | 'string'
+  | 'number'
   | 'eof';
 
 export type Token = {

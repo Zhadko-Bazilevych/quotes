@@ -30,18 +30,50 @@ export class Lexer<
     this.peekChar = this.input[this.position + 1];
   }
 
-  isKeyChar(): boolean {
-    if (!this.char) {
+  isKeyChar(char: string): boolean {
+    if (!char) {
       return false;
     }
-
-    return keyChars.includes(this.char as KeyChar);
+    return keyChars.includes(char as KeyChar);
   }
 
-  readLiteral(): string {
+  isNumber(char: string): boolean {
+    return char.charCodeAt(0) > 47 && char.charCodeAt(0) < 58;
+  }
+
+  readNumber(): string {
     let literal: string = '';
-    while (this.char && !this.isKeyChar()) {
+    while (
+      this.char &&
+      !this.isKeyChar(this.char) &&
+      (this.isNumber(this.char) || this.char == '\\')
+    ) {
       if (this.char === '\\') {
+        if (!this.peekChar || !this.isNumber(this.peekChar)) {
+          break;
+        }
+        literal += this.peekChar;
+        this.readChar();
+        this.readChar();
+        continue;
+      }
+      literal += this.char;
+      this.readChar();
+    }
+    return literal;
+  }
+
+  readUnique(): string {
+    let literal: string = '';
+    while (
+      this.char &&
+      !this.isKeyChar(this.char) &&
+      !this.isNumber(this.char)
+    ) {
+      if (this.char === '\\') {
+        if (this.peekChar && this.isNumber(this.peekChar)) {
+          break;
+        }
         if (this.peekChar === 'n') {
           literal += '\n';
         } else {
@@ -115,7 +147,19 @@ export class Lexer<
         break;
       }
       default: {
-        const literal = this.readLiteral();
+        let closeChar = this.char;
+        if (this.char === '\\') {
+          if (!this.peekChar) {
+            token = { literal: '', type: 'eof' };
+            break;
+          }
+          closeChar = this.peekChar;
+        }
+        if (this.isNumber(closeChar)) {
+          const literal = this.readNumber();
+          return { literal, type: 'number' };
+        }
+        const literal = this.readUnique();
         const type = this.isKeyword(literal) ? 'keyword' : 'unique';
         return { literal, type };
       }
