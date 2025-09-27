@@ -1,9 +1,10 @@
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import { defineConfig } from 'eslint/config';
 import { config as baseConfig } from '@quotes/eslint-config/base';
 
-export default tseslint.config([
+export default defineConfig(
   ...baseConfig,
+  { ignores: ['eslint.config.mjs'] },
   {
     languageOptions: {
       globals: {
@@ -22,4 +23,4 @@ export default tseslint.config([
       '@typescript-eslint/no-extraneous-class': 'off',
     },
   },
-]);
+);

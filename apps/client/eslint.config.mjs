@@ -1,10 +1,10 @@
 import globals from 'globals';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
 import pluginQuery from '@tanstack/eslint-plugin-query';
+import { defineConfig } from 'eslint/config';
 import { config as baseReactConfig } from '@quotes/eslint-config/react-internal';
 
-export default tseslint.config([
+export default defineConfig(
   ...baseReactConfig,
   { ignores: ['eslint.config.mjs'] },
   {
@@ -32,4 +32,4 @@ export default tseslint.config([
       '@typescript-eslint/no-extraneous-class': 'off',
     },
   },
-]);
+);
