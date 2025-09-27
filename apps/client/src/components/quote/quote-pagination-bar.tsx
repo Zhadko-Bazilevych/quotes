@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { quoteListRoute, router } from '@/routes/route-tree';
+import { quoteListRoute } from '@/routes/route-tree';
 import { ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react';
 import type { JSX } from 'react';
 import { PAGINATION } from '@/utils/constants';
@@ -103,6 +103,7 @@ export const QuotePaginationBar = React.memo(function QuotePaginationBar(
     renderLeftChevronsOnMobile,
     renderRightChevronsOnMobile,
   } = getPaginationConfig({ page, totalPages });
+  const navigate = quoteListRoute.useNavigate();
   const isSizeDefault = PAGINATION.PAGE_SIZES.includes(pageSize);
 
   const firstItemIndex = total ? (page - 1) * pageSize + 1 : 0;
@@ -207,8 +208,7 @@ export const QuotePaginationBar = React.memo(function QuotePaginationBar(
         />
         <Select
           onValueChange={(pageSize) => {
-            void router.navigate({
-              from: quoteListRoute.fullPath,
+            void navigate({
               search: (prev) => ({
                 ...prev,
                 page: 1,

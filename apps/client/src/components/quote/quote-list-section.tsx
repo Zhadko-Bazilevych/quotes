@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState, type JSX } from 'react';
 import { useQuotes } from '@/hooks/use-quotes';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
-import { useNavigate, useSearch } from '@tanstack/react-router';
 import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { QuoteSearch } from '@/components/quote/quote-search';
@@ -13,12 +12,8 @@ import { QuoteOrder } from './quote-order';
 import { keepPreviousData } from '@tanstack/react-query';
 
 export function QuoteListSection(): JSX.Element {
-  const navigate = useNavigate({
-    from: quoteListRoute.fullPath,
-  });
-  const { pageSize, page, q, sort } = useSearch({
-    from: quoteListRoute.fullPath,
-  });
+  const navigate = quoteListRoute.useNavigate();
+  const { pageSize, page, q, sort } = quoteListRoute.useSearch();
   const { data, isError, isFetching, isPlaceholderData, isLoading } = useQuotes(
     {
       pagination: { pageSize, page },
