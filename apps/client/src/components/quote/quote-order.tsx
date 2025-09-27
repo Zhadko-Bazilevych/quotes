@@ -7,8 +7,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { type JSX } from 'react';
-import { useSearch } from '@tanstack/react-router';
-import { quoteListRoute, router } from '@/routes/route-tree';
+import { quoteListRoute } from '@/routes/route-tree';
 import {
   ArrowDownWideNarrowIcon,
   ArrowRightIcon,
@@ -31,8 +30,9 @@ const namesMap: Record<SortField, string> = {
 };
 
 export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
-  const sortOptions = useSearch({
-    from: quoteListRoute.fullPath,
+  const navigate = quoteListRoute.useNavigate();
+
+  const sortOptions = quoteListRoute.useSearch({
     select: ({ sort }) => sort,
   });
 
@@ -44,8 +44,7 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
     oldField: SortField,
     sortOption: SortOption,
   ): void => {
-    void router.navigate({
-      from: quoteListRoute.fullPath,
+    void navigate({
       search: (prevSearch) => {
         const index = prevSearch.sort.findIndex(
           (prevSortOption) => prevSortOption.field === oldField,
@@ -67,8 +66,7 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
   };
 
   const deleteSortOption = (sortField: SortField): void => {
-    void router.navigate({
-      from: quoteListRoute.fullPath,
+    void navigate({
       search: (prevSearch) => {
         const newSortOptions = prevSearch.sort.filter(
           (prevSortOption) => prevSortOption.field !== sortField,
@@ -83,8 +81,7 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
   };
 
   const addSortOption = (sortField: SortField): void => {
-    void router.navigate({
-      from: quoteListRoute.fullPath,
+    void navigate({
       search: (prevSearch) => {
         const exists = prevSearch.sort.some(
           (prevSortOption) => prevSortOption.field === sortField,
@@ -101,8 +98,7 @@ export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
   };
 
   const shiftSortOption = (sortField: SortField, direction: -1 | 1): void => {
-    void router.navigate({
-      from: quoteListRoute.fullPath,
+    void navigate({
       search: (prevSearch) => {
         const index = prevSearch.sort.findIndex(
           (prevSortOption) => prevSortOption.field === sortField,
