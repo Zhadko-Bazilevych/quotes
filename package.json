@@ -8,6 +8,7 @@
     "code:check": "turbo run code:check",
     "code:lint": "turbo run code:lint",
     "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
     "code:lint:autofix": "turbo run code:lint:autofix"
   },
   "devDependencies": {
