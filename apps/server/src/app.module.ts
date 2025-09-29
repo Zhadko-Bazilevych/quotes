@@ -4,7 +4,7 @@ import { MigratorModule } from 'src/database/migrator/migrator.module';
 import { QuoteModule } from './quote/quote.module';
 import { ConfigModule } from '@nestjs/config';
 import { dbConfig } from './config/config.configuration';
-import { HealthModule } from 'src/health/health.module';
+import { AppController } from 'src/app.controller';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { HealthModule } from 'src/health/health.module';
       cache: true,
     }),
     QuoteModule,
-    HealthModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
