@@ -22,11 +22,11 @@ export function useDeleteQuoteMutation(
 
   return useMutation<Quote, unknown, DeleteQuoteVariables>({
     ...mutations.quotes.delete,
-    onSuccess: (deletedQuote, variables, context) => {
+    onSuccess: (deletedQuote, variables, onMutateResult, context) => {
       void queryClient.invalidateQueries({
         queryKey: queries.quotes.getList._def,
       });
-      onSuccess?.(deletedQuote, variables, context);
+      onSuccess?.(deletedQuote, variables, onMutateResult, context);
       toast('Quote was deleted sucscessfully');
     },
     ...restOptions,

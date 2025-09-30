@@ -21,11 +21,11 @@ export function useCreateQuoteMutation(
 
   return useMutation<Quote, unknown, CreateQuoteVariables>({
     ...mutations.quotes.create,
-    onSuccess: (updatedQuote, variables, context) => {
+    onSuccess: (updatedQuote, variables, onMutateResult, context) => {
       void queryClient.invalidateQueries({
         queryKey: queries.quotes.getList._def,
       });
-      onSuccess?.(updatedQuote, variables, context);
+      onSuccess?.(updatedQuote, variables, onMutateResult, context);
     },
     ...restOptions,
   });
