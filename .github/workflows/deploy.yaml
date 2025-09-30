@@ -32,6 +32,8 @@ jobs:
         run: npm ci
       - name: Test
         run: npm run test
+      - name: Test e2e
+        run: npm run test:e2e
 
   build-and-push-client-image:
     runs-on: ubuntu-latest
