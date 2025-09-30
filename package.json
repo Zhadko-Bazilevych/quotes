@@ -9,6 +9,7 @@
     "code:lint": "turbo run code:lint",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
+    "test:watch": "turbo run test:watch",
     "code:lint:autofix": "turbo run code:lint:autofix"
   },
   "devDependencies": {

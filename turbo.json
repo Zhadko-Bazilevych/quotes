@@ -8,10 +8,14 @@
     "code:lint": {},
     "code:lint:autofix": {},
     "check-types": {},
-    "test": {},
-    "test:e2e": {},
     "code:check": {
       "dependsOn": ["code:lint", "check-types"]
+    },
+    "test": {},
+    "test:e2e": {},
+    "test:watch": {
+      "persistent": true,
+      "cache": false
     },
     "start:dev": {
       "persistent": true,
