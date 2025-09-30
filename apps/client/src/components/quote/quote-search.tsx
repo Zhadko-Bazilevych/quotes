@@ -1,3 +1,4 @@
+import { QuoteSearchHint } from '@/components/quote/quote-search-hint';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
@@ -31,30 +32,33 @@ export const QuoteSearch = React.memo(function QuoteSearch(
   const [debouncedChange, clear] = useDebouncedCallback(onChange, 500);
 
   return (
-    <div className="relative">
-      <Input
-        onChange={(e) => {
-          setQ(e.target.value);
-          debouncedChange(e.target.value);
-        }}
-        value={q}
-        name="quoteSearchInput"
-        {...props}
-      />
-      <div className="bg-background absolute top-0 right-0 rounded-r-md">
-        <Button
-          className="bg-input/30 border-input rounded-l-none border"
-          variant="secondary"
-          size="icon"
-          onClick={() => {
-            clear();
-            setQ('');
-            onChange('');
+    <div className="flex gap-3">
+      <div className="relative flex-1">
+        <Input
+          onChange={(e) => {
+            setQ(e.target.value);
+            debouncedChange(e.target.value);
           }}
-        >
-          <XIcon />
-        </Button>
+          value={q}
+          name="quoteSearchInput"
+          {...props}
+        />
+        <div className="bg-background absolute top-0 right-0 rounded-r-md">
+          <Button
+            className="bg-input/30 border-input rounded-l-none border"
+            variant="secondary"
+            size="icon"
+            onClick={() => {
+              clear();
+              setQ('');
+              onChange('');
+            }}
+          >
+            <XIcon />
+          </Button>
+        </div>
       </div>
+      <QuoteSearchHint />
     </div>
   );
 });
