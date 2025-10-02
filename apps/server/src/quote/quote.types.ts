@@ -2,12 +2,9 @@ import type { Quote } from './domain/quote';
 import type { QuoteNotFoundError } from 'src/quote/quote.errors';
 import type { UnexpectedError } from 'src/utils/errors/app-errors';
 import type { ListResponse } from 'src/utils/types';
-import type { Brand } from 'src/utils/types';
 import type { QUOTE_SEARCH_QUERY_KEYWORDS } from './quote.constants';
 import type { SearchQueryService } from 'src/search-query/search-query.service';
 import type { MakeKeywords } from 'src/search-query/search-query.types';
-
-export type QuoteId = Brand<number, 'QuoteId'>;
 
 export type QuoteList = ListResponse<Quote>;
 
