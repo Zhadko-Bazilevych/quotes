@@ -11,6 +11,7 @@ async function bootstrap(): Promise<void> {
     cors: {
       origin: ['https://thatonequotes.duckdns.org', 'http://localhost:5173'],
     },
+    bodyParser: false,
   });
   app.set('query parser', 'extended');
 
