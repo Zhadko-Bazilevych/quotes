@@ -4,9 +4,17 @@ import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Config } from 'src/config/config.configuration';
 import { QuoteTable } from 'src/database/types/quote.types';
+import { UserTable } from 'src/database/types/user.types';
+import { AccountTable } from 'src/database/types/account.types';
+import { SessionTable } from 'src/database/types/session.types';
+import { VerificationTable } from 'src/database/types/verification.types';
 
 export interface Database {
   quote: QuoteTable;
+  user: UserTable;
+  account: AccountTable;
+  session: SessionTable;
+  verification: VerificationTable;
 }
 
 types.setTypeParser(types.builtins.INT8, Number);
