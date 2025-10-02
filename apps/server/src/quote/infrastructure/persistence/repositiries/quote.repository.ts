@@ -4,7 +4,6 @@ import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
 import type {
   CreateQuoteError,
-  QuoteId,
   GetQuoteError,
   UpdateQuoteError,
   QuoteList,
@@ -23,6 +22,7 @@ import { getOffset, getTotalPages } from 'src/utils/query';
 import { Injectable } from '@nestjs/common';
 import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
 import { ExpressionWrapper, SqlBool } from 'kysely';
+import type { QuoteId } from 'src/database/types/quote.types';
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {

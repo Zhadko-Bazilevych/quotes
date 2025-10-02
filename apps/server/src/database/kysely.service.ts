@@ -1,36 +1,13 @@
 import { Pool, types } from 'pg';
-import {
-  CamelCasePlugin,
-  ColumnType,
-  Generated,
-  Insertable,
-  Kysely,
-  PostgresDialect,
-  Selectable,
-  Updateable,
-} from 'kysely';
+import { CamelCasePlugin, Kysely, PostgresDialect } from 'kysely';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Config } from 'src/config/config.configuration';
-import { QuoteId } from 'src/quote/quote.types';
+import { QuoteTable } from 'src/database/types/quote.types';
 
 export interface Database {
   quote: QuoteTable;
 }
-
-interface QuoteTable {
-  id: Generated<QuoteId>;
-  user: string;
-  author: string;
-  content: string;
-  context: string;
-  createdAt: ColumnType<Date, never, never>;
-  updatedAt: ColumnType<Date, never, Date>;
-}
-
-export type Quote = Selectable<QuoteTable>;
-export type NewQuote = Insertable<QuoteTable>;
-export type UpdateQuote = Updateable<QuoteTable>;
 
 types.setTypeParser(types.builtins.INT8, Number);
 

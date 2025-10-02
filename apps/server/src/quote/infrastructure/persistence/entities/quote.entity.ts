@@ -1,4 +1,4 @@
-import type { QuoteId } from 'src/quote/quote.types';
+import type { QuoteId } from 'src/database/types/quote.types';
 
 export type QuoteEntity = {
   id: QuoteId;
