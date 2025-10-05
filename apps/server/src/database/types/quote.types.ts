@@ -5,13 +5,14 @@ import type {
   Selectable,
   Updateable,
 } from 'kysely';
+import type { UserId } from 'src/database/types/user.types';
 import type { Brand } from 'src/utils/types';
 
 export type QuoteId = Brand<number, 'QuoteId'>;
 
 export interface QuoteTable {
   id: Generated<QuoteId>;
-  user: string;
+  userId: Generated<UserId>;
   author: string;
   content: string;
   context: string;
