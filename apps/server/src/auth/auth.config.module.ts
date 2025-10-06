@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AuthFactory } from 'src/auth/auth.provider';
-import { KyselyService } from 'src/database/kysely.service';
+import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
 @Module({
-  providers: [AuthFactory, KyselyService],
+  providers: [AuthFactory, PostgresDialectService],
   exports: [AuthFactory],
 })
 export class AuthConfigModule {}

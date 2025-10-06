@@ -1,13 +1,12 @@
-import { Pool, types } from 'pg';
-import { CamelCasePlugin, Kysely, PostgresDialect } from 'kysely';
+import { types } from 'pg';
+import { CamelCasePlugin, Kysely } from 'kysely';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Config } from 'src/config/config.configuration';
 import { QuoteTable } from 'src/database/types/quote.types';
 import { UserTable } from 'src/database/types/user.types';
 import { AccountTable } from 'src/database/types/account.types';
 import { SessionTable } from 'src/database/types/session.types';
 import { VerificationTable } from 'src/database/types/verification.types';
+import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
 export interface Database {
   quote: QuoteTable;
@@ -21,18 +20,7 @@ types.setTypeParser(types.builtins.INT8, Number);
 
 @Injectable()
 export class KyselyService extends Kysely<Database> implements OnModuleDestroy {
-  constructor(config: ConfigService<Config, true>) {
-    const dialect = new PostgresDialect({
-      pool: new Pool({
-        database: config.get('db.database', { infer: true }),
-        host: config.get('db.host', { infer: true }),
-        user: config.get('db.user', { infer: true }),
-        password: config.get('db.password', { infer: true }),
-        port: config.get('db.port', { infer: true }),
-        max: 10,
-      }),
-    });
-
+  constructor(dialect: PostgresDialectService) {
     super({ dialect, plugins: [new CamelCasePlugin()] });
   }
 

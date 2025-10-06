@@ -19,11 +19,14 @@ import { AuthFactory } from 'src/auth/auth.provider';
       cache: true,
     }),
     AuthConfigModule,
-    AuthModule.forRoot({
-      auth: AuthFactory.getAuth(),
-      isGlobal: true,
+    AuthModule.forRootAsync({
+      inject: [AuthFactory],
+      useFactory: (factory: AuthFactory) => ({
+        auth: factory.client,
+        isGlobal: true,
+      }),
     }),
-    QuoteModule,
+    // QuoteModule,
   ],
 })
 export class AppModule {}

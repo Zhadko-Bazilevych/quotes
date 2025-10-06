@@ -1,27 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { betterAuth } from 'better-auth';
-import { KyselyService } from 'src/database/kysely.service';
+import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
 @Injectable()
 export class AuthFactory {
-  private static authInstance: ReturnType<typeof betterAuth>;
+  static client: ReturnType<typeof betterAuth>;
 
-  constructor(private readonly db: KyselyService) {
-    AuthFactory.authInstance = betterAuth({
-      database: db,
+  constructor(dialect: PostgresDialectService) {
+    AuthFactory.client = betterAuth({
+      database: dialect,
       emailAndPassword: {
         enabled: true,
       },
-      socialProviders: {
-        google: {
-          clientId: process.env.GOOGLE_CLIENT_ID as string,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-        },
-      },
+      // socialProviders: {
+      //   google: {
+      //     clientId: process.env.GOOGLE_CLIENT_ID as string,
+      //     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      //   },
+      // },
+      trustedOrigins: ['http://localhost:5173'],
     });
-  }
-
-  static getAuth(): ReturnType<typeof betterAuth> {
-    return AuthFactory.authInstance;
   }
 }
