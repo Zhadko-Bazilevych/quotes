@@ -4,10 +4,10 @@ import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
 @Injectable()
 export class AuthFactory {
-  static client: ReturnType<typeof betterAuth>;
+  private readonly betterAuthClient: ReturnType<typeof betterAuth>;
 
   constructor(dialect: PostgresDialectService) {
-    AuthFactory.client = betterAuth({
+    this.betterAuthClient = betterAuth({
       database: dialect,
       emailAndPassword: {
         enabled: true,
@@ -20,5 +20,9 @@ export class AuthFactory {
       // },
       trustedOrigins: ['http://localhost:5173'],
     });
+  }
+
+  get client(): ReturnType<typeof betterAuth> {
+    return this.betterAuthClient;
   }
 }
