@@ -26,7 +26,9 @@ import {
   QuoteListQueryDto,
   quoteListQuerySchema,
 } from 'src/quote/dto/quote-list-query.dto';
+import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 
+@AllowAnonymous()
 @Controller('quotes')
 export class QuoteController {
   constructor(private readonly quotesService: QuoteService) {}
