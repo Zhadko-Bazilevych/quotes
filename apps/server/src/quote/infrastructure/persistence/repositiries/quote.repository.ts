@@ -1,4 +1,4 @@
-import { err, ok, type Result, ResultAsync } from 'neverthrow';
+import { err, ok, okAsync, type Result, ResultAsync } from 'neverthrow';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
@@ -21,29 +21,63 @@ import { QuoteNotFoundError } from 'src/quote/quote.errors';
 import { getOffset, getTotalPages } from 'src/utils/query';
 import { Injectable } from '@nestjs/common';
 import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
-import { ExpressionWrapper, SqlBool } from 'kysely';
+import { ExpressionWrapper, sql, SqlBool } from 'kysely';
 import type { QuoteId } from 'src/database/types/quote.types';
+import { UserId } from 'src/database/types/user.types';
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {
   constructor(private readonly db: KyselyService) {}
 
-  create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
-    const { author, content, user, context } = data;
-
+  private getOrCreateUserByName(
+    userName: string,
+  ): ResultAsync<UserId, UnexpectedError> {
     return ResultAsync.fromPromise(
       this.db
-        .insertInto('quote')
-        .values({
-          author,
-          content,
-          user,
-          context,
-        })
-        .returningAll()
-        .executeTakeFirstOrThrow(),
+        .selectFrom('user')
+        .select('id')
+        .where('name', '=', userName)
+        .executeTakeFirst()
+        .then(async (userEntity) => {
+          if (userEntity) {
+            return userEntity.id;
+          }
+          const inserted = await this.db
+            .insertInto('user')
+            .values({
+              name: userName,
+              email: sql`gen_random_uuid() || '@example.com'`,
+              emailVerified: false,
+            })
+            .returning('id')
+            .executeTakeFirstOrThrow();
+          return inserted.id;
+        }),
       () => new UnexpectedError(),
-    ).map((quote) => QuoteMapper.toDomain(quote));
+    );
+  }
+
+  create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
+    const { author, content, user, context } = data;
+    const userIdResult = this.getOrCreateUserByName(user);
+
+    return userIdResult
+      .andThen((userId) =>
+        ResultAsync.fromPromise(
+          this.db
+            .insertInto('quote')
+            .values({
+              author,
+              content,
+              userId,
+              context,
+            })
+            .returningAll()
+            .executeTakeFirstOrThrow(),
+          () => new UnexpectedError(),
+        ),
+      )
+      .map((quote) => QuoteMapper.EntityToDomain(quote));
   }
 
   getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError> {
@@ -62,7 +96,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         return ok(quote);
       })
-      .map((quote) => QuoteMapper.toDomain(quote));
+      .map((quote) => QuoteMapper.EntityToDomain(quote));
   }
 
   update(
@@ -71,21 +105,29 @@ export class KyselyQuoteRepository implements QuoteRepository {
   ): ResultAsync<Quote, UpdateQuoteError> {
     const { author, content, user, context } = data;
 
-    return ResultAsync.fromPromise(
-      this.db
-        .updateTable('quote')
-        .set({
-          author,
-          content,
-          user,
-          context,
-          updatedAt: new Date(),
-        })
-        .where('id', '=', id)
-        .returningAll()
-        .executeTakeFirst(),
-      () => new UnexpectedError(),
-    )
+    let userIdResult = okAsync<UserId | undefined, UnexpectedError>(undefined);
+    if (user) {
+      userIdResult = this.getOrCreateUserByName(user);
+    }
+
+    return userIdResult
+      .andThen((userId) =>
+        ResultAsync.fromPromise(
+          this.db
+            .updateTable('quote')
+            .set({
+              author,
+              content,
+              userId,
+              context,
+              updatedAt: new Date(),
+            })
+            .where('id', '=', id)
+            .returningAll()
+            .executeTakeFirst(),
+          () => new UnexpectedError(),
+        ),
+      )
       .andThen((quote): Result<Quote, QuoteNotFoundError> => {
         if (!quote) {
           return err(new QuoteNotFoundError({ id }));
@@ -93,7 +135,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         return ok(quote);
       })
-      .map((quote) => QuoteMapper.toDomain(quote));
+      .map((quote) => QuoteMapper.EntityToDomain(quote));
   }
 
   getList(
@@ -110,7 +152,9 @@ export class KyselyQuoteRepository implements QuoteRepository {
       this.db.transaction().execute(async (trx) => {
         const offset = getOffset(page, pageSize);
 
-        let baseQuery = trx.selectFrom('quote');
+        let baseQuery = trx
+          .selectFrom('quote')
+          .innerJoin('user', 'user.id', 'quote.userId');
         if (filter) {
           const { common, ...restFilters } = filter;
           const keys = Object.keys(restFilters) as Exclude<
@@ -119,8 +163,9 @@ export class KyselyQuoteRepository implements QuoteRepository {
           >[];
           baseQuery = baseQuery.where((eb) => {
             const expressions: BoolExpression[] = [];
-            for (const key of keys) {
-              const { include, exclude } = restFilters[key];
+            for (const baseKey of keys) {
+              const { include, exclude } = restFilters[baseKey];
+              const key = baseKey !== 'user' ? baseKey : 'user.name';
               for (const value of exclude) {
                 expressions.push(eb(key, 'not ilike', `%${value}%`));
               }
@@ -133,14 +178,16 @@ export class KyselyQuoteRepository implements QuoteRepository {
               }
             }
             const { include, exclude } = common;
-            for (const key of keys) {
+            for (const baseKey of keys) {
+              const key = baseKey !== 'user' ? baseKey : 'user.name';
               for (const value of exclude) {
                 expressions.push(eb(key, 'not ilike', `%${value}%`));
               }
             }
             for (const value of include) {
               const includeExpressions: BoolExpression[] = [];
-              for (const key of keys) {
+              for (const baseKey of keys) {
+                const key = baseKey !== 'user' ? baseKey : 'user.name';
                 includeExpressions.push(eb(key, 'ilike', `%${value}%`));
               }
               expressions.push(eb.or(includeExpressions));
@@ -149,11 +196,21 @@ export class KyselyQuoteRepository implements QuoteRepository {
           });
         }
 
-        for (const sorter of sort) {
-          baseQuery = baseQuery.orderBy(sorter.field, sorter.order);
+        for (const { field: baseField, order: baseOrder } of sort) {
+          const field = baseField !== 'user' ? baseField : 'user.name';
+          baseQuery = baseQuery.orderBy(field, baseOrder);
         }
         const data = await baseQuery
-          .selectAll()
+          .select([
+            'quote.id',
+            'author',
+            'userId',
+            'user.name',
+            'content',
+            'context',
+            'quote.createdAt',
+            'quote.updatedAt',
+          ])
           .offset(offset)
           .limit(pageSize)
           .execute();
@@ -173,7 +230,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
       const totalPages = getTotalPages(total, pageSize);
 
       return {
-        data: data.map((quote) => QuoteMapper.toDomain(quote)),
+        data: data.map((quote) => QuoteMapper.EntityReadToDomain(quote)),
         total,
         page,
         pageSize,
@@ -195,9 +252,8 @@ export class KyselyQuoteRepository implements QuoteRepository {
         if (!quote) {
           return err(new QuoteNotFoundError({ id }));
         }
-
         return ok(quote);
       })
-      .map((quote) => QuoteMapper.toDomain(quote));
+      .map((quote) => QuoteMapper.EntityToDomain(quote));
   }
 }

@@ -1,8 +1,9 @@
 import type { QuoteId } from 'src/database/types/quote.types';
+import type { UserId } from 'src/database/types/user.types';
 
 export type QuoteEntity = {
   id: QuoteId;
-  user: string;
+  userId: UserId;
   author: string;
   content: string;
   context: string;
