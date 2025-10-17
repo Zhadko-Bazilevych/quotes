@@ -196,9 +196,8 @@ export class KyselyQuoteRepository implements QuoteRepository {
           });
         }
 
-        for (const { field: baseField, order: baseOrder } of sort) {
-          const field = baseField !== 'user' ? baseField : 'user.name';
-          baseQuery = baseQuery.orderBy(field, baseOrder);
+        for (const { field, order } of sort) {
+          baseQuery = baseQuery.orderBy(field, order);
         }
         const data = await baseQuery
           .select([

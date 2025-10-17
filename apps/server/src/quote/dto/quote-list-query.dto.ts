@@ -12,7 +12,7 @@ export type QuoteListFilterDto = z.infer<typeof quoteListFilterSchema>;
 
 const quoteListSortSchema = buildSortSchema([
   'author',
-  'user',
+  'user.name',
   'createdAt',
   'updatedAt',
 ]);

@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils';
 
 const namesMap: Record<SortField, string> = {
   author: 'Author',
-  user: 'User',
+  'user.name': 'User',
   createdAt: 'Created At',
   updatedAt: 'UpdatedAt',
 };
