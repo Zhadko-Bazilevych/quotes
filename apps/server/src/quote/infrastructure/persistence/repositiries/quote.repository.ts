@@ -30,13 +30,13 @@ export class KyselyQuoteRepository implements QuoteRepository {
   constructor(private readonly db: KyselyService) {}
 
   private getOrCreateUserByName(
-    userName: string,
+    name: string,
   ): ResultAsync<UserId, UnexpectedError> {
     return ResultAsync.fromPromise(
       this.db
         .selectFrom('user')
         .select('id')
-        .where('name', '=', userName)
+        .where('name', '=', name)
         .executeTakeFirst()
         .then(async (userEntity) => {
           if (userEntity) {
@@ -45,7 +45,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
           const inserted = await this.db
             .insertInto('user')
             .values({
-              name: userName,
+              name,
               email: sql`gen_random_uuid() || '@example.com'`,
               emailVerified: false,
             })
