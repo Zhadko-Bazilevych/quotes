@@ -18,6 +18,11 @@ export class AuthFactory {
       //     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       //   },
       // },
+      advanced: {
+        database: {
+          generateId: false,
+        },
+      },
       trustedOrigins: ['http://localhost:5173'],
       user: {
         modelName: 'user',
