@@ -163,9 +163,8 @@ export class KyselyQuoteRepository implements QuoteRepository {
           >[];
           baseQuery = baseQuery.where((eb) => {
             const expressions: BoolExpression[] = [];
-            for (const baseKey of keys) {
-              const { include, exclude } = restFilters[baseKey];
-              const key = baseKey !== 'user' ? baseKey : 'user.name';
+            for (const key of keys) {
+              const { include, exclude } = restFilters[key];
               for (const value of exclude) {
                 expressions.push(eb(key, 'not ilike', `%${value}%`));
               }
@@ -178,16 +177,14 @@ export class KyselyQuoteRepository implements QuoteRepository {
               }
             }
             const { include, exclude } = common;
-            for (const baseKey of keys) {
-              const key = baseKey !== 'user' ? baseKey : 'user.name';
+            for (const key of keys) {
               for (const value of exclude) {
                 expressions.push(eb(key, 'not ilike', `%${value}%`));
               }
             }
             for (const value of include) {
               const includeExpressions: BoolExpression[] = [];
-              for (const baseKey of keys) {
-                const key = baseKey !== 'user' ? baseKey : 'user.name';
+              for (const key of keys) {
                 includeExpressions.push(eb(key, 'ilike', `%${value}%`));
               }
               expressions.push(eb.or(includeExpressions));

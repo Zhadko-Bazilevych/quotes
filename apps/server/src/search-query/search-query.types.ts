@@ -22,18 +22,6 @@ export type WithDefaultKeyword<TKeyword extends string> =
   | TKeyword
   | DefaultKeyword;
 
-export type SafeKeyword<TKeyword extends string> = 'invalid' extends {
-  [K in TKeyword]: K extends `${string}${KeyChar | '\\'}${string}` | ``
-    ? 'invalid'
-    : 'valid';
-}[TKeyword]
-  ? never
-  : TKeyword;
-
-export type MakeKeywords<TKeyword extends string> = WithDefaultKeyword<
-  SafeKeyword<TKeyword>
->;
-
 export type KeywordSearch = {
   include: string[];
   exclude: string[];

@@ -1,22 +1,26 @@
 import type { Lexer } from 'src/search-query/lexer';
 import type {
   Expression,
-  MakeKeywords,
   ParsedQuery,
   Token,
+  WithDefaultKeyword,
 } from './search-query.types';
 
 export class Parser<
   TKeywordInput extends string,
-  TKeyword extends MakeKeywords<TKeywordInput>,
+  TKeyword extends WithDefaultKeyword<TKeywordInput>,
+  TAlias extends string,
 > {
   private currentToken: Token;
   private peekToken: Token;
 
-  private currentExpression: Expression<TKeyword>;
-  private expressions: ParsedQuery<TKeyword>;
+  private currentExpression: Expression<TAlias>;
+  private expressions: ParsedQuery<TAlias>;
 
-  constructor(private readonly lexer: Lexer<TKeywordInput, TKeyword>) {
+  constructor(
+    private readonly lexer: Lexer<TKeyword>,
+    private readonly keywordAliases: Record<TKeyword, TAlias>,
+  ) {
     this.currentToken = this.lexer.readNext();
     this.peekToken = this.lexer.readNext();
 
@@ -25,12 +29,17 @@ export class Parser<
       value: '',
       include: true,
     };
-    this.expressions = this.lexer.keywords.reduce(
+
+    const aliases = this.lexer.keywords.map(
+      (keyword) => this.keywordAliases[keyword],
+    );
+
+    this.expressions = aliases.reduce(
       (acc, curr) => ({
         [curr]: { include: [], exclude: [] },
         ...acc,
       }),
-      { common: { include: [], exclude: [] } } as ParsedQuery<TKeyword>,
+      { common: { include: [], exclude: [] } } as ParsedQuery<TAlias>,
     );
   }
 
@@ -63,7 +72,7 @@ export class Parser<
     this.clearValue();
   }
 
-  parse(): ParsedQuery<TKeyword> {
+  parse(): ParsedQuery<TAlias> {
     while (this.currentToken.type !== 'eof') {
       switch (this.currentToken.type) {
         case 'space': {
@@ -94,8 +103,8 @@ export class Parser<
             break;
           }
           if (this.peekToken.type === 'colon') {
-            this.currentExpression.field = this.currentToken
-              .literal as TKeyword;
+            this.currentExpression.field =
+              this.keywordAliases[this.currentToken.literal as TKeyword];
             this.nextToken();
             break;
           }

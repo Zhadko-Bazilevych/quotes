@@ -1,10 +1,7 @@
 import { keyChars } from './search-query.constants';
-import type { KeyChar, Token, MakeKeywords } from './search-query.types';
+import type { KeyChar, Token } from './search-query.types';
 
-export class Lexer<
-  TKeywordInput extends string,
-  TKeyword extends MakeKeywords<TKeywordInput>,
-> {
+export class Lexer<TKeyword extends string> {
   private readonly input: string;
   readonly keywords: TKeyword[];
   char: string | undefined;
