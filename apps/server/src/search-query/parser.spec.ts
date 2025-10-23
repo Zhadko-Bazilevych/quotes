@@ -485,4 +485,12 @@ describe('Parser.parse', () => {
       common: { include: ['abc-', 'hello world'], exclude: [] },
     });
   });
+
+  it('uses aliases', () => {
+    const parser = getParser('abc author:def', { author: 'user' });
+    expect(parser.parse()).toStrictEqual({
+      common: { include: ['abc'], exclude: [] },
+      user: { include: ['def'], exclude: [] },
+    });
+  });
 });
