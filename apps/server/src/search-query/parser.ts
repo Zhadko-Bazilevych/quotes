@@ -1,16 +1,7 @@
 import type { Lexer } from 'src/search-query/lexer';
-import type {
-  Expression,
-  ParsedQuery,
-  Token,
-  WithDefaultKeyword,
-} from './search-query.types';
+import type { Expression, ParsedQuery, Token } from './search-query.types';
 
-export class Parser<
-  TKeywordInput extends string,
-  TKeyword extends WithDefaultKeyword<TKeywordInput>,
-  TAlias extends string,
-> {
+export class Parser<TKeyword extends string, TAlias extends string> {
   private currentToken: Token;
   private peekToken: Token;
 
@@ -30,9 +21,14 @@ export class Parser<
       include: true,
     };
 
-    const aliases = this.lexer.keywords.map(
-      (keyword) => this.keywordAliases[keyword],
-    );
+    const aliases = this.lexer.keywords.map((keyword) => {
+      if (keyword !== 'common') {
+        return this.keywordAliases[keyword];
+      }
+      return Object.keys(this.keywordAliases).includes(keyword)
+        ? this.keywordAliases[keyword]
+        : 'common';
+    });
 
     this.expressions = aliases.reduce(
       (acc, curr) => ({
