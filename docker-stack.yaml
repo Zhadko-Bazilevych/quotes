@@ -12,6 +12,7 @@ services:
       DB_PORT: 5432
       BETTER_AUTH_URL: ${BETTER_AUTH_URL}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      CLIENT_URL: ${CLIENT_URL}
     depends_on:
       - quotes-pgdb
 

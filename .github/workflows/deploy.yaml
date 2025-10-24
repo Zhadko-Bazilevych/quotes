@@ -112,6 +112,7 @@ jobs:
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
             echo "BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}"
             echo "BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }}"
+            echo "CLIENT_URL=${{ secrets.CLIENT_URL }}"
           } > stack.env
 
       - name: Docker Stack Deploy

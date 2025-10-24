@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { betterAuth } from 'better-auth';
+import { Config } from 'src/config/config.configuration';
 import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
 @Injectable()
 export class AuthFactory {
   private readonly betterAuthClient: ReturnType<typeof betterAuth>;
 
-  constructor(dialect: PostgresDialectService) {
+  constructor(
+    config: ConfigService<Config, true>,
+    dialect: PostgresDialectService,
+  ) {
     this.betterAuthClient = betterAuth({
       database: dialect,
       emailAndPassword: {
@@ -23,7 +28,7 @@ export class AuthFactory {
           generateId: false,
         },
       },
-      trustedOrigins: ['http://localhost:5173'],
+      trustedOrigins: [config.get('client.url', { infer: true })],
       user: {
         modelName: 'user',
         fields: {
