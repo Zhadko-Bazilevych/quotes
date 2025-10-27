@@ -9,15 +9,6 @@ import {
 import { AuthFactory } from 'src/auth/auth.provider';
 import { fromNodeHeaders } from 'better-auth/node';
 import { Reflector } from '@nestjs/core';
-import { getSession } from 'better-auth/api';
-
-type UserSession = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getSession>>>
->;
-
-export interface SessionRequest extends Request {
-  session?: UserSession;
-}
 
 export const OptionalAuth = (): CustomDecorator => SetMetadata('PUBLIC', true);
 
@@ -29,11 +20,11 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<SessionRequest>();
+    const request = context.switchToHttp().getRequest<Request>();
     const session = await this.authFactory.client.api.getSession({
       headers: fromNodeHeaders(request.headers),
     });
-    request.session = session ?? undefined;
+    request.session = session;
 
     const isOptional = this.reflector.getAllAndOverride<boolean>('PUBLIC', [
       context.getHandler(),
