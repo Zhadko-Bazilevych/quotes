@@ -1,5 +1,9 @@
 import { type ConfigType, registerAs } from '@nestjs/config';
-import { clientEnvSchema } from 'src/config/client.config.schema';
+import z from 'zod';
+
+export const clientEnvSchema = z.object({
+  CLIENT_URL: z.string(),
+});
 
 export const clientConfig = registerAs('client', () => {
   const parsed = clientEnvSchema.parse(process.env);
