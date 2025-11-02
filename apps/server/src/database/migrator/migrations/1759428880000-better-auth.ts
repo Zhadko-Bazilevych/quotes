@@ -2,8 +2,8 @@ import type { Kysely } from 'kysely';
 import { sql } from 'kysely';
 import type { CustomMigration } from 'src/database/migrator/migrator.types';
 
-export const betterAuthMigration1759428880000: CustomMigration = {
-  name: '002_better_auth',
+export const betterAuth1759428880000: CustomMigration = {
+  name: '1759428880000_better_auth',
   up: async (db: Kysely<unknown>): Promise<void> => {
     await db.schema
       .createTable('user')

@@ -2,7 +2,7 @@ import { sql, type Kysely } from 'kysely';
 import type { CustomMigration } from 'src/database/migrator/migrator.types';
 
 export const migrateUsers1759503810000: CustomMigration = {
-  name: '003_migrate_users_from_quotes',
+  name: '1759503810000_migrate_users',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   up: async (db: Kysely<any>): Promise<void> => {
     await db
