@@ -1,4 +1,4 @@
-import type { QuoteId } from 'src/database/types/quote.types';
+import type { QuoteId } from 'src/database/tables/quote.tables';
 import { TaggedError } from 'src/utils/errors/tagged-error';
 import { CustomNotFoundException } from 'src/utils/exceptions';
 

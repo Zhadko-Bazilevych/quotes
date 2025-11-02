@@ -14,7 +14,7 @@ import type {
   UpdateQuoteError,
 } from 'src/quote/quote.types';
 import type { PaginationDto } from 'src/utils/dto/pagination.dto';
-import type { QuoteId } from 'src/database/types/quote.types';
+import type { QuoteId } from 'src/database/tables/quote.tables';
 
 export type QuoteListFilter = ParsedQuery<QuoteSearchQueryKeywords>;
 

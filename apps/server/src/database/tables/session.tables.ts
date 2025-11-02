@@ -5,7 +5,7 @@ import type {
   Selectable,
   Updateable,
 } from 'kysely';
-import type { UserId } from 'src/database/types/user.types';
+import type { UserId } from 'src/database/tables/user.tables';
 import type { Brand } from 'src/utils/types';
 
 export type SessionId = Brand<number, 'SessionId'>;

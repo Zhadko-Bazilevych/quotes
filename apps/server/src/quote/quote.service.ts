@@ -15,7 +15,7 @@ import { Quote } from './domain/quote';
 import { QuoteRepository } from './infrastructure/persistence/repositiries/quote-repository.interface';
 import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
 import { QUOTE_SEARCH_QUERY_SERVICE } from './quote.constants';
-import { QuoteId } from 'src/database/types/quote.types';
+import { QuoteId } from 'src/database/tables/quote.tables';
 
 @Injectable()
 export class QuoteService {

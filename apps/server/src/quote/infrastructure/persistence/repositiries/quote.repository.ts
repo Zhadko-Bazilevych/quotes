@@ -22,8 +22,8 @@ import { getOffset, getTotalPages } from 'src/utils/query';
 import { Injectable } from '@nestjs/common';
 import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
 import { ExpressionWrapper, sql, SqlBool } from 'kysely';
-import type { QuoteId } from 'src/database/types/quote.types';
-import { UserId } from 'src/database/types/user.types';
+import type { QuoteId } from 'src/database/tables/quote.tables';
+import { UserId } from 'src/database/tables/user.tables';
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {

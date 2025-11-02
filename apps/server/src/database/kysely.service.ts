@@ -1,11 +1,11 @@
 import { types } from 'pg';
 import { CamelCasePlugin, Kysely } from 'kysely';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
-import { QuoteTable } from 'src/database/types/quote.types';
-import { UserTable } from 'src/database/types/user.types';
-import { AccountTable } from 'src/database/types/account.types';
-import { SessionTable } from 'src/database/types/session.types';
-import { VerificationTable } from 'src/database/types/verification.types';
+import { QuoteTable } from 'src/database/tables/quote.tables';
+import { UserTable } from 'src/database/tables/user.tables';
+import { AccountTable } from 'src/database/tables/account.tables';
+import { SessionTable } from 'src/database/tables/session.tables';
+import { VerificationTable } from 'src/database/tables/verification.tables';
 import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
 export interface Database {

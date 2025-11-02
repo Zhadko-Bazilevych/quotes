@@ -1,5 +1,5 @@
-import type { QuoteId } from 'src/database/types/quote.types';
-import type { UserId } from 'src/database/types/user.types';
+import type { QuoteId } from 'src/database/tables/quote.tables';
+import type { UserId } from 'src/database/tables/user.tables';
 
 export type QuoteEntity = {
   id: QuoteId;
