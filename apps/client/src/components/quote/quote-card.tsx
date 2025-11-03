@@ -84,7 +84,7 @@ export const QuoteCard = React.memo(function QuoteCard(
             <p className="wrap-break-word whitespace-pre-wrap">
               {quote.context}
             </p>
-            <span>Sender: {quote.user}</span>
+            <span>Sender: {quote.user.name}</span>
           </div>
           <div>
             <span className="block sm:hidden">

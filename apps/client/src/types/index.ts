@@ -3,7 +3,10 @@ import type { SortOption } from '@/pages/quote-list-schema';
 export type Quote = {
   id: number;
   author: string;
-  user: string;
+  user: {
+    id: number;
+    name: string;
+  };
   content: string;
   context: string;
   createdAt: Date;
@@ -13,7 +16,10 @@ export type Quote = {
 export type QuoteDto = {
   id: number;
   author: string;
-  user: string;
+  user: {
+    id: number;
+    name: string;
+  };
   content: string;
   context: string;
   createdAt: string;
@@ -37,5 +43,15 @@ export type GetQuotesQuery = {
   filter?: { q?: string };
   sort?: SortOption[];
 };
-export type CreateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdateQuoteData = Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateQuoteData = {
+  user: string;
+  author: string;
+  content: string;
+  context: string;
+};
+export type UpdateQuoteData = {
+  user: string;
+  author: string;
+  content: string;
+  context: string;
+};

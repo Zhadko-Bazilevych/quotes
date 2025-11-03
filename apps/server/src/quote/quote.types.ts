@@ -3,10 +3,10 @@ import type { UnexpectedError } from 'src/utils/errors/app-errors';
 import type { ListResponse } from 'src/utils/types';
 import type { SearchQueryService } from 'src/search-query/search-query.service';
 import type { WithDefaultKeyword } from 'src/search-query/search-query.types';
-import type { QuoteRead } from 'src/quote/domain/quote-read';
+import type { QuoteAggregate } from 'src/quote/domain/quote-aggregate';
 import type { QUOTE_SEARCH_QUERY_KEYWORDS } from 'src/quote/quote.constants';
 
-export type QuoteList = ListResponse<QuoteRead>;
+export type QuoteList = ListResponse<QuoteAggregate>;
 
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
 export type GetQuoteListError = UnexpectedError;

@@ -77,7 +77,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
           () => new UnexpectedError(),
         ),
       )
-      .map((quote) => QuoteMapper.EntityToDomain(quote));
+      .map((quote) => QuoteMapper.entityToDomain(quote));
   }
 
   getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError> {
@@ -96,7 +96,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         return ok(quote);
       })
-      .map((quote) => QuoteMapper.EntityToDomain(quote));
+      .map((quote) => QuoteMapper.entityToDomain(quote));
   }
 
   update(
@@ -135,7 +135,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         return ok(quote);
       })
-      .map((quote) => QuoteMapper.EntityToDomain(quote));
+      .map((quote) => QuoteMapper.entityToDomain(quote));
   }
 
   getList(
@@ -226,7 +226,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
       const totalPages = getTotalPages(total, pageSize);
 
       return {
-        data: data.map((quote) => QuoteMapper.EntityReadToDomain(quote)),
+        data: data.map((quote) => QuoteMapper.entityAggregateToDomain(quote)),
         total,
         page,
         pageSize,
@@ -250,6 +250,6 @@ export class KyselyQuoteRepository implements QuoteRepository {
         }
         return ok(quote);
       })
-      .map((quote) => QuoteMapper.EntityToDomain(quote));
+      .map((quote) => QuoteMapper.entityToDomain(quote));
   }
 }

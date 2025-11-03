@@ -1,10 +1,10 @@
 import type { Quote } from 'src/quote/domain/quote';
 import type { QuoteEntity } from '../entities/quote.entity';
-import type { QuoteReadEntity } from 'src/quote/infrastructure/persistence/entities/quote-read.entity';
-import type { QuoteRead } from 'src/quote/domain/quote-read';
+import type { QuoteAggregateEntity as QuoteAggregateEntity } from 'src/quote/infrastructure/persistence/entities/quote-read.entity';
+import type { QuoteAggregate } from 'src/quote/domain/quote-aggregate';
 
 export class QuoteMapper {
-  static EntityToDomain(raw: QuoteEntity): Quote {
+  static entityToDomain(raw: QuoteEntity): Quote {
     return {
       id: raw.id,
       userId: raw.userId,
@@ -16,11 +16,14 @@ export class QuoteMapper {
     };
   }
 
-  static EntityReadToDomain(raw: QuoteReadEntity): QuoteRead {
+  static entityAggregateToDomain(raw: QuoteAggregateEntity): QuoteAggregate {
     return {
       id: raw.id,
       userId: raw.userId,
-      user: raw.name,
+      user: {
+        id: raw.userId,
+        name: raw.name,
+      },
       author: raw.author,
       content: raw.content,
       context: raw.context,
