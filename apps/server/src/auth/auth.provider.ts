@@ -22,7 +22,9 @@ export class AuthFactory {
           generateId: false,
         },
       },
-      trustedOrigins: [config.get('client.url', { infer: true })],
+      baseURL: config.get('auth.betterAuthUrl', { infer: true }),
+      trustedOrigins: [config.get('app.cors', { infer: true })],
+      secret: config.get('auth.betterAuthSecret', { infer: true }),
       user: {
         modelName: 'user',
         fields: {

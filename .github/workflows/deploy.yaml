@@ -110,9 +110,9 @@ jobs:
             echo "GIT_COMMIT_HASH=${GITHUB_SHA}"
             echo "DB_USER=${{ secrets.DB_USER }}"
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
-            echo "BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}"
-            echo "BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }}"
-            echo "CLIENT_URL=${{ secrets.CLIENT_URL }}"
+            echo "AUTH_BETTER_AUTH_SECRET=${{ secrets.AUTH_BETTER_AUTH_SECRET }}"
+            echo "AUTH_BETTER_AUTH_URL=${{ secrets.AUTH_BETTER_AUTH_URL }}"
+            echo "APP_CORS=${{ secrets.APP_CORS }}"
           } > stack.env
 
       - name: Docker Stack Deploy

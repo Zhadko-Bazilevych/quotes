@@ -5,7 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { dbConfig } from './config/db.config';
 import { AuthModule } from 'src/auth/auth.module';
 import { QuoteModule } from 'src/quote/quote.module';
-import { clientConfig } from 'src/config/client.config';
+import { appConfig } from 'src/config/app.config';
+import { authConfig } from 'src/config/auth.config';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { clientConfig } from 'src/config/client.config';
     MigratorModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [dbConfig, clientConfig],
+      load: [dbConfig, appConfig, authConfig],
       envFilePath: ['.env'],
       cache: true,
     }),

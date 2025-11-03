@@ -4,6 +4,7 @@ import { ConsoleLogger } from '@nestjs/common';
 import { MigratorService } from './database/migrator/migrator.service';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
+import type { Config } from 'src/config/config.types';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -13,11 +14,9 @@ async function bootstrap(): Promise<void> {
   });
   app.set('query parser', 'extended');
 
-  const config = app.get(ConfigService);
-  const clientUrl = config.get<string>('client.url');
-  if (clientUrl) {
-    app.enableCors({ origin: [clientUrl] });
-  }
+  const config = app.get(ConfigService<Config, true>);
+  const cors = config.get('app.cors', { infer: true });
+  app.enableCors({ origin: cors });
 
   const migratorService = app.get(MigratorService);
   await migratorService.migrate();
