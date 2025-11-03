@@ -1,4 +1,4 @@
-import { err, ok, okAsync, type Result, ResultAsync } from 'neverthrow';
+import { err, ok, type Result, ResultAsync } from 'neverthrow';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
@@ -21,7 +21,7 @@ import { QuoteNotFoundError } from 'src/quote/quote.errors';
 import { getOffset, getTotalPages } from 'src/utils/query';
 import { Injectable } from '@nestjs/common';
 import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
-import { ExpressionWrapper, sql, SqlBool } from 'kysely';
+import { ExpressionWrapper, sql, SqlBool, Transaction } from 'kysely';
 import type { QuoteId } from 'src/database/tables/quote.tables';
 import { UserId } from 'src/database/tables/user.tables';
 
@@ -29,55 +29,52 @@ import { UserId } from 'src/database/tables/user.tables';
 export class KyselyQuoteRepository implements QuoteRepository {
   constructor(private readonly db: KyselyService) {}
 
-  private getOrCreateUserByName(
+  private async getOrCreateUserByName(
     name: string,
-  ): ResultAsync<UserId, UnexpectedError> {
-    return ResultAsync.fromPromise(
-      this.db
-        .selectFrom('user')
-        .select('id')
-        .where('name', '=', name)
-        .executeTakeFirst()
-        .then(async (userEntity) => {
-          if (userEntity) {
-            return userEntity.id;
-          }
-          const inserted = await this.db
-            .insertInto('user')
-            .values({
-              name,
-              email: sql`gen_random_uuid() || '@example.com'`,
-              emailVerified: false,
-            })
-            .returning('id')
-            .executeTakeFirstOrThrow();
-          return inserted.id;
-        }),
-      () => new UnexpectedError(),
-    );
+    trx?: Transaction<Database>,
+  ): Promise<UserId> {
+    const db = trx ?? this.db;
+
+    const user = await db
+      .selectFrom('user')
+      .select('id')
+      .where('name', '=', name)
+      .executeTakeFirst();
+
+    if (user) {
+      return user.id;
+    }
+    const inserted = await db
+      .insertInto('user')
+      .values({
+        name,
+        email: sql`gen_random_uuid() || '@example.com'`,
+        emailVerified: false,
+      })
+      .returning('id')
+      .executeTakeFirstOrThrow();
+    return inserted.id;
   }
 
   create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
     const { author, content, user, context } = data;
-    const userIdResult = this.getOrCreateUserByName(user);
+    return ResultAsync.fromPromise(
+      this.db.transaction().execute(async (trx) => {
+        const userId = await this.getOrCreateUserByName(user, trx);
 
-    return userIdResult
-      .andThen((userId) =>
-        ResultAsync.fromPromise(
-          this.db
-            .insertInto('quote')
-            .values({
-              author,
-              content,
-              userId,
-              context,
-            })
-            .returningAll()
-            .executeTakeFirstOrThrow(),
-          () => new UnexpectedError(),
-        ),
-      )
-      .map((quote) => QuoteMapper.entityToDomain(quote));
+        return trx
+          .insertInto('quote')
+          .values({
+            author,
+            content,
+            userId,
+            context,
+          })
+          .returningAll()
+          .executeTakeFirstOrThrow();
+      }),
+      () => new UnexpectedError(),
+    ).map((quote) => QuoteMapper.entityToDomain(quote));
   }
 
   getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError> {
@@ -105,37 +102,34 @@ export class KyselyQuoteRepository implements QuoteRepository {
   ): ResultAsync<Quote, UpdateQuoteError> {
     const { author, content, user, context } = data;
 
-    let userIdResult = okAsync<UserId | undefined, UnexpectedError>(undefined);
-    if (user) {
-      userIdResult = this.getOrCreateUserByName(user);
-    }
-
-    return userIdResult
-      .andThen((userId) =>
-        ResultAsync.fromPromise(
-          this.db
-            .updateTable('quote')
-            .set({
-              author,
-              content,
-              userId,
-              context,
-              updatedAt: new Date(),
-            })
-            .where('id', '=', id)
-            .returningAll()
-            .executeTakeFirst(),
-          () => new UnexpectedError(),
-        ),
-      )
-      .andThen((quote): Result<Quote, QuoteNotFoundError> => {
-        if (!quote) {
-          return err(new QuoteNotFoundError({ id }));
+    return ResultAsync.fromPromise(
+      this.db.transaction().execute(async (trx) => {
+        let userId: UserId | undefined;
+        if (user) {
+          userId = await this.getOrCreateUserByName(user, trx);
         }
 
-        return ok(quote);
-      })
-      .map((quote) => QuoteMapper.entityToDomain(quote));
+        const quote = await trx
+          .updateTable('quote')
+          .set({
+            author,
+            content,
+            userId,
+            context,
+            updatedAt: new Date(),
+          })
+          .where('id', '=', id)
+          .returningAll()
+          .executeTakeFirst();
+        return quote;
+      }),
+      () => new UnexpectedError(),
+    ).andThen((quote) => {
+      if (!quote) {
+        return err(new QuoteNotFoundError({ id }));
+      }
+      return ok(quote);
+    });
   }
 
   getList(
