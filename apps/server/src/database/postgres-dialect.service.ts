@@ -6,7 +6,7 @@ import { Config } from 'src/config/config.types';
 
 @Injectable()
 export class PostgresDialectService extends PostgresDialect {
-  constructor(private readonly config: ConfigService<Config, true>) {
+  constructor(config: ConfigService<Config, true>) {
     super({
       pool: new Pool({
         database: config.get('db.database', { infer: true }),
