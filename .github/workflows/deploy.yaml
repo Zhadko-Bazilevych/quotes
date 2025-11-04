@@ -111,8 +111,8 @@ jobs:
             echo "DB_USER=${{ secrets.DB_USER }}"
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
             echo "AUTH_BETTER_AUTH_SECRET=${{ secrets.AUTH_BETTER_AUTH_SECRET }}"
-            echo "AUTH_BETTER_AUTH_URL=${{ secrets.AUTH_BETTER_AUTH_URL }}"
-            echo "APP_CORS=${{ secrets.APP_CORS }}"
+            echo "AUTH_BETTER_AUTH_URL=${{ vars.AUTH_BETTER_AUTH_URL }}"
+            echo "APP_CORS=${{ vars.APP_CORS }}"
           } > stack.env
 
       - name: Docker Stack Deploy
