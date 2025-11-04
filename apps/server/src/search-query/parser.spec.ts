@@ -1,13 +1,12 @@
 import { Lexer } from 'src/search-query/lexer';
 import { Parser } from 'src/search-query/parser';
-import type { SafeKeyword, WithDefaultKeyword } from './search-query.types';
 
-function getParser<
-  TKeywordInput extends string,
-  TKeyword extends WithDefaultKeyword<SafeKeyword<TKeywordInput>>,
->(input: string, keywords: TKeyword[] = []): Parser<TKeywordInput, TKeyword> {
-  const lexer = new Lexer(input, keywords);
-  return new Parser(lexer);
+function getParser<TAlias extends string>(
+  input: string,
+  keywords: Record<string, TAlias> = {},
+): Parser<string, TAlias> {
+  const lexer = new Lexer(input, Object.keys(keywords));
+  return new Parser(lexer, keywords);
 }
 
 describe('Parser.parse', () => {
@@ -19,7 +18,7 @@ describe('Parser.parse', () => {
   });
 
   it('returns a key for each passed keyword', () => {
-    const parser = getParser('', ['kw1', 'kw2', 'kw3']);
+    const parser = getParser('', { kw1: 'kw1', kw2: 'kw2', kw3: 'kw3' });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       kw1: { include: [], exclude: [] },
@@ -36,7 +35,7 @@ describe('Parser.parse', () => {
   });
 
   it('parses single word into `common` field and adds keywords', () => {
-    const parser = getParser('abc', ['kw1', 'kw2']);
+    const parser = getParser('abc', { kw1: 'kw1', kw2: 'kw2' });
     expect(parser.parse()).toStrictEqual({
       common: { include: ['abc'], exclude: [] },
       kw1: { include: [], exclude: [] },
@@ -45,7 +44,7 @@ describe('Parser.parse', () => {
   });
 
   it('removes spaces', () => {
-    const parser = getParser('     ', ['user']);
+    const parser = getParser('     ', { user: 'user' });
     expect(parser.parse()).toStrictEqual({
       user: { include: [], exclude: [] },
       common: { include: [], exclude: [] },
@@ -60,7 +59,7 @@ describe('Parser.parse', () => {
   });
 
   it('parses a single keyworded token', () => {
-    const parser = getParser('user:abc', ['user', 'content']);
+    const parser = getParser('user:abc', { user: 'user', content: 'content' });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       content: { include: [], exclude: [] },
@@ -69,7 +68,7 @@ describe('Parser.parse', () => {
   });
 
   it("skips keywords with colons that don't have values", () => {
-    const parser = getParser('kw1: kw2:', ['kw1', 'kw2']);
+    const parser = getParser('kw1: kw2:', { kw1: 'kw1', kw2: 'kw2' });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       kw1: { include: [], exclude: [] },
@@ -78,7 +77,7 @@ describe('Parser.parse', () => {
   });
 
   it('parses a single keyword without a colon into `common`', () => {
-    const parser = getParser('user', ['user']);
+    const parser = getParser('user', { user: 'user' });
     expect(parser.parse()).toStrictEqual({
       common: { include: ['user'], exclude: [] },
       user: { include: [], exclude: [] },
@@ -86,7 +85,7 @@ describe('Parser.parse', () => {
   });
 
   it('parses colons into `common`', () => {
-    const parser = getParser(': :: :::', ['user']);
+    const parser = getParser(': :: :::', { user: 'user' });
     expect(parser.parse()).toStrictEqual({
       common: { include: [':', '::', ':::'], exclude: [] },
       user: { include: [], exclude: [] },
@@ -94,11 +93,11 @@ describe('Parser.parse', () => {
   });
 
   it('parses colons after keywords into keywords', () => {
-    const parser = getParser('user:: content::: author:: :: :::', [
-      'user',
-      'author',
-      'content',
-    ]);
+    const parser = getParser('user:: content::: author:: :: :::', {
+      user: 'user',
+      content: 'content',
+      author: 'author',
+    });
     expect(parser.parse()).toStrictEqual({
       author: { include: [':', '::', ':::'], exclude: [] },
       common: { include: [], exclude: [] },
@@ -108,11 +107,11 @@ describe('Parser.parse', () => {
   });
 
   it('parses multiple keywords', () => {
-    const parser = getParser('user:test1 content:test2 author:test3', [
-      'user',
-      'content',
-      'author',
-    ]);
+    const parser = getParser('user:test1 content:test2 author:test3', {
+      user: 'user',
+      content: 'content',
+      author: 'author',
+    });
     expect(parser.parse()).toStrictEqual({
       author: { include: ['test3'], exclude: [] },
       common: { include: [], exclude: [] },
@@ -124,7 +123,11 @@ describe('Parser.parse', () => {
   it('parses multiple keywords of same type into one keyword', () => {
     const parser = getParser(
       'author:test1 content:test2 user:test3 user:test4 content:test5 author:test6',
-      ['user', 'content', 'author'],
+      {
+        user: 'user',
+        content: 'content',
+        author: 'author',
+      },
     );
     expect(parser.parse()).toStrictEqual({
       author: { include: ['test1', 'test6'], exclude: [] },
@@ -137,7 +140,11 @@ describe('Parser.parse', () => {
   it('parses multiple values after a keyword', () => {
     const parser = getParser(
       'test1 test2 user:test1 content:test2 test3 author:test4 test5 test6',
-      ['user', 'content', 'author'],
+      {
+        user: 'user',
+        content: 'content',
+        author: 'author',
+      },
     );
     expect(parser.parse()).toStrictEqual({
       common: { include: ['test1', 'test2'], exclude: [] },
@@ -148,11 +155,11 @@ describe('Parser.parse', () => {
   });
 
   it('removes spaces between keyword and value', () => {
-    const parser = getParser(' user:test1  content:  test2 author   :test3  ', [
-      'user',
-      'content',
-      'author',
-    ]);
+    const parser = getParser(' user:test1  content:  test2 author   :test3  ', {
+      user: 'user',
+      content: 'content',
+      author: 'author',
+    });
     expect(parser.parse()).toStrictEqual({
       author: { include: [], exclude: [] },
       common: { include: [], exclude: [] },
@@ -164,7 +171,11 @@ describe('Parser.parse', () => {
   it('handles keywords that are used as values', () => {
     const parser = getParser(
       'user:author content:content content:user common:common',
-      ['content', 'author', 'user'],
+      {
+        user: 'user',
+        content: 'content',
+        author: 'author',
+      },
     );
     expect(parser.parse()).toStrictEqual({
       author: { include: [], exclude: [] },
@@ -175,7 +186,10 @@ describe('Parser.parse', () => {
   });
 
   it('parses into the last keyword when there are multiple keywords followed by a colon', () => {
-    const parser = getParser('user:content: test1', ['user', 'content']);
+    const parser = getParser('user:content: test1', {
+      user: 'user',
+      content: 'content',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       content: { include: ['test1'], exclude: [] },
@@ -184,7 +198,9 @@ describe('Parser.parse', () => {
   });
 
   it('skips keywords when they a followed by a colon without a value', () => {
-    const parser = getParser('user:user:', ['user']);
+    const parser = getParser('user:user:', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       user: { include: [], exclude: [] },
@@ -213,7 +229,9 @@ describe('Parser.parse', () => {
   });
 
   it('excludes `common` token', () => {
-    const parser = getParser('-abc', ['user']);
+    const parser = getParser('-abc', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: ['abc'] },
       user: { include: [], exclude: [] },
@@ -221,7 +239,9 @@ describe('Parser.parse', () => {
   });
 
   it('excludes a keyword as a value', () => {
-    const parser = getParser('-user', ['user']);
+    const parser = getParser('-user', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: ['user'] },
       user: { include: [], exclude: [] },
@@ -229,7 +249,9 @@ describe('Parser.parse', () => {
   });
 
   it('excludes a keyword with a colon as value', () => {
-    const parser = getParser('-user:', ['user']);
+    const parser = getParser('-user:', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: ['user:'] },
       user: { include: [], exclude: [] },
@@ -237,7 +259,9 @@ describe('Parser.parse', () => {
   });
 
   it('excludes keyword with a value that is prefixed with a `-`', () => {
-    const parser = getParser('-user:test1', ['user']);
+    const parser = getParser('-user:test1', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: ['user:test1'] },
       user: { include: [], exclude: [] },
@@ -245,7 +269,9 @@ describe('Parser.parse', () => {
   });
 
   it('skips a single `-` as value', () => {
-    const parser = getParser('user: - ', ['user']);
+    const parser = getParser('user: - ', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       user: { include: [], exclude: [] },
@@ -253,7 +279,10 @@ describe('Parser.parse', () => {
   });
 
   it('exclude multiple keyworded tokens', () => {
-    const parser = getParser('user:-test1 content:-test2', ['user', 'content']);
+    const parser = getParser('user:-test1 content:-test2', {
+      user: 'user',
+      content: 'content',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       content: { include: [], exclude: ['test2'] },
@@ -262,10 +291,10 @@ describe('Parser.parse', () => {
   });
 
   it('excludes only values prefixed with `-`', () => {
-    const parser = getParser('user:test1 -test2 content:-test3 test4 ', [
-      'user',
-      'content',
-    ]);
+    const parser = getParser('user:test1 -test2 content:-test3 test4 ', {
+      user: 'user',
+      content: 'content',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       content: { include: ['test4'], exclude: ['test3'] },
@@ -274,7 +303,9 @@ describe('Parser.parse', () => {
   });
 
   it('skips `-` surrounded by whitespaces', () => {
-    const parser = getParser('  -  abc -  user:test1   test2', ['user']);
+    const parser = getParser('  -  abc -  user:test1   test2', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: ['abc'], exclude: [] },
       user: { include: ['test1', 'test2'], exclude: [] },
@@ -282,7 +313,9 @@ describe('Parser.parse', () => {
   });
 
   it('excludes all `-` after the first `-`', () => {
-    const parser = getParser('--- ----', ['user']);
+    const parser = getParser('--- ----', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: ['--', '---'] },
       user: { include: [], exclude: [] },
@@ -290,7 +323,9 @@ describe('Parser.parse', () => {
   });
 
   it('excludes all `-` after the first `-` together with a value', () => {
-    const parser = getParser('user:--test1', ['user']);
+    const parser = getParser('user:--test1', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       user: { include: [], exclude: ['-test1'] },
@@ -298,7 +333,9 @@ describe('Parser.parse', () => {
   });
 
   it('excludes kyeword with a value prefixed with `-`', () => {
-    const parser = getParser('--user:test1', ['user']);
+    const parser = getParser('--user:test1', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: ['-user:test1'] },
       user: { include: [], exclude: [] },
@@ -334,7 +371,9 @@ describe('Parser.parse', () => {
   });
 
   it('parses a single word inside of `""`', () => {
-    const parser = getParser('"hello"', ['hello']);
+    const parser = getParser('"hello"', {
+      hello: 'hello',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: ['hello'], exclude: [] },
       hello: { include: [], exclude: [] },
@@ -363,7 +402,9 @@ describe('Parser.parse', () => {
   });
 
   it('parses an empty string followed by a keyword with a value', () => {
-    const parser = getParser('"" user:test1', ['user']);
+    const parser = getParser('"" user:test1', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       user: { include: ['test1'], exclude: [] },
@@ -371,7 +412,9 @@ describe('Parser.parse', () => {
   });
 
   it('skips an excluded empty `""` followed by a value', () => {
-    const parser = getParser('user:-""test1', ['user']);
+    const parser = getParser('user:-""test1', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       user: { include: ['test1'], exclude: [] },
@@ -393,7 +436,9 @@ describe('Parser.parse', () => {
   });
 
   it('parses a keyworded string', () => {
-    const parser = getParser('user:"hello world"', ['user']);
+    const parser = getParser('user:"hello world"', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       user: { include: ['hello world'], exclude: [] },
@@ -408,7 +453,9 @@ describe('Parser.parse', () => {
   });
 
   it('exclude keyworded string', () => {
-    const parser = getParser('user:-"hello world"', ['user']);
+    const parser = getParser('user:-"hello world"', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: [], exclude: [] },
       user: { include: [], exclude: ['hello world'] },
@@ -416,7 +463,9 @@ describe('Parser.parse', () => {
   });
 
   it('parses an excluded keyword with a quoted value and includes the value', () => {
-    const parser = getParser('-user:"hello world"', ['user']);
+    const parser = getParser('-user:"hello world"', {
+      user: 'user',
+    });
     expect(parser.parse()).toStrictEqual({
       common: { include: ['hello world'], exclude: ['user:'] },
       user: { include: [], exclude: [] },
@@ -434,6 +483,14 @@ describe('Parser.parse', () => {
     const parser = getParser('abc-"hello world"');
     expect(parser.parse()).toStrictEqual({
       common: { include: ['abc-', 'hello world'], exclude: [] },
+    });
+  });
+
+  it('uses aliases', () => {
+    const parser = getParser('abc author:def', { author: 'user' });
+    expect(parser.parse()).toStrictEqual({
+      common: { include: ['abc'], exclude: [] },
+      user: { include: ['def'], exclude: [] },
     });
   });
 });

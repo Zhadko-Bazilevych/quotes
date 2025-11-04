@@ -1,8 +1,9 @@
-import type { QuoteId } from 'src/quote/quote.types';
+import type { QuoteId } from 'src/database/tables/quote.tables';
+import type { UserId } from 'src/database/tables/user.tables';
 
 export type Quote = {
   id: QuoteId;
-  user: string;
+  userId: UserId;
   author: string;
   content: string;
   context: string;

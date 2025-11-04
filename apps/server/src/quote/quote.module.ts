@@ -6,7 +6,7 @@ import { SearchQueryModule } from 'src/search-query/search-query.module';
 import {
   QUOTE_SEARCH_QUERY_KEYWORDS,
   QUOTE_SEARCH_QUERY_SERVICE,
-} from './quote.constants';
+} from 'src/quote/quote.constants';
 
 @Module({
   imports: [

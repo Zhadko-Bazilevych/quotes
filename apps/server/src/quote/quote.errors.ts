@@ -1,6 +1,6 @@
+import type { QuoteId } from 'src/database/tables/quote.tables';
 import { TaggedError } from 'src/utils/errors/tagged-error';
 import { CustomNotFoundException } from 'src/utils/exceptions';
-import type { QuoteId } from 'src/quote/quote.types';
 
 export class QuoteNotFoundError extends TaggedError('QuoteNotFoundError')<{
   id: QuoteId;

@@ -23,7 +23,7 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
       author: quote.author,
       content: quote.content,
       context: quote.context,
-      user: quote.user,
+      user: quote.user.name,
     },
     mode: 'all',
     criteriaMode: 'all',

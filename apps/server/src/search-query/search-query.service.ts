@@ -1,22 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Lexer } from './lexer';
 import { Parser } from './parser';
-import type {
-  ParsedQuery,
-  SafeKeyword,
-  WithDefaultKeyword,
-} from './search-query.types';
+import type { ParsedQuery } from './search-query.types';
 
 @Injectable()
-export class SearchQueryService<
-  TKeywordInput extends string,
-  TKeyword extends WithDefaultKeyword<SafeKeyword<TKeywordInput>>,
-> {
-  constructor(private readonly keywords: readonly TKeyword[] | TKeyword[]) {}
+export class SearchQueryService<TAlias extends string> {
+  constructor(private readonly keywords: Record<string, TAlias>) {}
 
-  parse(search: string): ParsedQuery<TKeyword> {
-    const lexer = new Lexer(search, this.keywords);
-    const parser = new Parser(lexer);
+  parse(search: string): ParsedQuery<TAlias> {
+    const lexer = new Lexer(search, Object.keys(this.keywords));
+    const parser = new Parser(lexer, this.keywords);
 
     return parser.parse();
   }

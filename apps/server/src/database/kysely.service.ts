@@ -1,53 +1,26 @@
-import { Pool, types } from 'pg';
-import {
-  CamelCasePlugin,
-  ColumnType,
-  Generated,
-  Insertable,
-  Kysely,
-  PostgresDialect,
-  Selectable,
-  Updateable,
-} from 'kysely';
+import { types } from 'pg';
+import { CamelCasePlugin, Kysely } from 'kysely';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Config } from 'src/config/config.configuration';
-import { QuoteId } from 'src/quote/quote.types';
+import { QuoteTable } from 'src/database/tables/quote.tables';
+import { UserTable } from 'src/database/tables/user.tables';
+import { AccountTable } from 'src/database/tables/account.tables';
+import { SessionTable } from 'src/database/tables/session.tables';
+import { VerificationTable } from 'src/database/tables/verification.tables';
+import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
 export interface Database {
   quote: QuoteTable;
+  user: UserTable;
+  account: AccountTable;
+  session: SessionTable;
+  verification: VerificationTable;
 }
-
-interface QuoteTable {
-  id: Generated<QuoteId>;
-  user: string;
-  author: string;
-  content: string;
-  context: string;
-  createdAt: ColumnType<Date, never, never>;
-  updatedAt: ColumnType<Date, never, Date>;
-}
-
-export type Quote = Selectable<QuoteTable>;
-export type NewQuote = Insertable<QuoteTable>;
-export type UpdateQuote = Updateable<QuoteTable>;
 
 types.setTypeParser(types.builtins.INT8, Number);
 
 @Injectable()
 export class KyselyService extends Kysely<Database> implements OnModuleDestroy {
-  constructor(config: ConfigService<Config, true>) {
-    const dialect = new PostgresDialect({
-      pool: new Pool({
-        database: config.get('db.database', { infer: true }),
-        host: config.get('db.host', { infer: true }),
-        user: config.get('db.user', { infer: true }),
-        password: config.get('db.password', { infer: true }),
-        port: config.get('db.port', { infer: true }),
-        max: 10,
-      }),
-    });
-
+  constructor(dialect: PostgresDialectService) {
     super({ dialect, plugins: [new CamelCasePlugin()] });
   }
 

@@ -1,5 +1,13 @@
 import { type ConfigType, registerAs } from '@nestjs/config';
-import { databaseEnvSchema } from './config.schema';
+import z from 'zod';
+
+export const databaseEnvSchema = z.object({
+  DB_DATABASE: z.string(),
+  DB_HOST: z.string(),
+  DB_USER: z.string(),
+  DB_PASSWORD: z.string(),
+  DB_PORT: z.coerce.number().int(),
+});
 
 export const dbConfig = registerAs('db', () => {
   const parsed = databaseEnvSchema.parse(process.env);
@@ -13,8 +21,4 @@ export const dbConfig = registerAs('db', () => {
   };
 });
 
-type DatabaseConfig = ConfigType<typeof dbConfig>;
-
-export type Config = {
-  db: DatabaseConfig;
-};
+export type DatabaseConfig = ConfigType<typeof dbConfig>;

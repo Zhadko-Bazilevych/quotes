@@ -1,7 +1,12 @@
 import { PAGINATION } from '@/utils/constants';
 import z from 'zod';
 
-export const sortFields = ['author', 'user', 'createdAt', 'updatedAt'] as const;
+export const sortFields = [
+  'author',
+  'user.name',
+  'createdAt',
+  'updatedAt',
+] as const;
 export type SortField = (typeof sortFields)[number];
 
 export const sortOrders = ['asc', 'desc'] as const;

@@ -10,6 +10,9 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_PORT: 5432
+      AUTH_BETTER_AUTH_URL: ${AUTH_BETTER_AUTH_URL}
+      AUTH_BETTER_AUTH_SECRET: ${AUTH_BETTER_AUTH_SECRET}
+      APP_CORS: ${APP_CORS}
     depends_on:
       - quotes-pgdb
 
@@ -22,7 +25,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5

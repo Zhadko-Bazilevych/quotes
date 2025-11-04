@@ -3,16 +3,20 @@ import { AppModule } from './app.module';
 import { ConsoleLogger } from '@nestjs/common';
 import { MigratorService } from './database/migrator/migrator.service';
 import type { NestExpressApplication } from '@nestjs/platform-express';
+import { ConfigService } from '@nestjs/config';
+import type { Config } from 'src/config/config.types';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: new ConsoleLogger({ json: true }),
     bufferLogs: true,
-    cors: {
-      origin: ['https://thatonequotes.duckdns.org', 'http://localhost:5173'],
-    },
+    bodyParser: false,
   });
   app.set('query parser', 'extended');
+
+  const config = app.get(ConfigService<Config, true>);
+  const cors = config.get('app.cors', { infer: true });
+  app.enableCors({ origin: cors });
 
   const migratorService = app.get(MigratorService);
   await migratorService.migrate();
