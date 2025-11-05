@@ -24,10 +24,7 @@ import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.
 import { ExpressionWrapper, sql, SqlBool } from 'kysely';
 import type { QuoteId } from 'src/database/tables/quote.tables';
 import { UserId } from 'src/database/tables/user.tables';
-
-function kt<T>(kyselyPromise: Promise<T>): ResultAsync<T, UnexpectedError> {
-  return ResultAsync.fromPromise(kyselyPromise, () => new UnexpectedError());
-}
+import { dbTry } from 'src/utils/db';
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {
@@ -36,7 +33,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
   private getOrCreateUserByName(
     name: string,
   ): ResultAsync<UserId, UnexpectedError> {
-    return kt(
+    return dbTry(
       this.db.ctx
         .selectFrom('user')
         .select('id')
@@ -47,7 +44,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
         return ok(user.id);
       }
 
-      return kt(
+      return dbTry(
         this.db.ctx
           .insertInto('user')
           .values({
@@ -67,7 +64,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
     return this.db
       .withTransaction(() => {
         return this.getOrCreateUserByName(user).andThen((userId) =>
-          kt(
+          dbTry(
             this.db.ctx
               .insertInto('quote')
               .values({
@@ -85,7 +82,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
   }
 
   getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError> {
-    return kt(
+    return dbTry(
       this.db.ctx
         .selectFrom('quote')
         .selectAll()
@@ -119,7 +116,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
             return okAsync(undefined);
           })
           .andThen((userId) =>
-            kt(
+            dbTry(
               this.db.ctx
                 .updateTable('quote')
                 .set({
@@ -204,7 +201,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
         }
 
         return ResultAsync.combine([
-          kt(
+          dbTry(
             baseQuery
               .select([
                 'quote.id',
@@ -220,7 +217,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
               .limit(pageSize)
               .execute(),
           ),
-          kt(
+          dbTry(
             baseQuery
               .clearOrderBy()
               .select((eb) => eb.fn.countAll<number>().as('total'))
@@ -242,7 +239,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
   }
 
   delete(id: QuoteId): ResultAsync<Quote, DeleteQuoteError> {
-    return kt(
+    return dbTry(
       this.db.ctx
         .deleteFrom('quote')
         .where('id', '=', id)
