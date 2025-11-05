@@ -1,11 +1,11 @@
 import { Migrator } from 'kysely';
-import { KyselyService } from 'src/database/kysely.service';
 import { Injectable } from '@nestjs/common';
 import { CustomMigrationProvider } from './migration.provider';
+import { InternalKyselyService } from 'src/database/kysely.service';
 
 @Injectable()
 export class MigratorService {
-  constructor(private readonly db: KyselyService) {}
+  constructor(private readonly db: InternalKyselyService) {}
 
   async migrate(): Promise<void> {
     const migrator = new Migrator({

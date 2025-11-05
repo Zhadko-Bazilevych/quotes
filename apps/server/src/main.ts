@@ -10,7 +10,8 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: new ConsoleLogger({ json: true }),
     bufferLogs: true,
-    bodyParser: false,
+    // FIXME: should be disabled for better auth
+    // bodyParser: false,
   });
   app.set('query parser', 'extended');
 
