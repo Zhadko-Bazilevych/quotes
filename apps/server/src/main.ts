@@ -5,7 +5,7 @@ import { MigratorService } from './database/migrator/migrator.service';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import type { Config } from 'src/config/config.types';
-import { bodyParserMiddleware } from 'src/utils/middlewares';
+import { bodyParserMiddleware } from 'src/auth/auth.middleware';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
