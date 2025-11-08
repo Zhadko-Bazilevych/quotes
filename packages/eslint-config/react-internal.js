@@ -8,7 +8,7 @@ import pluginReact from "eslint-plugin-react";
  * @type {import("eslint").Linter.Config[]} */
 export const config = [
   ...baseConfig,
-  reactHooks.configs["recommended-latest"],
+  reactHooks.configs.flat["recommended-latest"],
   pluginReact.configs.flat.recommended,
   {
     rules: {
