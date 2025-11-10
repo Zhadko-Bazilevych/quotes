@@ -57,18 +57,31 @@ export function QuoteSearchHint(): JSX.Element {
           </p>
           <ul className="ml-6 list-disc">
             <li>
-              <InlineCode>author:</InlineCode> quote author
+              <InlineCode>author:</InlineCode> / <InlineCode>a:</InlineCode>{' '}
+              quote author{' '}
             </li>
             <li>
-              <InlineCode>user:</InlineCode> person published the quote
+              <InlineCode>user:</InlineCode> / <InlineCode>u:</InlineCode>{' '}
+              person published the quote{' '}
             </li>
             <li>
-              <InlineCode>content:</InlineCode> text of the quote
+              <InlineCode>content:</InlineCode> / <InlineCode>ctn:</InlineCode>{' '}
+              / <InlineCode>cn:</InlineCode> text of the quote{' '}
             </li>
             <li>
-              <InlineCode>context:</InlineCode> description or explanation
+              <InlineCode>context:</InlineCode> / <InlineCode>ctx:</InlineCode>{' '}
+              / <InlineCode>cx:</InlineCode> description or explanation{' '}
+            </li>
+            <li>
+              <InlineCode>common:</InlineCode> / <InlineCode>c:</InlineCode> /{' '}
+              <InlineCode>global:</InlineCode> / <InlineCode>g:</InlineCode>{' '}
+              search across all fields at once
             </li>
           </ul>
+          <p>
+            Words without a keyword are marked as{' '}
+            <InlineCode>common:</InlineCode> by default{' '}
+          </p>
           <p>
             Example: <InlineCode>author:Shakespeare content:love</InlineCode>{' '}
             quotes authored by Shakespeare that mention{' '}
@@ -85,20 +98,6 @@ export function QuoteSearchHint(): JSX.Element {
             Example: <InlineCode>user:John Mark</InlineCode> finds quotes
             published by either <InlineCode>John</InlineCode> or{' '}
             <InlineCode>Mark</InlineCode>.
-          </p>
-
-          <h3 className="mt-4 text-lg font-semibold">
-            Global search across all fields
-          </h3>
-          <p>
-            Words without a keyword are searched in every field:{' '}
-            <InlineCode>author</InlineCode>, <InlineCode>user</InlineCode>,{' '}
-            <InlineCode>content</InlineCode>, and{' '}
-            <InlineCode>context</InlineCode>.
-          </p>
-          <p>
-            Example: <InlineCode>hope</InlineCode> finds quotes where{' '}
-            <InlineCode>hope</InlineCode> appears in any field.
           </p>
 
           <h3 className="mt-4 text-lg font-semibold">Combine features</h3>
