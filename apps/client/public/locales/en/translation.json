@@ -1,0 +1,8 @@
+{
+  "dialog": {
+    "close": "Close"
+  },
+  "quote": {
+    "newQuotePrompt": "Create new quote?"
+  }
+}

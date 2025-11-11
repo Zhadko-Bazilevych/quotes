@@ -1,8 +1,10 @@
 import { CreateQuoteForm } from '@/components/quote/form/create-quote-form';
 import { Button } from '@/components/ui/button';
 import { useState, type JSX } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export function AddQuoteSection(): JSX.Element {
+  const { t } = useTranslation();
   const [isCreatingQuote, setIsCreatingQuote] = useState<boolean>(false);
   const toggleCreate = (): void => {
     setIsCreatingQuote((prev) => !prev);
@@ -13,7 +15,9 @@ export function AddQuoteSection(): JSX.Element {
       {isCreatingQuote && <CreateQuoteForm onCancel={toggleCreate} />}
       {!isCreatingQuote && (
         <Button className="py-2" onClick={toggleCreate} variant="outline">
-          Create new quote?
+          {t(($) => $.quote.newQuotePrompt, {
+            defaultValue: 'Create new quote?',
+          })}
         </Button>
       )}
     </>
