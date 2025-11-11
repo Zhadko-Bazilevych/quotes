@@ -1,6 +1,7 @@
 import type { JSX } from 'react';
 import { Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import '@/i18n';
 
 export function App(): JSX.Element {
   return (
