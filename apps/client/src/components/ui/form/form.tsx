@@ -54,21 +54,12 @@ const FormField = <
     <FormFieldContext.Provider value={{ name: props.name }}>
       <Controller<TFieldValues, TName>
         name={name}
-        render={({ field, formState }) => {
-          const { errors } = formState;
-          const errorMap = errors[name]?.types ?? {};
 
           return (
             <FormItem>
               <FormLabel>{label}</FormLabel>
               <FormControl>{render(field)}</FormControl>
-              <div className="mb-1 min-h-5 text-sm text-red-500">
-                {Object.values(errorMap)
-                  .flat()
-                  .map((msg, i) => (
-                    <p key={i}>{msg}</p>
-                  ))}
-              </div>
+              <FormMessage />
             </FormItem>
           );
         }}
@@ -149,23 +140,24 @@ function FormDescription({
 function FormMessage({
   className,
   ...props
-}: React.ComponentProps<'p'>): JSX.Element | null {
+}: React.ComponentProps<'div'>): JSX.Element | null {
   const { error, formMessageId } = useFormField();
-  const body = error ? (error.message ?? '') : props.children;
-
-  if (!body) {
-    return null;
-  }
+  const errorMap = error?.types ?? {};
+  const errorMessages = Object.values(errorMap).flat();
 
   return (
-    <p
-      data-slot="form-message"
-      id={formMessageId}
-      className={cn('text-destructive text-sm', className)}
-      {...props}
-    >
-      {body}
-    </p>
+    <>
+      <div
+        className={cn('text-destructive mb-1 min-h-5 text-sm', className)}
+        id={formMessageId}
+        data-slot="form-message"
+        {...props}
+      >
+        {errorMessages.map((msg, i) => (
+          <p key={i}>{msg}</p>
+        ))}
+      </div>
+    </>
   );
 }
 
