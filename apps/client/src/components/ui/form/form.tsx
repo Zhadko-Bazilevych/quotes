@@ -6,6 +6,8 @@ import { Slot } from '@radix-ui/react-slot';
 import {
   Controller,
   FormProvider,
+  type Control,
+  type ControllerProps,
   type ControllerRenderProps,
   type FieldPath,
   type FieldValues,
@@ -41,24 +43,25 @@ type CustomFieldProps<
   ) => React.ReactNode;
   name: TName;
   label: string;
+  description?: string;
+  control?: Control<TFieldValues, unknown, TFieldValues>;
 };
 
-const FormField = <
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(
-  props: CustomFieldProps<TFieldValues, TName>,
+const FormField = <TFieldValues extends FieldValues = FieldValues>(
+  props: CustomFieldProps<TFieldValues>,
 ): JSX.Element => {
-  const { render, name, label } = props;
+  const { render, name, label, description, control } = props;
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller<TFieldValues, TName>
+      <Controller
         name={name}
-
+        control={control}
+        render={({ field }) => {
           return (
             <FormItem>
               <FormLabel>{label}</FormLabel>
               <FormControl>{render(field)}</FormControl>
+              {description && <FormDescription>{description}</FormDescription>}
               <FormMessage />
             </FormItem>
           );
