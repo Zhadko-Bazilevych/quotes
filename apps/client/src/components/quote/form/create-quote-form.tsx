@@ -15,6 +15,12 @@ type CreateQuoteFormProps = {
 export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
   const { onCancel: toggleEdit } = props;
   const form = useForm<CreateQuoteData>({
+    defaultValues: {
+      author: '',
+      content: '',
+      context: '',
+      user: '',
+    },
     mode: 'onBlur',
     criteriaMode: 'all',
     resolver: zodResolver(quoteSchema),
