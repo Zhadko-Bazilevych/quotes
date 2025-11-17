@@ -19,12 +19,12 @@ export function QuoteFormBody(): JSX.Element {
         label="Content"
         render={(props) => <Textarea {...props} />}
       />
-      <FormField
+      <FormField<QuoteFormData>
         name="context"
         label="Context"
         render={(props) => <Textarea {...props} />}
       />
-      <FormField
+      <FormField<QuoteFormData>
         name="user"
         label="User"
         render={(props) => <Input {...props} />}
