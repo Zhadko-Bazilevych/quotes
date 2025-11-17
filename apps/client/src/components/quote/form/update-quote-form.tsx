@@ -2,12 +2,12 @@ import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
 import type { Quote, UpdateQuoteData } from '@/types';
 import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
-import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
-import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { quoteSchema } from '@/components/quote/form/quote-schema';
+import { Form } from '@/components/ui/form';
+import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
 
 type UpdateQuoteFormProps = {
   quote: Quote;
@@ -18,7 +18,7 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
   props: UpdateQuoteFormProps,
 ): JSX.Element {
   const { quote, onCancel } = props;
-  const methods = useForm<UpdateQuoteData>({
+  const form = useForm<UpdateQuoteData>({
     values: {
       author: quote.author,
       content: quote.content,
@@ -39,22 +39,23 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
   };
 
   return (
-    <Form<UpdateQuoteData>
-      className="bg-card flex flex-col rounded border p-2"
-      onSubmit={onSubmit}
-      methods={methods}
-    >
-      <QuoteFormBody />
-      <div className="flex justify-end gap-3">
-        <Button
-          type="button"
-          onClick={() => onCancel(quote.id)}
-          variant="destructive"
-        >
-          Cancel
-        </Button>
-        <Button type="submit">Update</Button>
-      </div>
+    <Form {...form}>
+      <form
+        onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
+        className="bg-card flex flex-col rounded border p-2"
+      >
+        <QuoteFormBody />
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            onClick={() => onCancel(quote.id)}
+            variant="destructive"
+          >
+            Cancel
+          </Button>
+          <Button type="submit">Update</Button>
+        </div>
+      </form>
     </Form>
   );
 });

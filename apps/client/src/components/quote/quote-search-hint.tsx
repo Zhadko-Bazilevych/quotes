@@ -13,8 +13,8 @@ import type { JSX } from 'react';
 export function QuoteSearchHint(): JSX.Element {
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button variant="outline" size="icon" className="">
+      <DialogTrigger asChild>
+        <Button variant="outline" size="icon">
           <CircleQuestionMarkIcon />
         </Button>
       </DialogTrigger>
