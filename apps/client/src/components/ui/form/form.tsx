@@ -19,6 +19,19 @@ import { FormFieldContext, FormItemContext } from '@/components/ui/form';
 
 const Form = FormProvider;
 
+const BaseFormField = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  ...props
+}: ControllerProps<TFieldValues, TName>): JSX.Element => {
+  return (
+    <FormFieldContext.Provider value={{ name: props.name }}>
+      <Controller {...props} />
+    </FormFieldContext.Provider>
+  );
+};
+
 type CustomFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -163,5 +176,6 @@ export {
   FormControl,
   FormDescription,
   FormMessage,
+  BaseFormField,
   FormField,
 };

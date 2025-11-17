@@ -5,6 +5,7 @@ export {
   FormControl,
   FormDescription,
   FormMessage,
+  BaseFormField,
   FormField,
 } from './form';
 export { useFormField } from './use-form-field';
