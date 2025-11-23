@@ -144,10 +144,12 @@ function FormMessage({
   className,
   ...props
 }: React.ComponentProps<'div'>): JSX.Element | null {
-  const { error, formMessageId } = useFormField();
+  const { error, formMessageId, value } = useFormField();
   const errorMap = error?.types ?? {};
-  const errorMessages = Object.values(errorMap).flat();
-
+  let errorMessages = Object.values(errorMap).flat();
+  if (value === '' && errorMap.too_small) {
+    errorMessages = [errorMap.too_small].flat();
+  }
   return (
     <>
       <div
