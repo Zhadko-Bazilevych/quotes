@@ -3,12 +3,37 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import type { JSX } from 'react';
+import { useState, type JSX } from 'react';
+import { useModalCounterStore } from '@/stores/modal-counter';
 
-function Dialog({
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Root>): JSX.Element {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+export type DialogProps = Omit<
+  React.ComponentProps<typeof DialogPrimitive.Root>,
+  'onOpenChange' | 'open' | 'defaultOpen'
+> &
+  Required<
+    Pick<
+      React.ComponentProps<typeof DialogPrimitive.Root>,
+      'open' | 'onOpenChange'
+    >
+  >;
+
+function Dialog({ open, ...props }: DialogProps): JSX.Element {
+  const increment = useModalCounterStore((state) => state.increment);
+  const decrement = useModalCounterStore((state) => state.decrement);
+  const [prevIsOpen, setPrevIsOpen] = useState(open);
+
+  if (prevIsOpen !== open) {
+    setPrevIsOpen(open);
+    if (open) {
+      increment();
+    } else {
+      decrement();
+    }
+  }
+
+  return (
+    <DialogPrimitive.Root {...props} open={prevIsOpen} data-slot="dialog" />
+  );
 }
 
 function DialogTrigger({
@@ -53,6 +78,11 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
 }): JSX.Element {
+  const onEscapeKeyDown = (e: KeyboardEvent): void => {
+    e.stopPropagation();
+    props.onEscapeKeyDown?.(e);
+  };
+
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
@@ -63,6 +93,7 @@ function DialogContent({
           className,
         )}
         {...props}
+        onEscapeKeyDown={onEscapeKeyDown}
       >
         {children}
         {showCloseButton && (

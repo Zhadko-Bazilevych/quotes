@@ -4,6 +4,7 @@ export type UseDisclosureReturn = {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function useDisclosure(
@@ -18,5 +19,6 @@ export function useDisclosure(
     isOpen,
     onOpen,
     onClose,
+    setIsOpen,
   };
 }

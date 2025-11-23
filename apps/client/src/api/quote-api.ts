@@ -6,7 +6,7 @@ import {
   type QuoteDto,
   type QuoteListDto,
   type QuoteList,
-} from '@/types';
+} from '@/types/quotes';
 import { BaseApi } from './base-api';
 import { Client } from './client';
 import { QuoteMapper } from '@/mappers/quote';

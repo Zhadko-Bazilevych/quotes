@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
-import type { Quote, UpdateQuoteData } from '@/types';
+import type { Quote, UpdateQuoteData } from '@/types/quotes';
 import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
 import { Button } from '@/components/ui/button';
 import React from 'react';

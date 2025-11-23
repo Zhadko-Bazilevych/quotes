@@ -57,14 +57,7 @@ export default function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
           <Trash2Icon className="text-destructive" />
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[425px]"
-        onEscapeKeyDown={(event) => {
-          event.preventDefault();
-          onOpenChange(false);
-          event.stopPropagation();
-        }}
-      >
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Delete quote?</DialogTitle>
           <DialogDescription>

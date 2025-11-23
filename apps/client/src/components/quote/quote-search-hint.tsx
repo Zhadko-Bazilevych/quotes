@@ -8,17 +8,19 @@ import {
 } from '@/components/ui/dialog';
 import { InlineCode } from '@/components/ui/inline-code';
 import { CircleQuestionMarkIcon } from 'lucide-react';
-import type { JSX } from 'react';
+import { useState, type JSX } from 'react';
 
 export function QuoteSearchHint(): JSX.Element {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="icon">
           <CircleQuestionMarkIcon />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle className="text-xl">Quote search hints</DialogTitle>
         </DialogHeader>

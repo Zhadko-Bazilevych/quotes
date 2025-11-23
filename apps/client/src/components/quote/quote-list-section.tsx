@@ -10,9 +10,11 @@ import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { QuoteSearch } from '@/components/quote/quote-search';
 import { QuoteOrder } from './quote-order';
 import { keepPreviousData } from '@tanstack/react-query';
+import { useModalCounterStore } from '@/stores/modal-counter';
 
 export function QuoteListSection(): JSX.Element {
   const navigate = quoteListRoute.useNavigate();
+  const isAnyModalOpen = useModalCounterStore((s) => s.isAnyModalOpen);
   const { pageSize, page, q, sort } = quoteListRoute.useSearch();
   const { data, isError, isFetching, isPlaceholderData, isLoading } = useQuotes(
     {
@@ -23,8 +25,6 @@ export function QuoteListSection(): JSX.Element {
     { placeholderData: keepPreviousData },
   );
   const isFetchingNewData = isLoading || (isFetching && isPlaceholderData);
-
-  const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
 
   const [editingIds, setEditingIds] = useState<number[]>([]);
 
@@ -38,7 +38,7 @@ export function QuoteListSection(): JSX.Element {
   );
 
   useEffect(() => {
-    if (!isQuoteListVisible || !data) {
+    if (isAnyModalOpen || !data) {
       return;
     }
 
@@ -63,6 +63,7 @@ export function QuoteListSection(): JSX.Element {
       }
 
       if (e.key === 'ArrowRight') {
+        e.preventDefault();
         void navigate({
           search: (prev) => ({
             ...prev,
@@ -71,6 +72,7 @@ export function QuoteListSection(): JSX.Element {
         });
       }
       if (e.key === 'ArrowLeft') {
+        e.preventDefault();
         void navigate({
           search: (prev) => ({
             ...prev,
@@ -79,10 +81,10 @@ export function QuoteListSection(): JSX.Element {
         });
       }
     });
-  }, [isQuoteListVisible, navigate, page, pageSize, data]);
+  }, [isAnyModalOpen, navigate, page, pageSize, data]);
 
   useEffect(() => {
-    if (!isQuoteListVisible) {
+    if (isAnyModalOpen) {
       return;
     }
 
@@ -91,7 +93,7 @@ export function QuoteListSection(): JSX.Element {
         setEditingIds((prev) => prev.slice(0, Math.max(0, prev.length - 1)));
       }
     });
-  }, [setEditingIds, isQuoteListVisible]);
+  }, [setEditingIds, isAnyModalOpen]);
 
   if (isError) {
     return <UnexpectedError />;
@@ -114,14 +116,7 @@ export function QuoteListSection(): JSX.Element {
             );
           }
 
-          return (
-            <QuoteCard
-              key={quote.id}
-              quote={quote}
-              onEdit={toggleEdit}
-              setIsQuoteListVisible={setIsQuoteListVisible}
-            />
-          );
+          return <QuoteCard key={quote.id} quote={quote} onEdit={toggleEdit} />;
         })}
       {data && (
         <QuotePaginationBar
