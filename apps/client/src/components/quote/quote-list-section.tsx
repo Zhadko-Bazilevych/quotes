@@ -1,7 +1,7 @@
 import { QuoteCard } from '@/components/quote/quote-card';
 import { UpdateQuoteForm } from '@/components/quote/form/update-quote-form';
 import { QuotePaginationBar } from '@/components/quote/quote-pagination-bar';
-import { useCallback, useEffect, useState, type JSX } from 'react';
+import { useCallback, useEffect, useMemo, useState, type JSX } from 'react';
 import { useQuotes } from '@/hooks/use-quotes';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
@@ -9,24 +9,31 @@ import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { QuoteSearch } from '@/components/quote/quote-search';
 import { QuoteOrder } from './quote-order';
-import { keepPreviousData } from '@tanstack/react-query';
+import { keepPreviousData, useQueryClient } from '@tanstack/react-query';
 import { useModalCounterStore } from '@/stores/modal-counter';
+import type { QuoteList } from '@/types/quotes';
+import { queries } from '@/api';
 
 export function QuoteListSection(): JSX.Element {
   const navigate = quoteListRoute.useNavigate();
   const isAnyModalOpen = useModalCounterStore((s) => s.isAnyModalOpen);
   const { pageSize, page, q, sort } = quoteListRoute.useSearch();
-  const { data, isError, isFetching, isPlaceholderData, isLoading } = useQuotes(
-    {
+  const quoteListParams = useMemo(
+    () => ({
       pagination: { pageSize, page },
       filter: { q },
       sort,
-    },
+    }),
+    [pageSize, page, q, sort],
+  );
+  const { data, isError, isFetching, isPlaceholderData, isLoading } = useQuotes(
+    quoteListParams,
     { placeholderData: keepPreviousData },
   );
   const isFetchingNewData = isLoading || (isFetching && isPlaceholderData);
 
   const [editingIds, setEditingIds] = useState<number[]>([]);
+  const queryClient = useQueryClient();
 
   const toggleEdit = useCallback(
     (id: number): void => {
@@ -35,6 +42,26 @@ export function QuoteListSection(): JSX.Element {
       );
     },
     [setEditingIds],
+  );
+
+  const onDelete = useCallback(
+    (id: number) => {
+      queryClient.setQueryData<QuoteList>(
+        queries.quotes.getList(quoteListParams).queryKey,
+        (old) => {
+          if (!old) {
+            return old;
+          }
+
+          return {
+            ...old,
+            data: old.data.filter((q) => q.id !== id),
+            total: old.total - 1,
+          };
+        },
+      );
+    },
+    [queryClient, quoteListParams],
   );
 
   useEffect(() => {
@@ -116,7 +143,14 @@ export function QuoteListSection(): JSX.Element {
             );
           }
 
-          return <QuoteCard key={quote.id} quote={quote} onEdit={toggleEdit} />;
+          return (
+            <QuoteCard
+              key={quote.id}
+              quote={quote}
+              onEdit={toggleEdit}
+              onDelete={onDelete}
+            />
+          );
         })}
       {data && (
         <QuotePaginationBar

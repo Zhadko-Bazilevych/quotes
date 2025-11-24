@@ -10,12 +10,13 @@ import DeleteModal from '@/components/quote/delete-quote-modal';
 export type QuoteCardProps = {
   quote: Quote;
   onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
 };
 
 export const QuoteCard = React.memo(function QuoteCard(
   props: QuoteCardProps,
 ): JSX.Element {
-  const { quote, onEdit } = props;
+  const { quote, onEdit, onDelete } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { isPending, mutate } = useDeleteQuoteMutation();
@@ -28,6 +29,7 @@ export const QuoteCard = React.memo(function QuoteCard(
       { id: quote.id },
       {
         onSuccess() {
+          onDelete(quote.id);
           onClose();
         },
       },
