@@ -3,8 +3,8 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { useState, type JSX } from 'react';
-import { useModalCounterStore } from '@/stores/modal-counter';
+import { useEffect, useId, type JSX } from 'react';
+import { useModalStore } from '@/stores/modal-store';
 
 export type DialogProps = Omit<
   React.ComponentProps<typeof DialogPrimitive.Root>,
@@ -18,22 +18,19 @@ export type DialogProps = Omit<
   >;
 
 function Dialog({ open, ...props }: DialogProps): JSX.Element {
-  const increment = useModalCounterStore((state) => state.increment);
-  const decrement = useModalCounterStore((state) => state.decrement);
-  const [prevIsOpen, setPrevIsOpen] = useState(open);
+  const add = useModalStore((state) => state.add);
+  const remove = useModalStore((state) => state.remove);
+  const id = useId();
 
-  if (prevIsOpen !== open) {
-    setPrevIsOpen(open);
+  useEffect(() => {
     if (open) {
-      increment();
-    } else {
-      decrement();
+      add(id);
     }
-  }
 
-  return (
-    <DialogPrimitive.Root {...props} open={prevIsOpen} data-slot="dialog" />
-  );
+    return (): void => remove(id);
+  }, [open, id, add, remove]);
+
+  return <DialogPrimitive.Root {...props} data-slot="dialog" />;
 }
 
 function DialogTrigger({

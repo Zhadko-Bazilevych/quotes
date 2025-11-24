@@ -9,14 +9,14 @@ import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { QuoteSearch } from '@/components/quote/quote-search';
 import { QuoteOrder } from './quote-order';
+import { useModalStore } from '@/stores/modal-store';
 import { keepPreviousData, useQueryClient } from '@tanstack/react-query';
-import { useModalCounterStore } from '@/stores/modal-counter';
 import type { QuoteList } from '@/types/quotes';
 import { queries } from '@/api';
 
 export function QuoteListSection(): JSX.Element {
   const navigate = quoteListRoute.useNavigate();
-  const isAnyModalOpen = useModalCounterStore((s) => s.isAnyModalOpen);
+  const isAnyModalOpen = useModalStore((s) => s.isAnyModalOpen);
   const { pageSize, page, q, sort } = quoteListRoute.useSearch();
   const quoteListParams = useMemo(
     () => ({
