@@ -1,11 +1,11 @@
 import AuthModal from '@/components/auth/auth-modal';
 import LogoutButton from '@/components/auth/logout-button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { authClient } from '@/lib/auth-client';
+import { useSession } from '@/hooks/use-session';
 import type { JSX } from 'react';
 
 export function Header(): JSX.Element {
-  const { data, isPending } = authClient.useSession();
+  const { data, isPending } = useSession();
 
   return (
     <nav className="bg-card flex w-full items-center justify-between border p-2">
