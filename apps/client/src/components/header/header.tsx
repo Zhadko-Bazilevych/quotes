@@ -8,12 +8,13 @@ export function Header(): JSX.Element {
   const isSignIn = !isPending && data;
 
   return (
-    <div className="bg-card flex w-full items-center justify-between border p-2">
-      <p>Hello there{isSignIn && `, ${data.user.name}`}</p>
-      <div>
+    <nav className="bg-card flex w-full items-center justify-between border p-2">
+      <p>That One Quotes</p>
+      <div className="flex items-center gap-2">
+        <span>{isSignIn && `Hello there, ${data.user.name}`}</span>
         {!isSignIn && <AuthModal />}
         {isSignIn && <LogoutButton />}
       </div>
-    </div>
+    </nav>
   );
 }
