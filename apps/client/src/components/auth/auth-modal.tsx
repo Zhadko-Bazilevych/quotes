@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,8 +15,6 @@ export type AuthModalProps = {
 };
 
 export default function AuthModal(): JSX.Element {
-  // const { onCancel: toggleModal } = props;
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (
