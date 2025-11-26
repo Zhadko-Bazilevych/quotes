@@ -60,7 +60,7 @@ export default function LoginForm({
           label="Password"
           render={(props) => <Input type="password" {...props} />}
         />
-        <Button className="self-center" type="submit">
+        <Button className="mt-1 w-full" type="submit">
           Submit
         </Button>
       </form>

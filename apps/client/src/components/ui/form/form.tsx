@@ -24,9 +24,9 @@ const Form = FormProvider;
 const BaseFormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({
-  ...props
-}: ControllerProps<TFieldValues, TName>): JSX.Element => {
+>(
+  props: ControllerProps<TFieldValues, TName>,
+): JSX.Element => {
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
       <Controller {...props} />
@@ -59,7 +59,7 @@ const FormField = <TFieldValues extends FieldValues = FieldValues>(
         render={({ field }) => {
           return (
             <FormItem>
-              <FormLabel>{label}</FormLabel>
+              <FormLabel className="mb-1">{label}</FormLabel>
               <FormControl>{render(field)}</FormControl>
               {description && <FormDescription>{description}</FormDescription>}
               <FormMessage />
@@ -71,19 +71,12 @@ const FormField = <TFieldValues extends FieldValues = FieldValues>(
   );
 };
 
-function FormItem({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): JSX.Element {
+function FormItem(props: React.ComponentProps<'div'>): JSX.Element {
   const id = React.useId();
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div
-        data-slot="form-item"
-        className={cn('grid gap-1', className)}
-        {...props}
-      />
+      <div data-slot="form-item" {...props} />
     </FormItemContext.Provider>
   );
 }
@@ -105,9 +98,7 @@ function FormLabel({
   );
 }
 
-function FormControl({
-  ...props
-}: React.ComponentProps<typeof Slot>): JSX.Element {
+function FormControl(props: React.ComponentProps<typeof Slot>): JSX.Element {
   const { error, formItemId, formDescriptionId, formMessageId } =
     useFormField();
 
@@ -153,7 +144,7 @@ function FormMessage({
   return (
     <>
       <div
-        className={cn('text-destructive mb-1 min-h-5 text-sm', className)}
+        className={cn('text-destructive min-h-5 text-sm', className)}
         id={formMessageId}
         data-slot="form-message"
         {...props}
