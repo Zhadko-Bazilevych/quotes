@@ -20,7 +20,7 @@ export default function LoginForm({
       email: '',
       password: '',
     },
-    mode: 'all',
+    mode: 'onSubmit',
     criteriaMode: 'all',
     resolver: zodResolver(loginSchema),
   });
