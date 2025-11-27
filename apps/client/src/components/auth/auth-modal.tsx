@@ -7,6 +7,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DialogTitle } from '@radix-ui/react-dialog';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { useState, type JSX } from 'react';
 
@@ -25,10 +26,12 @@ export default function AuthModal(): JSX.Element {
       <DialogContent aria-describedby={undefined} className="xs:w-fit">
         <Tabs defaultValue="account">
           <DialogHeader>
-            <TabsList>
-              <TabsTrigger value="signIn">Sign In</TabsTrigger>
-              <TabsTrigger value="signUp">Sing Up</TabsTrigger>
-            </TabsList>
+            <DialogTitle asChild>
+              <TabsList>
+                <TabsTrigger value="signIn">Sign In</TabsTrigger>
+                <TabsTrigger value="signUp">Sing Up</TabsTrigger>
+              </TabsList>
+            </DialogTitle>
           </DialogHeader>
           <TabsContent value="signIn">
             <LoginForm className="mb-3" />
