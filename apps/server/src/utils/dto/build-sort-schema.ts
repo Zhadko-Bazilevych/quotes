@@ -1,12 +1,12 @@
 import z from 'zod';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function buildSortSchema<const T extends ReadonlyArray<string>>(
-  fields: T,
-) {
-  const fieldsWithMinus: Array<T[number] | `-${T[number]}`> = fields.concat(
-    fields.map((field) => `-${field}`),
-  );
+export function buildSortSchema<T extends string>(fields: T[]) {
+  const fieldsWithMinus: (T | `-${T}`)[] = [];
+  for (const field of fields) {
+    fieldsWithMinus.push(field);
+    fieldsWithMinus.push(`-${field}`);
+  }
 
   return z
     .string()
@@ -17,9 +17,7 @@ export function buildSortSchema<const T extends ReadonlyArray<string>>(
         .transform((f) => {
           const startsWithMinus = f.startsWith('-');
           const order = startsWithMinus ? ('desc' as const) : ('asc' as const);
-          const field = startsWithMinus
-            ? (f.slice(1) as T[number])
-            : (f as T[number]);
+          const field = (startsWithMinus ? f.slice(1) : f) as T;
 
           return {
             field,
