@@ -11,10 +11,6 @@ import { DialogTitle } from '@radix-ui/react-dialog';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { useState, type JSX } from 'react';
 
-export type AuthModalProps = {
-  onCancel?: () => void;
-};
-
 export default function AuthModal(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
 

@@ -2,7 +2,6 @@ import type { CreateQuoteData, Quote, UpdateQuoteData } from '@/types/quotes';
 import { api } from '@/api';
 import type { Api } from './api';
 import type { MutationFunction } from '@tanstack/react-query';
-import type { LoginData } from '@/types/auth';
 
 export type UpdateQuoteVariables = {
   id: number;
@@ -15,10 +14,6 @@ export type CreateQuoteVariables = {
 
 export type DeleteQuoteVariables = {
   id: number;
-};
-
-export type LoginVariables = {
-  data: LoginData;
 };
 
 type MutationDetails<TData = unknown, TVariables = unknown> = {
