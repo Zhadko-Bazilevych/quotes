@@ -11,8 +11,7 @@ void i18n
   .use(I18nextBrowserLanguageDetector)
   .use(I18NextHttpBackend)
   .init({
-    // TODO: add env validation
-    debug: import.meta.env.VITE_I18N_DEBUG === 'true',
+    debug: import.meta.env.DEV,
     supportedLngs,
     fallbackLng: 'en',
     defaultNS,
