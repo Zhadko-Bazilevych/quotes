@@ -21,7 +21,7 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
       context: '',
       user: '',
     },
-    mode: 'onBlur',
+    mode: 'onTouched',
     criteriaMode: 'all',
     resolver: zodResolver(quoteSchema),
   });
