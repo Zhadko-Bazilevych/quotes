@@ -41,7 +41,7 @@ export default function LoginForm({
   return (
     <Form {...form}>
       <form
-        className={cn(className, 'flex flex-col')}
+        className={cn('flex flex-col', className)}
         onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
         {...props}
       >
