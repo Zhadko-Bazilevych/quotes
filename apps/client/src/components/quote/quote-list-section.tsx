@@ -56,7 +56,6 @@ export function QuoteListSection(): JSX.Element {
           return {
             ...old,
             data: old.data.filter((q) => q.id !== id),
-            total: old.total - 1,
           };
         },
       );
