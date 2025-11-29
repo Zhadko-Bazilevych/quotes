@@ -24,7 +24,6 @@ export default function LoginForm({
     criteriaMode: 'all',
     resolver: zodResolver(loginSchema),
   });
-  const serverError = form.formState.errors.root;
 
   const onSubmit = async (data: LoginData): Promise<void> => {
     await authClient.signIn.email(data, {
@@ -45,9 +44,6 @@ export default function LoginForm({
         onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
         {...props}
       >
-        {serverError && (
-          <p className="text-destructive mb-1 text-sm">{serverError.message}</p>
-        )}
         <FormField
           control={form.control}
           name="email"
