@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 /// <reference types="vite/client" />
 
 interface ViteTypeOptions {
@@ -6,9 +7,13 @@ interface ViteTypeOptions {
   strictImportMetaEnv: unknown;
 }
 
-interface ImportMetaEnv {
-  readonly VITE_API_BASE_URL: string;
-}
+type ImportMetaEnvAugmented =
+  import('@julr/vite-plugin-validate-env').ImportMetaEnvAugmented<
+    typeof import('@/env/config').default
+  >;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+interface ImportMetaEnv extends ImportMetaEnvAugmented {}
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;

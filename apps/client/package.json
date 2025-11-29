@@ -42,6 +42,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@julr/vite-plugin-validate-env": "2.2.0",
     "@quotes/eslint-config": "*",
     "@tanstack/eslint-plugin-query": "^5.91.0",
     "@tanstack/router-plugin": "^1.134.12",

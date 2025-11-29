@@ -1,0 +1,11 @@
+import z from 'zod';
+
+import { defineConfig } from '@julr/vite-plugin-validate-env';
+
+export default defineConfig({
+  validator: 'standard',
+  schema: {
+    VITE_API_BASE_URL: z.url(),
+    VITE_ENABLE_I18N: z.stringbool(),
+  },
+});

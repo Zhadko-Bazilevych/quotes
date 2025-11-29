@@ -3,6 +3,8 @@ import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector';
 import I18NextHttpBackend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
+import { env } from '@/env';
+
 export const defaultNS = 'translation';
 export const supportedLngs = ['en', 'ua'];
 
@@ -11,7 +13,7 @@ void i18n
   .use(I18nextBrowserLanguageDetector)
   .use(I18NextHttpBackend)
   .init({
-    debug: import.meta.env.DEV,
+    debug: env.DEV,
     supportedLngs,
     fallbackLng: 'en',
     defaultNS,
