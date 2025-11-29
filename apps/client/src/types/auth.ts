@@ -5,16 +5,16 @@ export type LoginData = {
   password: string;
 };
 
-export type BaseUserSession = NonNullable<
+type BaseUserSession = NonNullable<
   Awaited<ReturnType<ReturnType<typeof getSession>>>
 >;
 
-type AppSession = Omit<BaseUserSession['session'], 'id' | 'userId'> & {
+export type AppSession = Omit<BaseUserSession['session'], 'id' | 'userId'> & {
   id: number;
   userId: number;
 };
 
-type AppUser = Omit<BaseUserSession['user'], 'id'> & { id: number };
+export type AppUser = Omit<BaseUserSession['user'], 'id'> & { id: number };
 
 export type UserSession = {
   session: AppSession;
