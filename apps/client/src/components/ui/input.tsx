@@ -1,7 +1,7 @@
+import type { JSX } from 'react';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import type { JSX } from 'react';
 
 function Input({
   className,

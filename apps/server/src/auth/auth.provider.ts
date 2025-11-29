@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { betterAuth } from 'better-auth';
 import { Config } from 'src/config/config.types';
 import { PostgresDialectService } from 'src/database/postgres-dialect.service';
+
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthFactory {

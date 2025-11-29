@@ -1,8 +1,10 @@
+import type { JSX } from 'react';
+
 import { Slot } from '@radix-ui/react-slot';
 
 import { cn } from '@/lib/utils';
-import type { JSX } from 'react';
-import { buttonVariants, type ButtonVariants } from './button-variants';
+
+import { type ButtonVariants, buttonVariants } from './button-variants';
 
 export function Button({
   className,

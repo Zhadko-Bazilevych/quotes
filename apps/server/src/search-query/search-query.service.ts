@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { Lexer } from './lexer';
 import { Parser } from './parser';
 import type { ParsedQuery } from './search-query.types';

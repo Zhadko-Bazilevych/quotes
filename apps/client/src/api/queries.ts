@@ -1,6 +1,8 @@
-import type { GetQuotesQuery, Quote, QuoteList } from '@/types/quote';
 import type { QueryFunction, QueryKey } from '@tanstack/react-query';
-import { api, type Api } from './api';
+
+import type { GetQuotesQuery, Quote, QuoteList } from '@/types/quote';
+
+import { type Api, api } from './api';
 
 type QueryDetails<
   T = unknown,

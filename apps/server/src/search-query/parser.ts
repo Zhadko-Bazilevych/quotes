@@ -1,4 +1,5 @@
 import type { Lexer } from 'src/search-query/lexer';
+
 import type { Expression, ParsedQuery, Token } from './search-query.types';
 
 export class Parser<TKeyword extends string, TAlias extends string> {

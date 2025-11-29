@@ -1,4 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
+
 import { SearchQueryService } from './search-query.service';
 
 @Module({})

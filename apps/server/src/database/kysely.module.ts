@@ -1,9 +1,10 @@
-import { Global, Module } from '@nestjs/common';
 import {
   InternalKyselyService,
   KyselyService,
 } from 'src/database/kysely.service';
 import { PostgresDialectService } from 'src/database/postgres-dialect.service';
+
+import { Global, Module } from '@nestjs/common';
 
 @Global()
 @Module({

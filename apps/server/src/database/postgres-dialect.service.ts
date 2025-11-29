@@ -1,8 +1,9 @@
-import { Pool } from 'pg';
 import { PostgresDialect } from 'kysely';
+import { Pool } from 'pg';
+import { Config } from 'src/config/config.types';
+
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Config } from 'src/config/config.types';
 
 @Injectable()
 export class PostgresDialectService extends PostgresDialect {

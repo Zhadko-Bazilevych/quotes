@@ -1,23 +1,24 @@
 'use client';
 
+import type { JSX } from 'react';
 import * as React from 'react';
-import type * as LabelPrimitive from '@radix-ui/react-label';
-import { Slot } from '@radix-ui/react-slot';
 import {
-  Controller,
-  FormProvider,
   type Control,
+  Controller,
   type ControllerProps,
   type ControllerRenderProps,
   type FieldPath,
   type FieldValues,
+  FormProvider,
 } from 'react-hook-form';
 
-import { cn } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
-import type { JSX } from 'react';
+import type * as LabelPrimitive from '@radix-ui/react-label';
+import { Slot } from '@radix-ui/react-slot';
+
 import { useFormField } from '@/components/ui/form';
 import { FormFieldContext, FormItemContext } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 const Form = FormProvider;
 

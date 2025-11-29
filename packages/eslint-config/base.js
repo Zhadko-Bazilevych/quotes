@@ -1,7 +1,8 @@
-import { globalIgnores } from 'eslint/config';
-import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import tseslint from 'typescript-eslint';
+import { globalIgnores } from "eslint/config";
+import eslint from "@eslint/js";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import tseslint from "typescript-eslint";
 
 /**
  * A shared ESLint configuration for the repository.
@@ -9,27 +10,30 @@ import tseslint from 'typescript-eslint';
  * @type {import("eslint").Linter.Config[]}
  * */
 export const config = [
-  globalIgnores(['dist']),
+  globalIgnores(["dist"]),
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,
   eslintPluginPrettierRecommended,
   {
+    plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
     rules: {
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn',
-      '@typescript-eslint/explicit-function-return-type': 'error',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      "@typescript-eslint/no-floating-promises": "warn",
+      "@typescript-eslint/no-unsafe-argument": "warn",
+      "@typescript-eslint/explicit-function-return-type": "error",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
         {
-          fixStyle: 'inline-type-imports',
+          fixStyle: "inline-type-imports",
         },
       ],
-      '@typescript-eslint/restrict-template-expressions': [
-        'error',
+      "@typescript-eslint/restrict-template-expressions": [
+        "error",
         {
           allowBoolean: true,
           allowNever: true,
@@ -37,8 +41,21 @@ export const config = [
           allowNumber: true,
         },
       ],
-      'no-unreachable': 'error',
-      curly: ['error', 'all'],
+      "no-unreachable": "error",
+      "simple-import-sort/imports": [
+        "error",
+        {
+          groups: [
+            ["^node:"],
+            ["^\\w"],
+            ["^@(?!/)\\w"],
+            ["^@/"],
+            ["^\\./"],
+            ["^.+\\.?(css)$"],
+          ],
+        },
+      ],
+      curly: ["error", "all"],
     },
-  }
-]
+  },
+];

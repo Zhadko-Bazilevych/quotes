@@ -1,8 +1,9 @@
+import z, { type ZodType } from 'zod';
+
 import {
   type PipeTransform,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import z, { type ZodType } from 'zod';
 
 export class ZodValidationPipe implements PipeTransform {
   constructor(private schema: ZodType) {}

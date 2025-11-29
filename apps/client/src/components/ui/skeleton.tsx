@@ -1,5 +1,6 @@
-import { cn } from '@/lib/utils';
 import type { JSX } from 'react';
+
+import { cn } from '@/lib/utils';
 
 function Skeleton({
   className,

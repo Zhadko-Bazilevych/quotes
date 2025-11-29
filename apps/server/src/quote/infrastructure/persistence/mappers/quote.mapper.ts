@@ -1,7 +1,8 @@
 import type { Quote } from 'src/quote/domain/quote';
-import type { QuoteEntity } from '../entities/quote.entity';
-import type { QuoteAggregateEntity as QuoteAggregateEntity } from 'src/quote/infrastructure/persistence/entities/quote-read.entity';
 import type { QuoteAggregate } from 'src/quote/domain/quote-aggregate';
+import type { QuoteAggregateEntity as QuoteAggregateEntity } from 'src/quote/infrastructure/persistence/entities/quote-read.entity';
+
+import type { QuoteEntity } from '../entities/quote.entity';
 
 export class QuoteMapper {
   static entityToDomain(raw: QuoteEntity): Quote {

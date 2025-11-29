@@ -1,9 +1,10 @@
-import * as React from 'react';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
+import * as React from 'react';
+import { type JSX, useEffect, useId } from 'react';
+
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 import { cn } from '@/lib/utils';
-import { useEffect, useId, type JSX } from 'react';
 import { useModalStore } from '@/stores/modal-store';
 
 export type DialogProps = Omit<

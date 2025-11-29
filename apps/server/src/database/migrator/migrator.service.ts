@@ -1,7 +1,9 @@
 import { Migrator } from 'kysely';
-import { Injectable } from '@nestjs/common';
-import { CustomMigrationProvider } from './migration.provider';
 import { InternalKyselyService } from 'src/database/kysely.service';
+
+import { Injectable } from '@nestjs/common';
+
+import { CustomMigrationProvider } from './migration.provider';
 
 @Injectable()
 export class MigratorService {

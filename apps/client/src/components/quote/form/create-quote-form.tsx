@@ -1,14 +1,16 @@
-import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
-import type { CreateQuoteData } from '@/types/quote';
-import { useCreateQuoteMutation } from '@/hooks/use-create-quote';
-import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
-import { Button } from '@/components/ui/button';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { quoteSchema } from '@/components/quote/form/quote-schema';
-import { Form } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
 
-type CreateQuoteFormProps = {
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
+import { quoteSchema } from '@/components/quote/form/quote-schema';
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import { useCreateQuoteMutation } from '@/hooks/use-create-quote';
+import type { CreateQuoteData } from '@/types/quote';
+
+export type CreateQuoteFormProps = {
   onCancel: () => void;
 };
 

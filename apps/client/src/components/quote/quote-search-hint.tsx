@@ -1,3 +1,6 @@
+import { CircleQuestionMarkIcon } from 'lucide-react';
+import { type JSX, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -7,8 +10,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { InlineCode } from '@/components/ui/inline-code';
-import { CircleQuestionMarkIcon } from 'lucide-react';
-import { useState, type JSX } from 'react';
 
 export function QuoteSearchHint(): JSX.Element {
   const [open, setOpen] = useState(false);

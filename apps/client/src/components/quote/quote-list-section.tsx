@@ -1,18 +1,21 @@
-import { QuoteCard } from '@/components/quote/quote-card';
+import { type JSX, useCallback, useEffect, useMemo, useState } from 'react';
+
+import { keepPreviousData, useQueryClient } from '@tanstack/react-query';
+
+import { queries } from '@/api';
 import { UpdateQuoteForm } from '@/components/quote/form/update-quote-form';
+import { QuoteCard } from '@/components/quote/quote-card';
 import { QuotePaginationBar } from '@/components/quote/quote-pagination-bar';
-import { useCallback, useEffect, useMemo, useState, type JSX } from 'react';
-import { useQuotes } from '@/hooks/use-quotes';
+import { QuoteSearch } from '@/components/quote/quote-search';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
+import { useQuotes } from '@/hooks/use-quotes';
 import { quoteListRoute } from '@/routes/route-tree';
-import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
-import { QuoteSearch } from '@/components/quote/quote-search';
-import { QuoteOrder } from './quote-order';
 import { useModalStore } from '@/stores/modal-store';
-import { keepPreviousData, useQueryClient } from '@tanstack/react-query';
 import type { QuoteList } from '@/types/quote';
-import { queries } from '@/api';
+import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
+
+import { QuoteOrder } from './quote-order';
 
 export function QuoteListSection(): JSX.Element {
   const navigate = quoteListRoute.useNavigate();

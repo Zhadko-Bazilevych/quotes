@@ -1,4 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ResultAsync } from 'neverthrow';
+import { QuoteId } from 'src/database/tables/quote.tables';
+import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
+import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
 import {
   CreateQuoteError,
   DeleteQuoteError,
@@ -8,14 +11,13 @@ import {
   QuoteSearchQueryService,
   UpdateQuoteError,
 } from 'src/quote/quote.types';
-import { CreateQuoteDto } from './dto/create-quote.dto';
-import { ResultAsync } from 'neverthrow';
-import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
+
+import { Inject, Injectable } from '@nestjs/common';
+
 import { Quote } from './domain/quote';
+import { CreateQuoteDto } from './dto/create-quote.dto';
 import { QuoteRepository } from './infrastructure/persistence/repositiries/quote-repository.interface';
-import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
 import { QUOTE_SEARCH_QUERY_SERVICE } from './quote.constants';
-import { QuoteId } from 'src/database/tables/quote.tables';
 
 @Injectable()
 export class QuoteService {

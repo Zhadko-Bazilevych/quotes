@@ -1,11 +1,12 @@
-import React, { useState, type JSX } from 'react';
-import { Button } from '@/components/ui/button';
-import type { Quote } from '@/types/quote';
-import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
-import { formatDatetime } from '@/utils/formatters';
-import { useDisclosure } from '@/hooks/use-disclosure';
 import { PencilIcon } from 'lucide-react';
+import React, { type JSX, useState } from 'react';
+
 import DeleteModal from '@/components/quote/delete-quote-modal';
+import { Button } from '@/components/ui/button';
+import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
+import { useDisclosure } from '@/hooks/use-disclosure';
+import type { Quote } from '@/types/quote';
+import { formatDatetime } from '@/utils/formatters';
 
 export type QuoteCardProps = {
   quote: Quote;
