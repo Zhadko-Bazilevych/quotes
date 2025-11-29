@@ -1,3 +1,7 @@
+import { ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react';
+import type { JSX } from 'react';
+import React from 'react';
+
 import {
   Pagination,
   PaginationContent,
@@ -16,11 +20,8 @@ import {
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { quoteListRoute } from '@/routes/route-tree';
-import { ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react';
-import type { JSX } from 'react';
 import { PAGINATION } from '@/utils/constants';
 import { range } from '@/utils/range';
-import React from 'react';
 
 type PaginationConfig = {
   renderPrev: boolean;

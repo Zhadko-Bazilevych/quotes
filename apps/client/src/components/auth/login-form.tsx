@@ -1,3 +1,8 @@
+import type { JSX } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+
 import { loginSchema } from '@/components/auth/auth.schema';
 import { Button } from '@/components/ui/button';
 import { Form, FormField } from '@/components/ui/form';
@@ -5,9 +10,6 @@ import { Input } from '@/components/ui/input';
 import { authClient } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import type { LoginData } from '@/types/auth';
-import { zodResolver } from '@hookform/resolvers/zod';
-import type { JSX } from 'react';
-import { useForm } from 'react-hook-form';
 
 export type LoginFormProps = Omit<React.ComponentProps<'form'>, 'onSubmit'>;
 

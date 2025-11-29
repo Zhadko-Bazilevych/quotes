@@ -1,5 +1,6 @@
-import { type ConfigType, registerAs } from '@nestjs/config';
 import z from 'zod';
+
+import { type ConfigType, registerAs } from '@nestjs/config';
 
 export const authEnvSchema = z.object({
   AUTH_BETTER_AUTH_SECRET: z.string(),

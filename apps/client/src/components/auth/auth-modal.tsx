@@ -1,3 +1,8 @@
+import { type JSX, useState } from 'react';
+
+import { DialogTitle } from '@radix-ui/react-dialog';
+import { TabsContent } from '@radix-ui/react-tabs';
+
 import LoginForm from '@/components/auth/login-form';
 import { Button } from '@/components/ui/button';
 import {
@@ -7,9 +12,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DialogTitle } from '@radix-ui/react-dialog';
-import { TabsContent } from '@radix-ui/react-tabs';
-import { useState, type JSX } from 'react';
 
 export default function AuthModal(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);

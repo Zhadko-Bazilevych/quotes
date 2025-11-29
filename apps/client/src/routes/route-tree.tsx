@@ -1,11 +1,12 @@
-import { App } from '@/app';
-import { QuoteList } from '@/pages/quote-list';
-import { quoteListQuerySchema } from '@/pages/quote-list-schema';
 import {
   createRootRoute,
   createRoute,
   createRouter,
 } from '@tanstack/react-router';
+
+import { App } from '@/app';
+import { QuoteList } from '@/pages/quote-list';
+import { quoteListQuerySchema } from '@/pages/quote-list-schema';
 
 const rootRoute = createRootRoute({
   component: () => <App />,

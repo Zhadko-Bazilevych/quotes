@@ -1,6 +1,7 @@
+import { type JSX, useState } from 'react';
+
 import { CreateQuoteForm } from '@/components/quote/form/create-quote-form';
 import { Button } from '@/components/ui/button';
-import { useState, type JSX } from 'react';
 
 export function AddQuoteSection(): JSX.Element {
   const [isCreatingQuote, setIsCreatingQuote] = useState<boolean>(false);

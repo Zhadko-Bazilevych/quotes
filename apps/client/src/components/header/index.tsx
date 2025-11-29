@@ -1,8 +1,9 @@
+import type { JSX } from 'react';
+
 import AuthModal from '@/components/auth/auth-modal';
 import LogoutButton from '@/components/auth/logout-button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSession } from '@/hooks/use-session';
-import type { JSX } from 'react';
 
 export function Header(): JSX.Element {
   const { data, isPending } = useSession();

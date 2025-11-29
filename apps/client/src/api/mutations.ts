@@ -1,7 +1,9 @@
-import type { CreateQuoteData, Quote, UpdateQuoteData } from '@/types/quote';
-import { api } from '@/api';
-import type { Api } from './api';
 import type { MutationFunction } from '@tanstack/react-query';
+
+import { api } from '@/api';
+import type { CreateQuoteData, Quote, UpdateQuoteData } from '@/types/quote';
+
+import type { Api } from './api';
 
 export type UpdateQuoteVariables = {
   id: number;

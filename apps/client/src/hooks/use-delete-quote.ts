@@ -1,13 +1,15 @@
+import { toast } from 'sonner';
+
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
   type UseMutationResult,
+  useQueryClient,
 } from '@tanstack/react-query';
-import type { Quote } from '@/types/quote';
+
+import { type DeleteQuoteVariables, mutations } from '@/api/mutations';
 import { queries } from '@/api/queries';
-import { mutations, type DeleteQuoteVariables } from '@/api/mutations';
-import { toast } from 'sonner';
+import type { Quote } from '@/types/quote';
 
 type UseDeleteQuoteMutationOptions = Omit<
   UseMutationOptions<Quote, unknown, DeleteQuoteVariables>,

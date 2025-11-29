@@ -1,30 +1,32 @@
-import { err, ok, type Result, ResultAsync, okAsync } from 'neverthrow';
+import { ExpressionWrapper, sql, SqlBool } from 'kysely';
+import { err, ok, okAsync, type Result, ResultAsync } from 'neverthrow';
+import { Database, KyselyService } from 'src/database/kysely.service';
+import type { QuoteId } from 'src/database/tables/quote.tables';
+import { UserId } from 'src/database/tables/user.tables';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
+import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
+import { QuoteNotFoundError } from 'src/quote/quote.errors';
 import type {
   CreateQuoteError,
-  GetQuoteError,
-  UpdateQuoteError,
-  QuoteList,
-  GetQuoteListError,
   DeleteQuoteError,
+  GetQuoteError,
+  GetQuoteListError,
+  QuoteList,
+  UpdateQuoteError,
 } from 'src/quote/quote.types';
+import { dbTry } from 'src/utils/db';
+import { UnexpectedError } from 'src/utils/errors/app-errors';
+import { getOffset, getTotalPages } from 'src/utils/query';
+
+import { Injectable } from '@nestjs/common';
+
 import type {
   GetQuoteListOptions,
   QuoteListFilter,
   QuoteRepository,
 } from './quote-repository.interface';
-import { Database, KyselyService } from 'src/database/kysely.service';
-import { UnexpectedError } from 'src/utils/errors/app-errors';
-import { QuoteNotFoundError } from 'src/quote/quote.errors';
-import { getOffset, getTotalPages } from 'src/utils/query';
-import { Injectable } from '@nestjs/common';
-import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
-import { ExpressionWrapper, sql, SqlBool } from 'kysely';
-import type { QuoteId } from 'src/database/tables/quote.tables';
-import { UserId } from 'src/database/tables/user.tables';
-import { dbTry } from 'src/utils/db';
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {

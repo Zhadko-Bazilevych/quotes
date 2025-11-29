@@ -1,14 +1,15 @@
-import * as React from 'react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   MoreHorizontalIcon,
 } from 'lucide-react';
-
-import { cn } from '@/lib/utils';
-import { type Button, buttonVariants } from '@/components/ui/button';
 import type { JSX } from 'react';
+import * as React from 'react';
+
 import { createLink } from '@tanstack/react-router';
+
+import { type Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 function Pagination({
   className,

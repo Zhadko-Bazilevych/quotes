@@ -1,5 +1,5 @@
-import z from 'zod';
 import type { Brand } from 'src/utils/types';
+import z from 'zod';
 
 export function newIdValueSchema<
   TBrand extends Brand<number, string>,

@@ -1,5 +1,6 @@
-import { PAGINATION } from '@/utils/constants';
 import z from 'zod';
+
+import { PAGINATION } from '@/utils/constants';
 
 export const sortFields = [
   'author',

@@ -1,15 +1,16 @@
+import { QuoteMapper } from '@/mappers/quote';
 import {
+  type CreateQuoteData,
   type GetQuotesQuery,
   type Quote,
-  type CreateQuoteData,
-  type UpdateQuoteData,
   type QuoteDto,
-  type QuoteListDto,
   type QuoteList,
+  type QuoteListDto,
+  type UpdateQuoteData,
 } from '@/types/quote';
+
 import { BaseApi } from './base-api';
 import { Client } from './client';
-import { QuoteMapper } from '@/mappers/quote';
 
 export class QuoteApi extends BaseApi {
   async getList(query?: GetQuotesQuery): Promise<QuoteList> {

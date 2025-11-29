@@ -1,5 +1,6 @@
-import { QuoteCardSkeleton } from '@/components/quote/skeleton/quote-card-skeleton';
 import type { JSX } from 'react';
+
+import { QuoteCardSkeleton } from '@/components/quote/skeleton/quote-card-skeleton';
 
 type QuoteListSkeletonProps = {
   pageSize: number;

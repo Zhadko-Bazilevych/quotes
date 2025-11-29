@@ -1,12 +1,13 @@
 import {
   useMutation,
-  useQueryClient,
   type UseMutationOptions,
   type UseMutationResult,
+  useQueryClient,
 } from '@tanstack/react-query';
-import type { Quote } from '@/types/quote';
-import { queries } from '@/api/queries';
+
 import { mutations, type UpdateQuoteVariables } from '@/api/mutations';
+import { queries } from '@/api/queries';
+import type { Quote } from '@/types/quote';
 
 type UseUpdateQuoteMutationOptions = Omit<
   UseMutationOptions<Quote, unknown, UpdateQuoteVariables>,

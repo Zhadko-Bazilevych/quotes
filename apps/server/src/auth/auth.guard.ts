@@ -1,4 +1,7 @@
+import { fromNodeHeaders } from 'better-auth/node';
 import { Request } from 'express';
+import { AuthFactory } from 'src/auth/auth.provider';
+
 import {
   CanActivate,
   CustomDecorator,
@@ -6,8 +9,6 @@ import {
   Injectable,
   SetMetadata,
 } from '@nestjs/common';
-import { AuthFactory } from 'src/auth/auth.provider';
-import { fromNodeHeaders } from 'better-auth/node';
 import { Reflector } from '@nestjs/core';
 
 export const OptionalAuth = (): CustomDecorator => SetMetadata('PUBLIC', true);

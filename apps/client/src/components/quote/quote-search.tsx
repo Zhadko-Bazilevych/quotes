@@ -1,10 +1,11 @@
+import { XIcon } from 'lucide-react';
+import React, { type JSX, useCallback, useState } from 'react';
+
 import { QuoteSearchHint } from '@/components/quote/quote-search-hint';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { quoteListRoute } from '@/routes/route-tree';
-import { XIcon } from 'lucide-react';
-import React, { useCallback, useState, type JSX } from 'react';
 
 export type SearchProps = {} & Omit<
   React.ComponentProps<'input'>,

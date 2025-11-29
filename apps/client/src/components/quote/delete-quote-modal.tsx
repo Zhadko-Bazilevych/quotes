@@ -1,3 +1,6 @@
+import { Trash2Icon } from 'lucide-react';
+import type { JSX } from 'react';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -8,10 +11,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Trash2Icon } from 'lucide-react';
-import type { JSX } from 'react';
 
-type DeleteQuoteModalProps = {
+export type DeleteQuoteModalProps = {
   isOpen: boolean;
   onOk: () => void;
   onOpen: () => void;

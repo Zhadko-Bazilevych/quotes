@@ -1,26 +1,27 @@
 import {
+  ArrowDownWideNarrowIcon,
+  ArrowRightIcon,
+  ArrowUpWideNarrowIcon,
+  XIcon,
+} from 'lucide-react';
+import { type JSX } from 'react';
+import React from 'react';
+
+import { Button } from '@/components/ui/button';
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { type JSX } from 'react';
-import { quoteListRoute } from '@/routes/route-tree';
+import { cn } from '@/lib/utils';
 import {
-  ArrowDownWideNarrowIcon,
-  ArrowRightIcon,
-  ArrowUpWideNarrowIcon,
-  XIcon,
-} from 'lucide-react';
-import {
-  sortFields,
   type SortField,
+  sortFields,
   type SortOption,
 } from '@/pages/quote-list-schema';
-import React from 'react';
-import { cn } from '@/lib/utils';
+import { quoteListRoute } from '@/routes/route-tree';
 
 const namesMap: Record<SortField, string> = {
   author: 'Author',

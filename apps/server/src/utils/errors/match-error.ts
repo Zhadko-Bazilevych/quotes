@@ -1,5 +1,6 @@
-import type { HttpException } from '@nestjs/common';
 import { type GenericTaggedError } from 'src/utils/errors/tagged-error';
+
+import type { HttpException } from '@nestjs/common';
 
 export type Matcher<T extends GenericTaggedError> = {
   [P in T as P['_tag']]?: (args: P['cause']) => HttpException;

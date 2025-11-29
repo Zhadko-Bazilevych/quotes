@@ -1,10 +1,11 @@
-import { DynamicModule, Module, OnModuleInit } from '@nestjs/common';
-import { HttpAdapterHost } from '@nestjs/core';
+import { toNodeHandler } from 'better-auth/node';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { AuthFactory } from 'src/auth/auth.provider';
 import { PostgresDialectService } from 'src/database/postgres-dialect.service';
-import { toNodeHandler } from 'better-auth/node';
+
+import { DynamicModule, Module, OnModuleInit } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { HttpAdapterHost } from '@nestjs/core';
 
 @Module({})
 export class AuthModule implements OnModuleInit {

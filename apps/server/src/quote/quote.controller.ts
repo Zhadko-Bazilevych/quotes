@@ -1,3 +1,19 @@
+import { OptionalAuth } from 'src/auth/auth.guard';
+import {
+  QuoteListQueryDto,
+  quoteListQuerySchema,
+} from 'src/quote/dto/quote-list-query.dto';
+import {
+  UpdateQuoteDto,
+  updateQuoteSchema,
+} from 'src/quote/dto/update-quote.dto';
+import { QuoteService } from 'src/quote/quote.service';
+import { QuoteList } from 'src/quote/quote.types';
+import { UnexpectedError } from 'src/utils/errors/app-errors';
+import { matchError } from 'src/utils/errors/match-error';
+import { UnexpectedException } from 'src/utils/exceptions';
+import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
+
 import {
   Body,
   Controller,
@@ -8,25 +24,11 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { QuoteService } from 'src/quote/quote.service';
-import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
-import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
-import { matchError } from 'src/utils/errors/match-error';
-import {
-  UpdateQuoteDto,
-  updateQuoteSchema,
-} from 'src/quote/dto/update-quote.dto';
-import { UnexpectedException } from 'src/utils/exceptions';
-import { QuoteNotFoundException } from './quote.errors';
-import { UnexpectedError } from 'src/utils/errors/app-errors';
-import { QuoteList } from 'src/quote/quote.types';
-import { QuoteIdDto, quoteIdSchema } from './dto/quote-id.dto';
+
 import { Quote } from './domain/quote';
-import {
-  QuoteListQueryDto,
-  quoteListQuerySchema,
-} from 'src/quote/dto/quote-list-query.dto';
-import { OptionalAuth } from 'src/auth/auth.guard';
+import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
+import { QuoteIdDto, quoteIdSchema } from './dto/quote-id.dto';
+import { QuoteNotFoundException } from './quote.errors';
 
 @OptionalAuth()
 @Controller('quotes')

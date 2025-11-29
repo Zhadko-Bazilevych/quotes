@@ -1,4 +1,4 @@
-import { sql, type Kysely } from 'kysely';
+import { type Kysely, sql } from 'kysely';
 import type { CustomMigration } from 'src/database/migrator/migrator.types';
 
 export const migrateUsers1759503810000: CustomMigration = {

@@ -1,8 +1,8 @@
 import {
+  json,
+  type NextFunction,
   type Request,
   type Response,
-  type NextFunction,
-  json,
   urlencoded,
 } from 'express';
 
