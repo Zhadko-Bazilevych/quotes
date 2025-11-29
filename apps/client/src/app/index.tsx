@@ -1,7 +1,7 @@
 import type { JSX } from 'react';
 import { Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { Header } from '@/components/header/header';
+import { Header } from '@/components/header';
 
 export function App(): JSX.Element {
   return (
