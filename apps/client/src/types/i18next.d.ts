@@ -1,5 +1,6 @@
-import 'i18next';
 import type { defaultNS } from '@/i18n';
+
+import 'i18next';
 import type en from '../../public/locales/en/translation.json';
 
 declare module 'i18next' {

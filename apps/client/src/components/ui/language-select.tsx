@@ -1,3 +1,6 @@
+import type { JSX } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import {
   Select,
   SelectContent,
@@ -6,8 +9,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { supportedLngs } from '@/i18n';
-import type { JSX } from 'react';
-import { useTranslation } from 'react-i18next';
 
 export function LanguageSelect(): JSX.Element {
   const { i18n } = useTranslation();
