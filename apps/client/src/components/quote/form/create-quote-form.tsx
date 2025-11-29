@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import type { JSX } from 'react';
-import type { CreateQuoteData } from '@/types';
+import type { CreateQuoteData } from '@/types/quote';
 import { useCreateQuoteMutation } from '@/hooks/use-create-quote';
 import { QuoteFormBody } from '@/components/quote/form/quote-form-body';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
       context: '',
       user: '',
     },
-    mode: 'onBlur',
+    mode: 'onTouched',
     criteriaMode: 'all',
     resolver: zodResolver(quoteSchema),
   });

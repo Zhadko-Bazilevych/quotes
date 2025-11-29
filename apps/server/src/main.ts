@@ -19,7 +19,7 @@ async function bootstrap(): Promise<void> {
 
   const config = app.get(ConfigService<Config, true>);
   const cors = config.get('app.cors', { infer: true });
-  app.enableCors({ origin: cors });
+  app.enableCors({ origin: cors, credentials: true });
 
   const migratorService = app.get(MigratorService);
   await migratorService.migrate();

@@ -1,6 +1,6 @@
 import React, { useState, type JSX } from 'react';
 import { Button } from '@/components/ui/button';
-import type { Quote } from '@/types';
+import type { Quote } from '@/types/quote';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { formatDatetime } from '@/utils/formatters';
 import { useDisclosure } from '@/hooks/use-disclosure';
@@ -10,13 +10,13 @@ import DeleteModal from '@/components/quote/delete-quote-modal';
 export type QuoteCardProps = {
   quote: Quote;
   onEdit: (id: number) => void;
-  setIsQuoteListVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  onDelete: (id: number) => void;
 };
 
 export const QuoteCard = React.memo(function QuoteCard(
   props: QuoteCardProps,
 ): JSX.Element {
-  const { quote, onEdit, setIsQuoteListVisible } = props;
+  const { quote, onEdit, onDelete } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { isPending, mutate } = useDeleteQuoteMutation();
@@ -29,20 +29,11 @@ export const QuoteCard = React.memo(function QuoteCard(
       { id: quote.id },
       {
         onSuccess() {
-          onModalClose();
+          onDelete(quote.id);
+          onClose();
         },
       },
     );
-  };
-
-  const onModalOpen = (): void => {
-    setIsQuoteListVisible(false);
-    onOpen();
-  };
-
-  const onModalClose = (): void => {
-    onClose();
-    setIsQuoteListVisible(true);
   };
 
   const toggleEdit = (): void => onEdit(quote.id);
@@ -71,8 +62,8 @@ export const QuoteCard = React.memo(function QuoteCard(
           </Button>
           <DeleteModal
             isOpen={isOpen}
-            onOpen={onModalOpen}
-            onClose={onModalClose}
+            onOpen={onOpen}
+            onClose={onClose}
             onOk={deleteQuote}
             isDeleting={isPending}
           />

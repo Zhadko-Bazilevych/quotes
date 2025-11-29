@@ -3,7 +3,7 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from '@tanstack/react-query';
-import type { GetQuotesQuery, QuoteList } from '@/types';
+import type { GetQuotesQuery, QuoteList } from '@/types/quote';
 import { queries } from '@/api/queries';
 
 type UseQuotesOptions = Omit<

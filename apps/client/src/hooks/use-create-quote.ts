@@ -4,7 +4,7 @@ import {
   type UseMutationOptions,
   type UseMutationResult,
 } from '@tanstack/react-query';
-import type { Quote } from '@/types';
+import type { Quote } from '@/types/quote';
 import { queries } from '@/api/queries';
 import { mutations, type CreateQuoteVariables } from '@/api/mutations';
 

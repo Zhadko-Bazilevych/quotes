@@ -1,7 +1,7 @@
 import { QuoteCard } from '@/components/quote/quote-card';
 import { UpdateQuoteForm } from '@/components/quote/form/update-quote-form';
 import { QuotePaginationBar } from '@/components/quote/quote-pagination-bar';
-import { useCallback, useEffect, useState, type JSX } from 'react';
+import { useCallback, useEffect, useMemo, useState, type JSX } from 'react';
 import { useQuotes } from '@/hooks/use-quotes';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
@@ -9,24 +9,31 @@ import { quoteListRoute } from '@/routes/route-tree';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 import { QuoteSearch } from '@/components/quote/quote-search';
 import { QuoteOrder } from './quote-order';
-import { keepPreviousData } from '@tanstack/react-query';
+import { useModalStore } from '@/stores/modal-store';
+import { keepPreviousData, useQueryClient } from '@tanstack/react-query';
+import type { QuoteList } from '@/types/quote';
+import { queries } from '@/api';
 
 export function QuoteListSection(): JSX.Element {
   const navigate = quoteListRoute.useNavigate();
+  const isAnyModalOpen = useModalStore((s) => s.isAnyModalOpen);
   const { pageSize, page, q, sort } = quoteListRoute.useSearch();
-  const { data, isError, isFetching, isPlaceholderData, isLoading } = useQuotes(
-    {
+  const quoteListParams = useMemo(
+    () => ({
       pagination: { pageSize, page },
       filter: { q },
       sort,
-    },
+    }),
+    [pageSize, page, q, sort],
+  );
+  const { data, isError, isFetching, isPlaceholderData, isLoading } = useQuotes(
+    quoteListParams,
     { placeholderData: keepPreviousData },
   );
   const isFetchingNewData = isLoading || (isFetching && isPlaceholderData);
 
-  const [isQuoteListVisible, setIsQuoteListVisible] = useState(true);
-
   const [editingIds, setEditingIds] = useState<number[]>([]);
+  const queryClient = useQueryClient();
 
   const toggleEdit = useCallback(
     (id: number): void => {
@@ -37,8 +44,27 @@ export function QuoteListSection(): JSX.Element {
     [setEditingIds],
   );
 
+  const onDelete = useCallback(
+    (id: number) => {
+      queryClient.setQueryData<QuoteList>(
+        queries.quotes.getList(quoteListParams).queryKey,
+        (old) => {
+          if (!old) {
+            return old;
+          }
+
+          return {
+            ...old,
+            data: old.data.filter((q) => q.id !== id),
+          };
+        },
+      );
+    },
+    [queryClient, quoteListParams],
+  );
+
   useEffect(() => {
-    if (!isQuoteListVisible || !data) {
+    if (isAnyModalOpen || !data) {
       return;
     }
 
@@ -63,6 +89,7 @@ export function QuoteListSection(): JSX.Element {
       }
 
       if (e.key === 'ArrowRight') {
+        e.preventDefault();
         void navigate({
           search: (prev) => ({
             ...prev,
@@ -71,6 +98,7 @@ export function QuoteListSection(): JSX.Element {
         });
       }
       if (e.key === 'ArrowLeft') {
+        e.preventDefault();
         void navigate({
           search: (prev) => ({
             ...prev,
@@ -79,10 +107,10 @@ export function QuoteListSection(): JSX.Element {
         });
       }
     });
-  }, [isQuoteListVisible, navigate, page, pageSize, data]);
+  }, [isAnyModalOpen, navigate, page, pageSize, data]);
 
   useEffect(() => {
-    if (!isQuoteListVisible) {
+    if (isAnyModalOpen) {
       return;
     }
 
@@ -91,7 +119,7 @@ export function QuoteListSection(): JSX.Element {
         setEditingIds((prev) => prev.slice(0, Math.max(0, prev.length - 1)));
       }
     });
-  }, [setEditingIds, isQuoteListVisible]);
+  }, [setEditingIds, isAnyModalOpen]);
 
   if (isError) {
     return <UnexpectedError />;
@@ -119,7 +147,7 @@ export function QuoteListSection(): JSX.Element {
               key={quote.id}
               quote={quote}
               onEdit={toggleEdit}
-              setIsQuoteListVisible={setIsQuoteListVisible}
+              onDelete={onDelete}
             />
           );
         })}

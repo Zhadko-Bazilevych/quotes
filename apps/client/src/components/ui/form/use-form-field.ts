@@ -13,6 +13,7 @@ export const useFormField = (): {
   formItemId: string;
   formDescriptionId: string;
   formMessageId: string;
+  value: unknown;
 } & ReturnType<UseFormGetFieldState<FieldValues>> => {
   const fieldContext = React.useContext(FormFieldContext);
   if (!fieldContext) {
@@ -20,9 +21,10 @@ export const useFormField = (): {
   }
 
   const itemContext = React.useContext(FormItemContext);
-  const { getFieldState } = useFormContext();
+  const { getFieldState, getValues } = useFormContext();
   const formState = useFormState({ name: fieldContext.name });
   const fieldState = getFieldState(fieldContext.name, formState);
+  const value = getValues(fieldContext.name) as unknown;
 
   const { id } = itemContext;
 
@@ -33,5 +35,6 @@ export const useFormField = (): {
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
     ...fieldState,
+    value,
   };
 };
