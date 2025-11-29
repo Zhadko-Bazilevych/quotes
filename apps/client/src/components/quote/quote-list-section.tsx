@@ -11,7 +11,7 @@ import { QuoteSearch } from '@/components/quote/quote-search';
 import { QuoteOrder } from './quote-order';
 import { useModalStore } from '@/stores/modal-store';
 import { keepPreviousData, useQueryClient } from '@tanstack/react-query';
-import type { QuoteList } from '@/types/quotes';
+import type { QuoteList } from '@/types/quote';
 import { queries } from '@/api';
 
 export function QuoteListSection(): JSX.Element {

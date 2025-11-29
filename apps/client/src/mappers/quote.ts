@@ -1,4 +1,4 @@
-import type { Quote, QuoteDto } from '@/types/quotes';
+import type { Quote, QuoteDto } from '@/types/quote';
 
 export class QuoteMapper {
   static toDomain(dto: QuoteDto): Quote {

@@ -1,4 +1,4 @@
-import type { CreateQuoteData, Quote, UpdateQuoteData } from '@/types/quotes';
+import type { CreateQuoteData, Quote, UpdateQuoteData } from '@/types/quote';
 import { api } from '@/api';
 import type { Api } from './api';
 import type { MutationFunction } from '@tanstack/react-query';

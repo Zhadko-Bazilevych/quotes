@@ -1,6 +1,6 @@
 import React, { useState, type JSX } from 'react';
 import { Button } from '@/components/ui/button';
-import type { Quote } from '@/types/quotes';
+import type { Quote } from '@/types/quote';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { formatDatetime } from '@/utils/formatters';
 import { useDisclosure } from '@/hooks/use-disclosure';
