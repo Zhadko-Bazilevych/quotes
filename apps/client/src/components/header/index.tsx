@@ -17,7 +17,9 @@ export function Header(): JSX.Element {
         {data && <span>{`Hello there, ${data.user.name}`}</span>}
         {env.VITE_ENABLE_I18N && <LanguageSelect />}
         {data && <LogoutButton />}
-        {isPending && <Skeleton className="bg-primary h-9 w-16 rounded-md" />}
+        {isPending && !data && (
+          <Skeleton className="bg-primary h-9 w-16 rounded-md" />
+        )}
         {!data && !isPending && <AuthModal />}
       </div>
     </header>

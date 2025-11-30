@@ -6,7 +6,7 @@ import { initReactI18next } from 'react-i18next';
 import { env } from '@/env';
 
 export const defaultNS = 'translation';
-export const supportedLngs = env.VITE_ENABLE_I18N ? ['en', 'ua'] : ['en'];
+export const supportedI18nLngs = env.VITE_ENABLE_I18N ? ['en', 'ua'] : ['en'];
 
 void i18n
   .use(initReactI18next)
@@ -14,7 +14,7 @@ void i18n
   .use(I18NextHttpBackend)
   .init({
     debug: env.DEV,
-    supportedLngs,
+    supportedLngs: supportedI18nLngs,
     fallbackLng: 'en',
     defaultNS,
     interpolation: {

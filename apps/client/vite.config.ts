@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import { defineConfig } from 'vite';
+import svgr from 'vite-plugin-svgr';
 
 import { ValidateEnv } from '@julr/vite-plugin-validate-env';
 import tailwindcss from '@tailwindcss/vite';
@@ -20,6 +21,7 @@ export default defineConfig({
     ValidateEnv({
       configFile: 'src/env/config',
     }),
+    svgr(),
   ],
   resolve: {
     alias: {
