@@ -6,6 +6,7 @@
     "start:dev": "vite",
     "build": "tsc -b && vite build",
     "code:lint": "eslint .",
+    "i18n:lint": "i18next-cli extract --sync-primary --dry-run --ci",
     "code:lint:autofix": "eslint . --fix",
     "check-types": "tsc -b --noEmit",
     "preview": "vite preview"
@@ -26,10 +27,15 @@
     "better-auth": "^1.3.34",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "i18next": "^25.6.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "i18next-cli": "^1.23.5",
+    "i18next-http-backend": "^3.0.2",
     "lucide-react": "^0.541.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.66.0",
+    "react-i18next": "^16.2.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.13",
@@ -37,6 +43,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@julr/vite-plugin-validate-env": "2.2.0",
     "@quotes/eslint-config": "*",
     "@tanstack/eslint-plugin-query": "^5.91.0",
     "@tanstack/router-plugin": "^1.134.12",
@@ -49,6 +56,7 @@
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5.9.2",
-    "vite": "^7.1.5"
+    "vite": "^7.1.5",
+    "vite-plugin-svgr": "4.5.0"
   }
 }

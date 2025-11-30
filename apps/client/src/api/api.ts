@@ -1,3 +1,5 @@
+import { env } from '@/env';
+
 import { QuoteApi } from './quote-api';
 
 export class Api {
@@ -12,4 +14,4 @@ export function createApi(baseUrl: string): Api {
   return new Api(baseUrl);
 }
 
-export const api = createApi(import.meta.env.VITE_API_BASE_URL);
+export const api = createApi(env.VITE_API_BASE_URL);

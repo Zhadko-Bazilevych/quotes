@@ -6,7 +6,7 @@ import { config as baseReactConfig } from '@quotes/eslint-config/react-internal'
 
 export default defineConfig(
   ...baseReactConfig,
-  { ignores: ['eslint.config.mjs'] },
+  { ignores: ['eslint.config.mjs', 'i18next.config.ts'] },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

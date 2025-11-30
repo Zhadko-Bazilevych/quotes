@@ -1,7 +1,9 @@
 import path from 'node:path';
 
 import { defineConfig } from 'vite';
+import svgr from 'vite-plugin-svgr';
 
+import { ValidateEnv } from '@julr/vite-plugin-validate-env';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react';
@@ -16,6 +18,10 @@ export default defineConfig({
     }),
     react(),
     tailwindcss(),
+    ValidateEnv({
+      configFile: 'src/env/config',
+    }),
+    svgr(),
   ],
   resolve: {
     alias: {

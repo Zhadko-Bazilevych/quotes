@@ -5,6 +5,8 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 import { Header } from '@/components/header';
 
+import '@/i18n';
+
 export function App(): JSX.Element {
   return (
     <div className="flex flex-col items-center">

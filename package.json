@@ -8,7 +8,8 @@
     "code:check": "turbo run code:check",
     "code:lint": "turbo run code:lint",
     "test": "turbo run test",
-    "code:lint:autofix": "turbo run code:lint:autofix"
+    "code:lint:autofix": "turbo run code:lint:autofix",
+    "i18n:lint": "turbo run --filter=./apps/client i18n:lint"
   },
   "devDependencies": {
     "turbo": "^2.6.1"

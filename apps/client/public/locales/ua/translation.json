@@ -1,0 +1,8 @@
+{
+  "dialog": {
+    "close": "Закрити"
+  },
+  "quote": {
+    "newQuotePrompt": "Додати нову цитату?"
+  }
+}
