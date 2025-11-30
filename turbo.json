@@ -6,11 +6,12 @@
       "outputs": ["./dist"]
     },
     "code:lint": {},
+    "i18n:lint": {},
     "code:lint:autofix": {},
     "check-types": {},
     "test": {},
     "code:check": {
-      "dependsOn": ["code:lint", "check-types"]
+      "dependsOn": ["code:lint", "i18n:lint", "check-types"]
     },
     "start:dev": {
       "persistent": true,
