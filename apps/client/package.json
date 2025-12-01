@@ -47,7 +47,7 @@
     "@quotes/eslint-config": "*",
     "@tanstack/eslint-plugin-query": "^5.91.0",
     "@tanstack/router-plugin": "^1.134.12",
-    "@types/react": "^19.1.8",
+    "@types/react": "^19.2.7",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^5.1.1",
     "eslint": "^9.39.1",
