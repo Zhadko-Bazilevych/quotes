@@ -4,6 +4,7 @@ import type { ListResponse } from '@/types';
 export type Quote = {
   id: number;
   author: string;
+  userId: number;
   user: {
     id: number;
     name: string;
@@ -12,11 +13,13 @@ export type Quote = {
   context: string;
   createdAt: Date;
   updatedAt: Date;
+  __typename: 'Quote';
 };
 
 export type QuoteDto = {
   id: number;
   author: string;
+  userId: number;
   user: {
     id: number;
     name: string;
@@ -25,6 +28,7 @@ export type QuoteDto = {
   context: string;
   createdAt: string;
   updatedAt: string;
+  __typename: 'Quote';
 };
 
 export type QuoteListDto = ListResponse<QuoteDto>;

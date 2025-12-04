@@ -14,6 +14,7 @@ export class QuoteMapper {
       context: raw.context,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
+      __typename: 'Quote',
     };
   }
 
@@ -30,6 +31,7 @@ export class QuoteMapper {
       context: raw.context,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
+      __typename: 'Quote',
     };
   }
 }

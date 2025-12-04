@@ -11,7 +11,7 @@ import type { AppUser as User } from '@/types/auth';
 import type { Quote } from '@/types/quote';
 
 type Actions = 'manage' | 'read' | 'update' | 'delete' | 'create';
-type Subjects = 'all' | User | 'User' | Quote | 'Quote';
+type Subjects = Quote | 'Quote';
 
 type AppAbility = MongoAbility<[Actions, Subjects]>;
 
@@ -27,5 +27,7 @@ export function defineAbilityFor(user?: User): AppAbility {
     can('manage', 'Quote', { userId: user.id });
   }
 
-  return build();
+  return build({
+    detectSubjectType: (object) => object.__typename,
+  });
 }
