@@ -3,6 +3,7 @@
     "close": "Закрити"
   },
   "quote": {
+    "createQuoteUnauthorized": "Увійдіть у свій обліковий запис, щоб створити цитату.",
     "newQuotePrompt": "Додати нову цитату?"
   }
 }
