@@ -5,6 +5,7 @@ import DeleteModal from '@/components/quote/delete-quote-modal';
 import { Button } from '@/components/ui/button';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { useDisclosure } from '@/hooks/use-disclosure';
+import { Can } from '@/lib/casl/permissions';
 import type { Quote } from '@/types/quote';
 import { formatDatetime } from '@/utils/formatters';
 
@@ -58,16 +59,20 @@ export const QuoteCard = React.memo(function QuoteCard(
           Details
         </Button>
         <div className="flex items-start gap-1">
-          <Button onClick={toggleEdit} variant="outline" size="icon">
-            <PencilIcon />
-          </Button>
-          <DeleteModal
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onClose={onClose}
-            onOk={deleteQuote}
-            isDeleting={isPending}
-          />
+          <Can I="update" this={quote}>
+            <Button onClick={toggleEdit} variant="outline" size="icon">
+              <PencilIcon />
+            </Button>
+          </Can>
+          <Can I="delete" this={quote}>
+            <DeleteModal
+              isOpen={isOpen}
+              onOpen={onOpen}
+              onClose={onClose}
+              onOk={deleteQuote}
+              isDeleting={isPending}
+            />
+          </Can>
         </div>
       </div>
       {isDetailsOpen && (

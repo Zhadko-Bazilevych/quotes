@@ -3,6 +3,7 @@
     "close": "Close"
   },
   "quote": {
+    "createQuoteUnauthorized": "You need to sign in to create a quote.",
     "newQuotePrompt": "Create new quote?"
   }
 }

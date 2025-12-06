@@ -5,3 +5,7 @@ export type ListResponse<T> = {
   pageSize: number;
   totalPages: number;
 };
+
+export type WithTypename<T, Typename extends 'Quote' | 'User'> = T & {
+  __typename: Typename;
+};

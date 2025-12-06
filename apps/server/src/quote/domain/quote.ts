@@ -9,4 +9,5 @@ export type Quote = {
   context: string;
   createdAt: Date;
   updatedAt: Date;
+  __typename: string;
 };

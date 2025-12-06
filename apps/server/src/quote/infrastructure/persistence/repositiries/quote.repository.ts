@@ -6,6 +6,7 @@ import { UserId } from 'src/database/tables/user.tables';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
+import { QuoteEntity } from 'src/quote/infrastructure/persistence/entities/quote.entity';
 import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
 import { QuoteNotFoundError } from 'src/quote/quote.errors';
 import type {
@@ -91,7 +92,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
         .where('id', '=', id)
         .executeTakeFirst(),
     )
-      .andThen((quote): Result<Quote, QuoteNotFoundError> => {
+      .andThen((quote): Result<QuoteEntity, QuoteNotFoundError> => {
         if (!quote) {
           return err(new QuoteNotFoundError({ id }));
         }
@@ -140,7 +141,8 @@ export class KyselyQuoteRepository implements QuoteRepository {
         }
 
         return ok(quote);
-      });
+      })
+      .map((quote) => QuoteMapper.entityToDomain(quote));
   }
 
   getList(
@@ -248,7 +250,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
         .returningAll()
         .executeTakeFirst(),
     )
-      .andThen((quote): Result<Quote, QuoteNotFoundError> => {
+      .andThen((quote): Result<QuoteEntity, QuoteNotFoundError> => {
         if (!quote) {
           return err(new QuoteNotFoundError({ id }));
         }

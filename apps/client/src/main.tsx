@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider } from '@tanstack/react-router';
 
 import { Toaster } from '@/components/ui/sonner';
+import { AbilityProvider } from '@/lib/casl/ability-provider';
 import { router } from '@/routes/route-tree';
 
 import './index.css';
@@ -20,9 +21,11 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <RouterProvider router={router} />
-      <ReactQueryDevtools buttonPosition="bottom-left" />
+      <AbilityProvider>
+        <Toaster />
+        <RouterProvider router={router} />
+        <ReactQueryDevtools buttonPosition="bottom-left" />
+      </AbilityProvider>
     </QueryClientProvider>
   </StrictMode>,
 );
