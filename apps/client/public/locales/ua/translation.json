@@ -3,7 +3,9 @@
     "close": "Закрити"
   },
   "quote": {
-    "createQuoteUnauthorized": "Увійдіть у свій обліковий запис, щоб створити цитату.",
-    "newQuotePrompt": "Додати нову цитату?"
+    "newQuotePrompt": "Додати нову цитату?",
+    "notifications": {
+      "signInRequired": "Вам потрібно увійти в систему, щоб виконати цю дію."
+    }
   }
 }

@@ -3,7 +3,9 @@
     "close": "Close"
   },
   "quote": {
-    "createQuoteUnauthorized": "You need to sign in to create a quote.",
-    "newQuotePrompt": "Create new quote?"
+    "newQuotePrompt": "Create new quote?",
+    "notifications": {
+      "signInRequired": "You need to be signed in to perform this action."
+    }
   }
 }
