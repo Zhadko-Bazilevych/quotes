@@ -13,7 +13,7 @@ import type { Quote } from '@/types/quote';
 type Actions = 'manage' | 'read' | 'update' | 'delete' | 'create';
 type Subjects = 'all' | Quote | 'Quote' | AppUser | 'User';
 
-type AppAbility = MongoAbility<[Actions, Subjects]>;
+export type AppAbility = MongoAbility<[Actions, Subjects]>;
 
 export const AbilityContext = createContext<AppAbility>({} as AppAbility);
 export const Can = createContextualCan<AppAbility>(AbilityContext.Consumer);

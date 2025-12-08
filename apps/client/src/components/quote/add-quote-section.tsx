@@ -2,16 +2,14 @@ import { type JSX, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
-import { useAbility } from '@casl/react';
-
 import { CreateQuoteForm } from '@/components/quote/form/create-quote-form';
 import { Button } from '@/components/ui/button';
-import { AbilityContext } from '@/lib/casl/permissions';
+import { useAppAbility } from '@/hooks/use-app-ability';
 
 export function AddQuoteSection(): JSX.Element {
   const { t } = useTranslation();
   const [isCreatingQuote, setIsCreatingQuote] = useState(false);
-  const ability = useAbility(AbilityContext);
+  const ability = useAppAbility();
 
   const toggleCreate = (): void => {
     setIsCreatingQuote((prev) => !prev);
