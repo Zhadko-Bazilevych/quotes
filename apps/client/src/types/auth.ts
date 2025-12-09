@@ -21,6 +21,7 @@ export type AppUser = Omit<
   'id'
 > & {
   id: number;
+  role: 'user' | 'admin';
 };
 
 export type UserSession = {
