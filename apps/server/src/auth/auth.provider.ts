@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth';
+import { admin } from 'better-auth/plugins';
 import { Config } from 'src/config/config.types';
 import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
@@ -26,6 +27,7 @@ export class AuthProvider {
       baseURL: config.get('auth.betterAuthUrl', { infer: true }),
       trustedOrigins: config.get('app.cors', { infer: true }),
       secret: config.get('auth.betterAuthSecret', { infer: true }),
+      plugins: [admin()],
       user: {
         modelName: 'user',
         fields: {
