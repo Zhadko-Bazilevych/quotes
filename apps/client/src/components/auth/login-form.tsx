@@ -50,13 +50,15 @@ export default function LoginForm({
           control={form.control}
           name="email"
           label="Email"
-          render={(props) => <Input {...props} />}
+          render={(props) => <Input autoComplete="email" {...props} />}
         />
         <FormField
           control={form.control}
           name="password"
           label="Password"
-          render={(props) => <Input type="password" {...props} />}
+          render={(props) => (
+            <Input type="password" autoComplete="current-password" {...props} />
+          )}
         />
         <Button className="mt-1 w-full" type="submit">
           Submit
