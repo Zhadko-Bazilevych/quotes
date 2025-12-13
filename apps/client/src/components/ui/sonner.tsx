@@ -5,7 +5,7 @@ const Toaster = ({ ...props }: ToasterProps): JSX.Element => {
   return (
     <Sonner
       className="toaster group"
-      position="top-right"
+      position="bottom-right"
       closeButton
       toastOptions={{
         unstyled: true,
