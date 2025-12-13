@@ -10,7 +10,7 @@ export function AbilityProvider({
 
   const ability = useMemo(() => {
     return defineAbilityFor(data?.user);
-  }, [data]);
+  }, [data?.user]);
 
   return (
     <AbilityContext.Provider value={ability}>
