@@ -29,7 +29,7 @@ export function AuthRequiredButton({
     }
     if (mode === 'toast') {
       toast.warning(
-        t(($) => $.quote.notifications.signInRequired, {
+        t(($) => $.notifications.authRequired, {
           defaultValue: 'You need to be signed in to perform this action.',
         }),
       );

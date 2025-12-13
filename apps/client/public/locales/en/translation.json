@@ -2,10 +2,10 @@
   "dialog": {
     "close": "Close"
   },
+  "notifications": {
+    "authRequired": "You need to be signed in to perform this action."
+  },
   "quote": {
-    "newQuotePrompt": "Create new quote?",
-    "notifications": {
-      "signInRequired": "You need to be signed in to perform this action."
-    }
+    "newQuotePrompt": "Create new quote?"
   }
 }
