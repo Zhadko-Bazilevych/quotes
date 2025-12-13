@@ -5,18 +5,18 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { useSession } from '@/hooks/use-session';
 
-type PermissionButtonProps = {
+export type AuthRequiredButtonProps = {
   mode?: 'hide' | 'disable' | 'toast';
   toastMessage?: string;
 } & ComponentProps<typeof Button>;
 
-export default function PermissionButton({
+export function AuthRequiredButton({
   children,
   mode = 'toast',
   toastMessage,
   onClick: onSuccess,
   ...props
-}: PermissionButtonProps): JSX.Element | null {
+}: AuthRequiredButtonProps): JSX.Element | null {
   const { data } = useSession();
   const { t } = useTranslation();
 
