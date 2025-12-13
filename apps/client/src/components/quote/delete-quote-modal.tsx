@@ -22,7 +22,7 @@ export type DeleteQuoteModalProps = {
 
 // TODO: and show spinner while the the delete operation is pending
 // and show a toast on success and on error
-export default function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
+export function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
   const {
     isOpen,
     onOpen,

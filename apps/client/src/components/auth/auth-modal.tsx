@@ -3,7 +3,7 @@ import { type JSX, useState } from 'react';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { TabsContent } from '@radix-ui/react-tabs';
 
-import LoginForm from '@/components/auth/login-form';
+import { LoginForm } from '@/components/auth/login-form';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export default function AuthModal(): JSX.Element {
+export function AuthModal(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

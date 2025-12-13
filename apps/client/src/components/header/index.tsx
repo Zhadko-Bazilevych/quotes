@@ -1,7 +1,7 @@
 import type { JSX } from 'react';
 
-import AuthModal from '@/components/auth/auth-modal';
-import LogoutButton from '@/components/auth/logout-button';
+import { AuthModal } from '@/components/auth/auth-modal';
+import { LogoutButton } from '@/components/auth/logout-button';
 import { LanguageSelect } from '@/components/ui/language-select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { env } from '@/env';

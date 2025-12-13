@@ -1,7 +1,7 @@
 import { PencilIcon } from 'lucide-react';
 import React, { type JSX, useState } from 'react';
 
-import DeleteModal from '@/components/quote/delete-quote-modal';
+import { DeleteModal } from '@/components/quote/delete-quote-modal';
 import { Button } from '@/components/ui/button';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { useDisclosure } from '@/hooks/use-disclosure';

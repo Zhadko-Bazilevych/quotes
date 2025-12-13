@@ -13,7 +13,7 @@ import type { LoginData } from '@/types/auth';
 
 export type LoginFormProps = Omit<React.ComponentProps<'form'>, 'onSubmit'>;
 
-export default function LoginForm({
+export function LoginForm({
   className,
   ...props
 }: LoginFormProps): JSX.Element {
