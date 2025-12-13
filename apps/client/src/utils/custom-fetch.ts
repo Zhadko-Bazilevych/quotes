@@ -22,6 +22,7 @@ export async function customFetch<T = unknown>(
   const res = await fetch(url, {
     body: JSON.stringify(body),
     method,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
