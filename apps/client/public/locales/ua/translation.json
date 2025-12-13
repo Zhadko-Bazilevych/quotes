@@ -2,6 +2,9 @@
   "dialog": {
     "close": "Закрити"
   },
+  "notifications": {
+    "authRequired": "Вам потрібно увійти в систему, щоб виконати цю дію."
+  },
   "quote": {
     "newQuotePrompt": "Додати нову цитату?"
   }

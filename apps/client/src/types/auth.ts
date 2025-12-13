@@ -1,5 +1,7 @@
 import type { getSession } from 'better-auth/api';
 
+import type { WithTypename } from '@/types';
+
 export type LoginData = {
   email: string;
   password: string;
@@ -14,7 +16,12 @@ export type AppSession = Omit<BaseUserSession['session'], 'id' | 'userId'> & {
   userId: number;
 };
 
-export type AppUser = Omit<BaseUserSession['user'], 'id'> & { id: number };
+export type AppUser = Omit<
+  WithTypename<BaseUserSession['user'], 'User'>,
+  'id'
+> & {
+  id: number;
+};
 
 export type UserSession = {
   session: AppSession;

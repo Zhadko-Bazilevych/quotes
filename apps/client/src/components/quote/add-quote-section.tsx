@@ -2,7 +2,7 @@ import { type JSX, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CreateQuoteForm } from '@/components/quote/form/create-quote-form';
-import { Button } from '@/components/ui/button';
+import { AuthRequiredButton } from '@/components/ui/button/auth-required-button';
 
 export function AddQuoteSection(): JSX.Element {
   const { t } = useTranslation();
@@ -14,14 +14,18 @@ export function AddQuoteSection(): JSX.Element {
 
   return (
     <>
-      {isCreatingQuote && <CreateQuoteForm onCancel={toggleCreate} />}
       {!isCreatingQuote && (
-        <Button className="py-2" onClick={toggleCreate} variant="outline">
+        <AuthRequiredButton
+          className="py-2"
+          onClick={toggleCreate}
+          variant="outline"
+        >
           {t(($) => $.quote.newQuotePrompt, {
             defaultValue: 'Create new quote?',
           })}
-        </Button>
+        </AuthRequiredButton>
       )}
+      {isCreatingQuote && <CreateQuoteForm onCancel={toggleCreate} />}
     </>
   );
 }

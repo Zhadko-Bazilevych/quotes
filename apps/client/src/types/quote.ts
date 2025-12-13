@@ -1,31 +1,39 @@
 import type { SortOption } from '@/pages/quote-list-schema';
-import type { ListResponse } from '@/types';
+import type { ListResponse, WithTypename } from '@/types';
 
-export type Quote = {
-  id: number;
-  author: string;
-  user: {
+export type Quote = WithTypename<
+  {
     id: number;
-    name: string;
-  };
-  content: string;
-  context: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+    author: string;
+    userId: number;
+    user: {
+      id: number;
+      name: string;
+    };
+    content: string;
+    context: string;
+    createdAt: Date;
+    updatedAt: Date;
+  },
+  'Quote'
+>;
 
-export type QuoteDto = {
-  id: number;
-  author: string;
-  user: {
+export type QuoteDto = WithTypename<
+  {
     id: number;
-    name: string;
-  };
-  content: string;
-  context: string;
-  createdAt: string;
-  updatedAt: string;
-};
+    author: string;
+    userId: number;
+    user: {
+      id: number;
+      name: string;
+    };
+    content: string;
+    context: string;
+    createdAt: string;
+    updatedAt: string;
+  },
+  'Quote'
+>;
 
 export type QuoteListDto = ListResponse<QuoteDto>;
 
