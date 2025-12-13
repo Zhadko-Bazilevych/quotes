@@ -12,6 +12,7 @@ export const appEnvSchema = z.object({
         .filter(Boolean),
     )
     .refine((val) => val.length > 0, 'pass at least one origin into APP_CORS'),
+  APP_CLIENT_DOMAIN: z.string(),
 });
 
 export const appConfig = registerAs('app', () => {
@@ -19,6 +20,7 @@ export const appConfig = registerAs('app', () => {
 
   return {
     cors: parsed.APP_CORS,
+    clientDomain: parsed.APP_CLIENT_DOMAIN,
   };
 });
 

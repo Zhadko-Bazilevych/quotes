@@ -22,6 +22,10 @@ export class AuthFactory {
         database: {
           generateId: false,
         },
+        crossSubDomainCookies: {
+          enabled: true,
+          domain: config.get('app.clientDomain', { infer: true }),
+        },
       },
       baseURL: config.get('auth.betterAuthUrl', { infer: true }),
       trustedOrigins: config.get('app.cors', { infer: true }),

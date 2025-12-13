@@ -113,6 +113,7 @@ jobs:
             echo "AUTH_BETTER_AUTH_SECRET=${{ secrets.AUTH_BETTER_AUTH_SECRET }}"
             echo "AUTH_BETTER_AUTH_URL=${{ vars.AUTH_BETTER_AUTH_URL }}"
             echo "APP_CORS=${{ vars.APP_CORS }}"
+            echo "APP_CLIENT_DOMAIN=${{ vars.APP_CLIENT_DOMAIN }}"
           } > stack.env
 
       - name: Docker Stack Deploy

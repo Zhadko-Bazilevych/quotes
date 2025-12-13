@@ -13,6 +13,7 @@ services:
       AUTH_BETTER_AUTH_URL: ${AUTH_BETTER_AUTH_URL}
       AUTH_BETTER_AUTH_SECRET: ${AUTH_BETTER_AUTH_SECRET}
       APP_CORS: ${APP_CORS}
+      APP_CLIENT_DOMAIN: ${APP_CLIENT_DOMAIN}
     depends_on:
       - quotes-pgdb
 
