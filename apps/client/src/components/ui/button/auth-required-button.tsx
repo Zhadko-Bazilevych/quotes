@@ -7,13 +7,11 @@ import { useSession } from '@/hooks/use-session';
 
 export type AuthRequiredButtonProps = {
   mode?: 'hide' | 'disable' | 'toast';
-  toastMessage?: string;
 } & ComponentProps<typeof Button>;
 
 export function AuthRequiredButton({
   children,
   mode = 'toast',
-  toastMessage,
   onClick: onSuccess,
   ...props
 }: AuthRequiredButtonProps): JSX.Element | null {
@@ -31,10 +29,9 @@ export function AuthRequiredButton({
     }
     if (mode === 'toast') {
       toast.warning(
-        toastMessage ??
-          t(($) => $.quote.notifications.signInRequired, {
-            defaultValue: 'You need to be signed in to perform this action.',
-          }),
+        t(($) => $.quote.notifications.signInRequired, {
+          defaultValue: 'You need to be signed in to perform this action.',
+        }),
       );
     }
   };
