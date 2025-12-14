@@ -1,6 +1,6 @@
 import { fromNodeHeaders } from 'better-auth/node';
 import { Request } from 'express';
-import { AuthFactory } from 'src/auth/auth.provider';
+import { AuthProvider } from 'src/auth/auth.provider';
 
 import {
   CanActivate,
@@ -17,7 +17,7 @@ export const OptionalAuth = (): CustomDecorator => SetMetadata('PUBLIC', true);
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly authFactory: AuthFactory,
+    private readonly authFactory: AuthProvider,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

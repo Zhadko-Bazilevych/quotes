@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class AuthFactory {
+export class AuthProvider {
   private readonly betterAuthClient: ReturnType<typeof betterAuth>;
 
   constructor(

@@ -1,6 +1,6 @@
 import { toNodeHandler } from 'better-auth/node';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { AuthFactory } from 'src/auth/auth.provider';
+import { AuthProvider } from 'src/auth/auth.provider';
 import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
 import { DynamicModule, Module, OnModuleInit } from '@nestjs/common';
@@ -11,7 +11,7 @@ import { HttpAdapterHost } from '@nestjs/core';
 export class AuthModule implements OnModuleInit {
   constructor(
     private readonly adapter: HttpAdapterHost,
-    private readonly authFactory: AuthFactory,
+    private readonly authFactory: AuthProvider,
   ) {}
 
   onModuleInit(): void {
@@ -26,11 +26,11 @@ export class AuthModule implements OnModuleInit {
       module: AuthModule,
       global: true,
       providers: [
-        AuthFactory,
+        AuthProvider,
         PostgresDialectService,
         { provide: APP_GUARD, useClass: AuthGuard },
       ],
-      exports: [AuthFactory],
+      exports: [AuthProvider],
     };
   }
 }
