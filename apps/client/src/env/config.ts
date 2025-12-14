@@ -6,6 +6,7 @@ export default defineConfig({
   validator: 'standard',
   schema: {
     VITE_API_BASE_URL: z.url(),
+    VITE_API_AUTH_URL: z.url(),
     VITE_ENABLE_I18N: z.stringbool(),
   },
 });

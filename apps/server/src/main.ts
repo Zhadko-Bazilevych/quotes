@@ -15,6 +15,7 @@ async function bootstrap(): Promise<void> {
     bufferLogs: true,
     bodyParser: false,
   });
+  app.setGlobalPrefix('/api');
   app.set('query parser', 'extended');
 
   app.use(bodyParserMiddleware);

@@ -22,11 +22,6 @@ export class AuthProvider {
         database: {
           generateId: false,
         },
-        // TODO: check whether sameSite can remain lax
-        defaultCookieAttributes: {
-          sameSite: 'none',
-          secure: true,
-        },
       },
       baseURL: config.get('auth.betterAuthUrl', { infer: true }),
       trustedOrigins: config.get('app.cors', { infer: true }),

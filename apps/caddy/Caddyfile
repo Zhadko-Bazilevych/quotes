@@ -1,8 +1,9 @@
 thatonequotes.duckdns.org {
-    reverse_proxy quotes-client:80
-}
-
-api-thatonequotes.duckdns.org {
     encode gzip zstd
-    reverse_proxy quotes-server:3000
+
+    handle /api/* {
+        reverse_proxy quotes-server:3000
+    }
+
+    reverse_proxy quotes-client:80
 }
