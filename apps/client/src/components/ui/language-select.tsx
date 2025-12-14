@@ -8,12 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { supportedI18nLngs } from '@/i18n';
+import { type supportedI18nLngs } from '@/i18n';
 import { UaFlagIcon, UsFlagIcon } from '@/icons';
 
 type SupportedLanguage = {
   label: string;
-  code: string;
+  code: (typeof supportedI18nLngs)[number];
   icon: JSX.Element;
 };
 
@@ -28,7 +28,7 @@ const supportedLangauges: SupportedLanguage[] = [
     code: 'ua',
     icon: <UaFlagIcon />,
   },
-].filter((lng) => supportedI18nLngs.includes(lng.code));
+];
 
 export function LanguageSelect(): JSX.Element {
   const { i18n } = useTranslation();
