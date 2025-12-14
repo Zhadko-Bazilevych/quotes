@@ -1,4 +1,7 @@
 {
+  "common": {
+    "beta": "beta"
+  },
   "dialog": {
     "close": "Close"
   },

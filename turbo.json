@@ -7,6 +7,9 @@
     },
     "code:lint": {},
     "i18n:lint": {},
+    "i18n:sync": {
+      "outputs": ["./public/locales/*"]
+    },
     "code:lint:autofix": {},
     "check-types": {},
     "test": {},
