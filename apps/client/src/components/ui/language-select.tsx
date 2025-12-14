@@ -11,27 +11,36 @@ import {
 import { type supportedI18nLngs } from '@/i18n';
 import { UaFlagIcon, UsFlagIcon } from '@/icons';
 
+import { Badge } from './badge';
+
 type SupportedLanguage = {
-  label: string;
+  label: JSX.Element | string;
   code: (typeof supportedI18nLngs)[number];
   icon: JSX.Element;
 };
 
-const supportedLangauges: SupportedLanguage[] = [
-  {
-    label: 'English',
-    code: 'en',
-    icon: <UsFlagIcon />,
-  },
-  {
-    label: 'Українська',
-    code: 'ua',
-    icon: <UaFlagIcon />,
-  },
-];
-
 export function LanguageSelect(): JSX.Element {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const supportedLangauges: SupportedLanguage[] = [
+    {
+      label: 'English',
+      code: 'en',
+      icon: <UsFlagIcon />,
+    },
+    {
+      label: (
+        <>
+          Українська{' '}
+          <Badge variant="destructive" className="py-0 uppercase">
+            {t(($) => $.common.beta, { lng: 'ua', defaultValue: 'beta' })}
+          </Badge>
+        </>
+      ),
+      code: 'ua',
+      icon: <UaFlagIcon />,
+    },
+  ];
 
   return (
     <Select
