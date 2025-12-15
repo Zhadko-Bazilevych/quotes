@@ -24,6 +24,7 @@ export const useSession = (): UseSessionReturn => {
       ...sessionUser,
       role,
       id: Number(sessionUser.id),
+      role: sessionUser.role as AppUser['role'],
       __typename: 'User',
     };
   }, [sessionUser]);
