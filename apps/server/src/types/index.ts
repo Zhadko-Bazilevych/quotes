@@ -1,3 +1,3 @@
-export type WithTypename<T, Typename extends 'Quote'> = T & {
+export type WithTypename<T, Typename extends 'Quote' | 'User'> = T & {
   __typename: Typename;
 };

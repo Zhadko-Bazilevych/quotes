@@ -8,13 +8,21 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthProvider {
-  private readonly betterAuthClient: ReturnType<typeof betterAuth>;
+  private readonly betterAuthClient: ReturnType<typeof this.createAuthClient>;
 
   constructor(
     config: ConfigService<Config, true>,
     dialect: PostgresDialectService,
   ) {
-    this.betterAuthClient = betterAuth({
+    this.betterAuthClient = this.createAuthClient(config, dialect);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  private createAuthClient(
+    config: ConfigService<Config, true>,
+    dialect: PostgresDialectService,
+  ) {
+    return betterAuth({
       database: dialect,
       emailAndPassword: {
         enabled: true,
@@ -73,7 +81,7 @@ export class AuthProvider {
     });
   }
 
-  get client(): ReturnType<typeof betterAuth> {
+  get client(): typeof this.betterAuthClient {
     return this.betterAuthClient;
   }
 }
