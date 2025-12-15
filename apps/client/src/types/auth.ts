@@ -13,12 +13,14 @@ export type AppSession = Omit<BaseUserSession['session'], 'id' | 'userId'> & {
   userId: number;
 };
 
+export type Role = 'admin' | 'user';
+
 export type AppUser = Omit<
   WithTypename<BaseUserSession['user'], 'User'>,
   'id' | 'role'
 > & {
   id: number;
-  role: ('admin' | 'user')[];
+  role: Role[];
 };
 
 export type UserSession = {
