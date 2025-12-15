@@ -18,8 +18,12 @@ export const useSession = (): UseSessionReturn => {
       return;
     }
 
+    // TODO: move 'user' | 'admin' to a type
+    const role = (sessionUser.role?.split(',') ?? []) as ('user' | 'admin')[];
+
     return {
       ...sessionUser,
+      role,
       id: Number(sessionUser.id),
       role: sessionUser.role as AppUser['role'],
       __typename: 'User',
