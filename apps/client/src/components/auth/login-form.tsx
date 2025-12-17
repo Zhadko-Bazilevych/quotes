@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import { type JSX, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,7 +27,10 @@ export function LoginForm({
     resolver: zodResolver(loginSchema),
   });
 
+  const [isLogging, setIsLogging] = useState<boolean>(false);
+
   const onSubmit = async (data: LoginData): Promise<void> => {
+    setIsLogging(true);
     await authClient.signIn.email(data, {
       onError: (ctx) => {
         form.setError('password', {
@@ -35,8 +38,9 @@ export function LoginForm({
             server: ctx.error.message,
           },
         });
-      },
+      },q
     });
+    setIsLogging(false);
   };
 
   return (
@@ -60,7 +64,7 @@ export function LoginForm({
             <Input type="password" autoComplete="current-password" {...props} />
           )}
         />
-        <Button className="mt-1 w-full" type="submit">
+        <Button className="mt-1 w-full" type="submit" disabled={isLogging}>
           Submit
         </Button>
       </form>
