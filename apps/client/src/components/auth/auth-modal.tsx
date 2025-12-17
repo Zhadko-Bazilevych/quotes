@@ -15,9 +15,16 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export function AuthModal(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const onModalChange = (state: boolean): void => {
+    if (!isLoading || state) {
+      setIsOpen(state);
+    }
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={onModalChange}>
       <DialogTrigger asChild>
         <Button>Login</Button>
       </DialogTrigger>
@@ -32,7 +39,11 @@ export function AuthModal(): JSX.Element {
             </DialogTitle>
           </DialogHeader>
           <TabsContent value="signIn">
-            <LoginForm className="mb-3" />
+            <LoginForm
+              className="mb-3"
+              setIsLoggingIn={setIsLoading}
+              isLoggingIn={isLoading}
+            />
           </TabsContent>
           <TabsContent value="signUp">
             <p>Sorry, we don&#39;t support registering right now</p>

@@ -1,4 +1,4 @@
-import { type JSX, useState } from 'react';
+import type { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,10 +11,15 @@ import { authClient } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import type { LoginData } from '@/types/auth';
 
-export type LoginFormProps = Omit<React.ComponentProps<'form'>, 'onSubmit'>;
+export type LoginFormProps = {
+  isLoggingIn: boolean;
+  setIsLoggingIn: (state: boolean) => void;
+} & Omit<React.ComponentProps<'form'>, 'onSubmit'>;
 
 export function LoginForm({
   className,
+  isLoggingIn,
+  setIsLoggingIn,
   ...props
 }: LoginFormProps): JSX.Element {
   const form = useForm<LoginData>({
@@ -27,10 +32,8 @@ export function LoginForm({
     resolver: zodResolver(loginSchema),
   });
 
-  const [isLogging, setIsLogging] = useState<boolean>(false);
-
   const onSubmit = async (data: LoginData): Promise<void> => {
-    setIsLogging(true);
+    setIsLoggingIn(true);
     await authClient.signIn.email(data, {
       onError: (ctx) => {
         form.setError('password', {
@@ -38,9 +41,9 @@ export function LoginForm({
             server: ctx.error.message,
           },
         });
-      },q
+      },
     });
-    setIsLogging(false);
+    setIsLoggingIn(false);
   };
 
   return (
@@ -64,7 +67,7 @@ export function LoginForm({
             <Input type="password" autoComplete="current-password" {...props} />
           )}
         />
-        <Button className="mt-1 w-full" type="submit" disabled={isLogging}>
+        <Button className="mt-1 w-full" type="submit" disabled={isLoggingIn}>
           Submit
         </Button>
       </form>
