@@ -7,19 +7,17 @@ import { loginSchema } from '@/components/auth/auth.schema';
 import { Button } from '@/components/ui/button';
 import { Form, FormField } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { authClient } from '@/lib/auth-client';
+import type { useSignInWithEmailResult } from '@/hooks/use-sign-in-with-email';
 import { cn } from '@/lib/utils';
 import type { LoginData } from '@/types/auth';
 
 export type LoginFormProps = {
-  isLoggingIn: boolean;
-  setIsLoggingIn: (state: boolean) => void;
+  signInMutation: useSignInWithEmailResult;
 } & Omit<React.ComponentProps<'form'>, 'onSubmit'>;
 
 export function LoginForm({
   className,
-  isLoggingIn,
-  setIsLoggingIn,
+  signInMutation: { isPending, mutate },
   ...props
 }: LoginFormProps): JSX.Element {
   const form = useForm<LoginData>({
@@ -32,18 +30,19 @@ export function LoginForm({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginData): Promise<void> => {
-    setIsLoggingIn(true);
-    await authClient.signIn.email(data, {
-      onError: (ctx) => {
-        form.setError('password', {
-          types: {
-            server: ctx.error.message,
-          },
-        });
+  const onSubmit = (data: LoginData): void => {
+    mutate({
+      data,
+      options: {
+        onError: (ctx) => {
+          form.setError('password', {
+            types: {
+              server: ctx.error.message,
+            },
+          });
+        },
       },
     });
-    setIsLoggingIn(false);
   };
 
   return (
@@ -67,7 +66,7 @@ export function LoginForm({
             <Input type="password" autoComplete="current-password" {...props} />
           )}
         />
-        <Button className="mt-1 w-full" type="submit" disabled={isLoggingIn}>
+        <Button className="mt-1 w-full" type="submit" disabled={isPending}>
           Submit
         </Button>
       </form>

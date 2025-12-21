@@ -12,13 +12,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useSignInWithEmail } from '@/hooks/use-sign-in-with-email';
 
 export function AuthModal(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const mutation = useSignInWithEmail();
 
   const onModalChange = (state: boolean): void => {
-    if (!isLoading || state) {
+    if (!mutation.isPending || state) {
       setIsOpen(state);
     }
   };
@@ -39,11 +40,7 @@ export function AuthModal(): JSX.Element {
             </DialogTitle>
           </DialogHeader>
           <TabsContent value="signIn">
-            <LoginForm
-              className="mb-3"
-              setIsLoggingIn={setIsLoading}
-              isLoggingIn={isLoading}
-            />
+            <LoginForm className="mb-3" signInMutation={mutation} />
           </TabsContent>
           <TabsContent value="signUp">
             <p>Sorry, we don&#39;t support registering right now</p>
