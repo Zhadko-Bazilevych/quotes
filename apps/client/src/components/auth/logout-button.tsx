@@ -1,12 +1,25 @@
-import type { JSX } from 'react';
+import { type JSX } from 'react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { authClient } from '@/lib/auth-client';
+import { useSignOut } from '@/hooks/use-sign-out';
 
 export function LogoutButton(): JSX.Element {
-  const logout = async (): Promise<void> => {
-    await authClient.signOut();
+  const { isPending, mutate } = useSignOut();
+
+  const logout = (): void => {
+    mutate({
+      fetchOptions: {
+        onError(ctx) {
+          toast.warning(ctx.error.message);
+        },
+      },
+    });
   };
 
-  return <Button onClick={() => void logout()}>Logout</Button>;
+  return (
+    <Button onClick={logout} disabled={isPending}>
+      Logout
+    </Button>
+  );
 }

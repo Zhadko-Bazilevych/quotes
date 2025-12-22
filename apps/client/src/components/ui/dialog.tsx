@@ -32,7 +32,7 @@ function Dialog({ open, ...props }: DialogProps): JSX.Element {
     return (): void => remove(id);
   }, [open, id, add, remove]);
 
-  return <DialogPrimitive.Root {...props} data-slot="dialog" />;
+  return <DialogPrimitive.Root {...props} open={open} data-slot="dialog" />;
 }
 
 function DialogTrigger({
