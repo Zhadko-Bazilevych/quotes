@@ -1,5 +1,4 @@
-import type { getSession } from 'better-auth/api';
-
+import type { authClient } from '@/lib/auth-client';
 import type { WithTypename } from '@/types';
 
 export type LoginData = {
@@ -7,20 +6,21 @@ export type LoginData = {
   password: string;
 };
 
-type BaseUserSession = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getSession>>>
->;
+type BaseUserSession = typeof authClient.$Infer.Session;
 
 export type AppSession = Omit<BaseUserSession['session'], 'id' | 'userId'> & {
   id: number;
   userId: number;
 };
 
+export type Role = 'admin' | 'user';
+
 export type AppUser = Omit<
   WithTypename<BaseUserSession['user'], 'User'>,
-  'id'
+  'id' | 'role'
 > & {
   id: number;
+  role: Role[];
 };
 
 export type UserSession = {

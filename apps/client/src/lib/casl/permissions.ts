@@ -21,14 +21,14 @@ export const Can = createContextualCan<AppAbility>(AbilityContext.Consumer);
 export function defineAbilityFor(_user?: User): AppAbility {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
-  // can('read', 'Quote');
+  if (_user?.role.includes('admin')) {
+    can('manage', 'all');
+  }
 
-  // if (user) {
-  //   can('manage', 'Quote', { userId: user.id });
-  //   can('manage', 'User', { id: user.id });
-  // }
-
-  can('manage', 'all');
+  if (_user?.role.includes('user')) {
+    can('manage', 'Quote', { userId: _user.id });
+    can('manage', 'User', { id: _user.id });
+  }
 
   return build({
     detectSubjectType: (object) => object.__typename,

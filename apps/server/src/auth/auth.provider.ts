@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth';
+import { admin } from 'better-auth/plugins';
 import { Config } from 'src/config/config.types';
 import { PostgresDialectService } from 'src/database/postgres-dialect.service';
 
@@ -7,13 +8,21 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthProvider {
-  private readonly betterAuthClient: ReturnType<typeof betterAuth>;
+  private readonly betterAuthClient: ReturnType<typeof this.createAuthClient>;
 
   constructor(
     config: ConfigService<Config, true>,
     dialect: PostgresDialectService,
   ) {
-    this.betterAuthClient = betterAuth({
+    this.betterAuthClient = this.createAuthClient(config, dialect);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  private createAuthClient(
+    config: ConfigService<Config, true>,
+    dialect: PostgresDialectService,
+  ) {
+    return betterAuth({
       database: dialect,
       emailAndPassword: {
         enabled: true,
@@ -26,6 +35,7 @@ export class AuthProvider {
       baseURL: config.get('auth.betterAuthUrl', { infer: true }),
       trustedOrigins: config.get('app.cors', { infer: true }),
       secret: config.get('auth.betterAuthSecret', { infer: true }),
+      plugins: [admin()],
       user: {
         modelName: 'user',
         fields: {
@@ -71,7 +81,7 @@ export class AuthProvider {
     });
   }
 
-  get client(): ReturnType<typeof betterAuth> {
+  get client(): typeof this.betterAuthClient {
     return this.betterAuthClient;
   }
 }

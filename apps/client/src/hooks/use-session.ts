@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { authClient } from '@/lib/auth-client';
-import type { AppUser, UserSession } from '@/types/auth';
+import type { AppUser, Role, UserSession } from '@/types/auth';
 
 type UseSessionReturn = Omit<
   ReturnType<typeof authClient.useSession>,
@@ -18,8 +18,11 @@ export const useSession = (): UseSessionReturn => {
       return;
     }
 
+    const role = (sessionUser.role?.split(',') ?? []) as Role[];
+
     return {
       ...sessionUser,
+      role,
       id: Number(sessionUser.id),
       __typename: 'User',
     };
