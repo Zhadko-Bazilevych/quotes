@@ -5,6 +5,7 @@ export const updateQuoteSchema = z.object({
   content: z.string().trim().min(3).max(500).optional(),
   user: z.string().trim().min(3).max(30).optional(),
   context: z.string().trim().max(500).optional(),
+  visibility: z.enum(['public', 'private']).optional(),
 });
 
 export type UpdateQuoteDto = z.infer<typeof updateQuoteSchema>;

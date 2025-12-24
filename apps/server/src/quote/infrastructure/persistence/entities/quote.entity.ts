@@ -1,4 +1,7 @@
-import type { QuoteId } from 'src/database/tables/quote.tables';
+import type {
+  QuoteId,
+  QuoteVisibility,
+} from 'src/database/tables/quote.tables';
 import type { UserId } from 'src/database/tables/user.tables';
 
 export type QuoteEntity = {
@@ -9,4 +12,5 @@ export type QuoteEntity = {
   context: string;
   createdAt: Date;
   updatedAt: Date;
+  visibility: QuoteVisibility;
 };
