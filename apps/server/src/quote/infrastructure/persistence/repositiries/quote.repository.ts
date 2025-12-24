@@ -62,7 +62,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
   }
 
   create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
-    const { author, content, user, context } = data;
+    const { author, content, user, context, visibility } = data;
 
     return this.db
       .withTransaction(() => {
@@ -75,6 +75,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
                 content,
                 userId,
                 context,
+                visibility,
               })
               .returningAll()
               .executeTakeFirstOrThrow(),
@@ -106,7 +107,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
     id: QuoteId,
     data: UpdateQuoteDto,
   ): ResultAsync<Quote, UpdateQuoteError> {
-    const { author, content, user, context } = data;
+    const { author, content, user, context, visibility } = data;
 
     return this.db
       .withTransaction(() => {
@@ -127,6 +128,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
                   content,
                   userId,
                   context,
+                  visibility,
                   updatedAt: new Date(),
                 })
                 .where('id', '=', id)
@@ -216,6 +218,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
                 'context',
                 'quote.createdAt',
                 'quote.updatedAt',
+                'visibility',
               ])
               .offset(offset)
               .limit(pageSize)
