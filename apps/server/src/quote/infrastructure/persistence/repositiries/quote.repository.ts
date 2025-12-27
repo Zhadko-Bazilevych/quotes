@@ -1,5 +1,7 @@
 import { ExpressionWrapper, sql, SqlBool } from 'kysely';
 import { err, ok, okAsync, type Result, ResultAsync } from 'neverthrow';
+import { AuthStore } from 'src/auth/auth-als.module';
+import { kyselyWhere } from 'src/auth/permissions';
 import { Database, KyselyService } from 'src/database/kysely.service';
 import type { QuoteId } from 'src/database/tables/quote.tables';
 import { UserId } from 'src/database/tables/user.tables';
@@ -31,7 +33,10 @@ import type {
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {
-  constructor(private readonly db: KyselyService) {}
+  constructor(
+    private readonly db: KyselyService,
+    private readonly authStore: AuthStore,
+  ) {}
 
   private getOrCreateUserByName(
     name: string,
@@ -201,6 +206,10 @@ export class KyselyQuoteRepository implements QuoteRepository {
             return eb.and(expressions);
           });
         }
+
+        const { ability } = this.authStore.getStore();
+        const conditions = kyselyWhere(ability, 'read', 'Quote');
+        baseQuery = baseQuery.where(conditions);
 
         for (const { field, order } of sort) {
           baseQuery = baseQuery.orderBy(field, order);

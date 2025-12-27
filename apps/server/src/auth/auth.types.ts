@@ -1,4 +1,5 @@
 import type { getSession } from 'better-auth/api';
+import { type AppAbility } from 'src/auth/permissions';
 import type { WithTypename } from 'src/types';
 
 export type BaseUserSession = NonNullable<
@@ -23,4 +24,9 @@ export type AppUser = Omit<
 export type UserSession = {
   session: AppSession;
   user: AppUser;
+};
+
+export type AuthStoreType = {
+  ability: AppAbility;
+  user: AppUser | null;
 };
