@@ -26,6 +26,7 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
       content: quote.content,
       context: quote.context,
       user: quote.user.name,
+      visibility: quote.visibility,
     },
     mode: 'all',
     criteriaMode: 'all',

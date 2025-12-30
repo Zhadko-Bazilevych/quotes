@@ -53,10 +53,12 @@ export type CreateQuoteData = {
   author: string;
   content: string;
   context: string;
+  visibility: QuoteVisibility;
 };
 export type UpdateQuoteData = {
   user: string;
   author: string;
   content: string;
   context: string;
+  visibility: QuoteVisibility;
 };

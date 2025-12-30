@@ -22,6 +22,7 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
       content: '',
       context: '',
       user: '',
+      visibility: 'public',
     },
     mode: 'onTouched',
     criteriaMode: 'all',
