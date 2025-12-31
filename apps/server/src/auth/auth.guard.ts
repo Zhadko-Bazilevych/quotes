@@ -18,11 +18,11 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly authFactory: AuthProvider,
-    private readonly als: AuthStore,
+    private readonly authStore: AuthStore,
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const store = this.als.getStore();
+    const store = this.authStore.getStore();
     const user = store ? store.user : null;
 
     const isOptional = this.reflector.getAllAndOverride<boolean>('PUBLIC', [
