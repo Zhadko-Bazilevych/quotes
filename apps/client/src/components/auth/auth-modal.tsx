@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { TabsContent } from '@radix-ui/react-tabs';
 
-import { loginSchema } from '@/components/auth/auth.schema';
+import { type LoginSchema, loginSchema } from '@/components/auth/auth.schema';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -17,13 +17,12 @@ import { Form, FormField } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSignInWithEmail } from '@/hooks/use-sign-in-with-email';
-import type { LoginData } from '@/types/auth';
 
 export function AuthModal(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const { isPending, mutate } = useSignInWithEmail();
 
-  const form = useForm<LoginData>({
+  const form = useForm({
     defaultValues: {
       email: '',
       password: '',
@@ -33,7 +32,7 @@ export function AuthModal(): JSX.Element {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginData): void => {
+  const onSubmit = (data: LoginSchema): void => {
     mutate({
       data,
       options: {

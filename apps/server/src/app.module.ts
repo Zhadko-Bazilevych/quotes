@@ -1,4 +1,5 @@
 import { AuthModule } from 'src/auth/auth.module';
+import { AuthAlsModule } from 'src/auth/auth-als.module';
 import { appConfig } from 'src/config/app.config';
 import { authConfig } from 'src/config/auth.config';
 import { KyselyModule } from 'src/database/kysely.module';
@@ -22,6 +23,7 @@ import { dbConfig } from './config/db.config';
     }),
     AuthModule.register(),
     QuoteModule,
+    AuthAlsModule,
   ],
 })
 export class AppModule {}

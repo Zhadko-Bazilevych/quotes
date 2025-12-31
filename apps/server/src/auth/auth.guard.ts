@@ -1,6 +1,6 @@
-import { fromNodeHeaders } from 'better-auth/node';
 import { Request } from 'express';
 import { AuthProvider } from 'src/auth/auth.provider';
+import { AuthStore } from 'src/auth/auth-als.module';
 
 import {
   CanActivate,
@@ -18,21 +18,19 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly authFactory: AuthProvider,
+    private readonly authStore: AuthStore,
   ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request>();
-    const session = await this.authFactory.client.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-    request.session = session;
+  canActivate(context: ExecutionContext): boolean {
+    const store = this.authStore.getStore();
+    const user = store ? store.user : null;
 
     const isOptional = this.reflector.getAllAndOverride<boolean>('PUBLIC', [
       context.getHandler(),
       context.getClass(),
     ]);
 
-    if (session || isOptional) {
+    if (user || isOptional) {
       return true;
     }
     return false;
