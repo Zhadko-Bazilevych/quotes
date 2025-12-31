@@ -18,16 +18,16 @@ export type AppAbility = MongoAbility<[Actions, Subjects]>;
 export const AbilityContext = createContext<AppAbility>({} as AppAbility);
 export const Can = createContextualCan<AppAbility>(AbilityContext.Consumer);
 
-export function defineAbilityFor(_user?: User): AppAbility {
+export function defineAbilityFor(user?: User): AppAbility {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
-  if (_user?.role.includes('admin')) {
+  if (user?.role.includes('admin')) {
     can('manage', 'all');
   }
 
-  if (_user?.role.includes('user')) {
-    can('manage', 'Quote', { userId: _user.id });
-    can('manage', 'User', { id: _user.id });
+  if (user?.role.includes('user')) {
+    can('manage', 'Quote', { userId: user.id });
+    can('manage', 'User', { id: user.id });
   }
 
   return build({
