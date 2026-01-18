@@ -1,5 +1,6 @@
 import type { ResultAsync } from 'neverthrow';
 import type { QuoteId } from 'src/database/tables/quote.tables';
+import { type UserId } from 'src/database/tables/user.tables';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { QuoteListSortDto } from 'src/quote/dto/quote-list-query.dto';
@@ -25,7 +26,10 @@ export type GetQuoteListOptions = {
 };
 
 export abstract class QuoteRepository {
-  abstract create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError>;
+  abstract create(
+    data: CreateQuoteDto,
+    userId: UserId,
+  ): ResultAsync<Quote, CreateQuoteError>;
 
   abstract getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError>;
 

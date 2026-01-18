@@ -1,4 +1,4 @@
-import { ExpressionWrapper, sql, SqlBool } from 'kysely';
+import { ExpressionWrapper, SqlBool } from 'kysely';
 import { err, ok, okAsync, type Result, ResultAsync } from 'neverthrow';
 import { AuthStore } from 'src/auth/auth-als.module';
 import { kyselyWhere } from 'src/auth/permissions';
@@ -20,7 +20,6 @@ import type {
   UpdateQuoteError,
 } from 'src/quote/quote.types';
 import { dbTry } from 'src/utils/db';
-import { UnexpectedError } from 'src/utils/errors/app-errors';
 import { getOffset, getTotalPages } from 'src/utils/query';
 
 import { Injectable } from '@nestjs/common';
@@ -38,40 +37,15 @@ export class KyselyQuoteRepository implements QuoteRepository {
     private readonly authStore: AuthStore,
   ) {}
 
-  private getOrCreateUserByName(
-    name: string,
-  ): ResultAsync<UserId, UnexpectedError> {
-    return dbTry(
-      this.db.ctx
-        .selectFrom('user')
-        .select('id')
-        .where('name', '=', name)
-        .executeTakeFirst(),
-    ).andThen((user) => {
-      if (user) {
-        return ok(user.id);
-      }
-
-      return dbTry(
-        this.db.ctx
-          .insertInto('user')
-          .values({
-            name,
-            email: sql`gen_random_uuid() || '@example.com'`,
-            emailVerified: false,
-          })
-          .returning('id')
-          .executeTakeFirstOrThrow(),
-      ).map((user) => user.id);
-    });
-  }
-
-  create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
-    const { author, content, user, context, visibility } = data;
+  create(
+    data: CreateQuoteDto,
+    userId: UserId,
+  ): ResultAsync<Quote, CreateQuoteError> {
+    const { author, content, context, visibility } = data;
 
     return this.db
       .withTransaction(() => {
-        return this.getOrCreateUserByName(user).andThen((userId) =>
+        return okAsync(userId).andThen((userId) =>
           dbTry(
             this.db.ctx
               .insertInto('quote')
@@ -112,35 +86,27 @@ export class KyselyQuoteRepository implements QuoteRepository {
     id: QuoteId,
     data: UpdateQuoteDto,
   ): ResultAsync<Quote, UpdateQuoteError> {
-    const { author, content, user, context, visibility } = data;
+    const { author, content, userId, context, visibility } = data;
 
     return this.db
       .withTransaction(() => {
-        return okAsync(user)
-          .andThen((user) => {
-            if (typeof user !== 'undefined') {
-              return this.getOrCreateUserByName(user);
-            }
-
-            return okAsync(undefined);
-          })
-          .andThen((userId) =>
-            dbTry(
-              this.db.ctx
-                .updateTable('quote')
-                .set({
-                  author,
-                  content,
-                  userId,
-                  context,
-                  visibility,
-                  updatedAt: new Date(),
-                })
-                .where('id', '=', id)
-                .returningAll()
-                .executeTakeFirst(),
-            ),
-          );
+        return okAsync(userId).andThen((userId) =>
+          dbTry(
+            this.db.ctx
+              .updateTable('quote')
+              .set({
+                author,
+                content,
+                userId,
+                context,
+                visibility,
+                updatedAt: new Date(),
+              })
+              .where('id', '=', id)
+              .returningAll()
+              .executeTakeFirst(),
+          ),
+        );
       })
       .andThen((quote) => {
         if (!quote) {

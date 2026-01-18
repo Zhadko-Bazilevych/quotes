@@ -5,6 +5,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { AuthProvider } from 'src/auth/auth.provider';
 import { AppUser, AuthStoreType, Role } from 'src/auth/auth.types';
 import { defineAbilityFor } from 'src/auth/permissions';
+import { UserId } from 'src/database/tables/user.tables';
 
 import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
@@ -42,7 +43,7 @@ export class AuthAlsModule implements NestModule {
         const user: AppUser | null = baseSession
           ? {
               ...baseSession.user,
-              id: Number(baseSession.user.id),
+              id: Number(baseSession.user.id) as UserId,
               role,
               __typename: 'User' as const,
             }

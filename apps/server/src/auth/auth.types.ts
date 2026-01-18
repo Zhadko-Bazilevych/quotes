@@ -1,5 +1,6 @@
 import type { getSession } from 'better-auth/api';
 import { type AppAbility } from 'src/auth/permissions';
+import { type UserId } from 'src/database/tables/user.tables';
 import type { WithTypename } from 'src/types';
 
 export type BaseUserSession = NonNullable<
@@ -17,7 +18,7 @@ export type AppUser = Omit<
   WithTypename<BaseUserSession['user'], 'User'>,
   'id'
 > & {
-  id: number;
+  id: UserId;
   role: Role[];
 };
 

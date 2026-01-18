@@ -1,4 +1,5 @@
-import { ResultAsync } from 'neverthrow';
+import { errAsync, ResultAsync } from 'neverthrow';
+import { AuthStore } from 'src/auth/auth-als.module';
 import { QuoteId } from 'src/database/tables/quote.tables';
 import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
 import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
@@ -11,6 +12,7 @@ import {
   QuoteSearchQueryService,
   UpdateQuoteError,
 } from 'src/quote/quote.types';
+import { ForbiddenError, UnauthorizedError } from 'src/utils/errors/app-errors';
 
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -25,6 +27,7 @@ export class QuoteService {
     private readonly quoteRepository: QuoteRepository,
     @Inject(QUOTE_SEARCH_QUERY_SERVICE)
     private readonly quoteSearchQueryService: QuoteSearchQueryService,
+    private readonly authStore: AuthStore,
   ) {}
 
   getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError> {
@@ -47,14 +50,22 @@ export class QuoteService {
   }
 
   create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
-    return this.quoteRepository.create(data);
+    const { user } = this.authStore.getStore();
+    if (user) {
+      return this.quoteRepository.create(data, user.id);
+    }
+    return errAsync(new UnauthorizedError());
   }
 
   update(
     id: QuoteId,
     data: UpdateQuoteDto,
   ): ResultAsync<Quote, UpdateQuoteError> {
-    return this.quoteRepository.update(id, data);
+    const { ability } = this.authStore.getStore();
+    if (!data.userId || ability.can('update', 'Quote', 'userId')) {
+      return this.quoteRepository.update(id, data);
+    }
+    return errAsync(new ForbiddenError());
   }
 
   delete(id: QuoteId): ResultAsync<Quote, DeleteQuoteError> {

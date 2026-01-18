@@ -11,7 +11,11 @@ import { QuoteService } from 'src/quote/quote.service';
 import { QuoteList } from 'src/quote/quote.types';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
 import { matchError } from 'src/utils/errors/match-error';
-import { UnexpectedException } from 'src/utils/exceptions';
+import {
+  ForbiddenException,
+  UnauthorizedException,
+  UnexpectedException,
+} from 'src/utils/exceptions';
 import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
 
 import {
@@ -30,11 +34,11 @@ import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
 import { QuoteIdDto, quoteIdSchema } from './dto/quote-id.dto';
 import { QuoteNotFoundException } from './quote.errors';
 
-@OptionalAuth()
 @Controller('quotes')
 export class QuoteController {
   constructor(private readonly quotesService: QuoteService) {}
 
+  @OptionalAuth()
   @Get(':id')
   getQuoteById(
     @Param(new ZodValidationPipe(quoteIdSchema)) { id }: QuoteIdDto,
@@ -54,6 +58,7 @@ export class QuoteController {
       );
   }
 
+  @OptionalAuth()
   @Get()
   getList(
     @Query(new ZodValidationPipe(quoteListQuerySchema))
@@ -77,6 +82,7 @@ export class QuoteController {
       (err) =>
         matchError(err, {
           UnexpectedError: () => new UnexpectedException(),
+          UnauthorizedError: () => new UnauthorizedException(),
         }),
     );
   }
@@ -92,6 +98,7 @@ export class QuoteController {
         matchError(err, {
           QuoteNotFoundError: ({ id }) => new QuoteNotFoundException(id),
           UnexpectedError: () => new UnexpectedException(),
+          ForbiddenError: () => new ForbiddenException(),
         }),
     );
   }

@@ -11,7 +11,14 @@ export function defineAbilityFor(user: AppUser | null): AppAbility {
   }
 
   if (user?.role.includes('user')) {
-    can('manage', 'Quote', { userId: user.id });
+    can('create', 'Quote');
+    can(['read', 'delete'], 'Quote', {
+      userId: user.id,
+    });
+    can('update', 'Quote', ['author', 'content', 'context', 'visibility'], {
+      userId: user.id,
+    });
+
     can('manage', 'User', { id: user.id });
   }
 

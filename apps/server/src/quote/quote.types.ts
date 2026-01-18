@@ -3,15 +3,22 @@ import type { QUOTE_SEARCH_QUERY_KEYWORDS } from 'src/quote/quote.constants';
 import type { QuoteNotFoundError } from 'src/quote/quote.errors';
 import type { SearchQueryService } from 'src/search-query/search-query.service';
 import type { WithDefaultKeyword } from 'src/search-query/search-query.types';
-import type { UnexpectedError } from 'src/utils/errors/app-errors';
+import type {
+  ForbiddenError,
+  UnauthorizedError,
+  UnexpectedError,
+} from 'src/utils/errors/app-errors';
 import type { ListResponse } from 'src/utils/types';
 
 export type QuoteList = ListResponse<QuoteAggregate>;
 
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
 export type GetQuoteListError = UnexpectedError;
-export type CreateQuoteError = UnexpectedError;
-export type UpdateQuoteError = QuoteNotFoundError | UnexpectedError;
+export type CreateQuoteError = UnexpectedError | UnauthorizedError;
+export type UpdateQuoteError =
+  | QuoteNotFoundError
+  | UnexpectedError
+  | ForbiddenError;
 export type DeleteQuoteError = QuoteNotFoundError | UnexpectedError;
 
 export type QuoteSearchQueryKeywords =
