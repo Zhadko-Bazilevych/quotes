@@ -48,13 +48,16 @@ type CustomFieldProps<
   control?: Control<TFieldValues, unknown, TFieldValues>;
 };
 
-const FormField = <TFieldValues extends FieldValues = FieldValues>(
-  props: CustomFieldProps<TFieldValues>,
+const FormField = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>(
+  props: CustomFieldProps<TFieldValues, TName>,
 ): JSX.Element => {
   const { render, name, label, description, control } = props;
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller
+      <Controller<TFieldValues, TName>
         name={name}
         control={control}
         render={({ field }) => {
