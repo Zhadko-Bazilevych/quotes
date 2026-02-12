@@ -1,11 +1,10 @@
 import z from 'zod';
 
-export const quoteSchema = z.object({
+export const createQuoteSchema = z.object({
   author: z.string().min(3).max(30),
   content: z.string().min(3).max(500),
   context: z.string().max(500),
-  user: z.string().min(3).max(30),
   visibility: z.enum(['public', 'private']),
 });
 
-export type QuoteSchema = z.infer<typeof quoteSchema>;
+export type QuoteSchema = z.infer<typeof createQuoteSchema>;

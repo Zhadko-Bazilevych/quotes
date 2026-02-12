@@ -49,16 +49,15 @@ export type GetQuotesQuery = {
   sort?: SortOption[];
 };
 export type CreateQuoteData = {
-  user: string;
   author: string;
   content: string;
   context: string;
   visibility: QuoteVisibility;
 };
 export type UpdateQuoteData = {
-  user: string;
-  author: string;
-  content: string;
-  context: string;
-  visibility: QuoteVisibility;
+  author?: string;
+  userId?: number;
+  content?: string;
+  context?: string;
+  visibility?: QuoteVisibility;
 };
