@@ -24,8 +24,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 
@@ -87,7 +87,7 @@ export class QuoteController {
     );
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param(new ZodValidationPipe(quoteIdSchema)) { id }: QuoteIdDto,
     @Body(new ZodValidationPipe(updateQuoteSchema)) body: UpdateQuoteDto,

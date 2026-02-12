@@ -48,7 +48,7 @@ export class QuoteApi extends BaseApi {
 
   async update(id: number, data: UpdateQuoteData): Promise<Quote> {
     const url = this.buildUrl('quotes', id);
-    const quote = await Client.put<QuoteDto>(url, { body: data });
+    const quote = await Client.patch<QuoteDto>(url, { body: data });
     return QuoteMapper.toDomain(quote);
   }
 
