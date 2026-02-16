@@ -62,10 +62,15 @@ export class QuoteService {
     data: UpdateQuoteDto,
   ): ResultAsync<Quote, UpdateQuoteError> {
     const { ability } = this.authStore.getStore();
-    if (!data.userId || ability.can('update', 'Quote', 'userId')) {
-      return this.quoteRepository.update(id, data);
-    }
-    return errAsync(new ForbiddenError());
+    return this.quoteRepository.getOne(id).andThen((quote) => {
+      if (
+        ability.can('update', quote) &&
+        (!data.userId || ability.can('update', 'Quote', 'userId'))
+      ) {
+        return this.quoteRepository.update(id, data);
+      }
+      return errAsync(new ForbiddenError());
+    });
   }
 
   delete(id: QuoteId): ResultAsync<Quote, DeleteQuoteError> {
