@@ -90,7 +90,9 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
           <FormField
             control={control}
             name="userId"
-            label="User"
+            label={t(($) => $.quote.user.label, {
+              defaultValue: 'Uploaded by',
+            })}
             render={(field) => (
               <SelectUser
                 field={field}
@@ -115,12 +117,12 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
                 <SelectGroup>
                   <SelectItem value="public">
                     {t(($) => $.quote.visibility.public, {
-                      defaultValue: 'public',
+                      defaultValue: 'Public',
                     })}
                   </SelectItem>
                   <SelectItem value="private">
                     {t(($) => $.quote.visibility.private, {
-                      defaultValue: 'private',
+                      defaultValue: 'Private',
                     })}
                   </SelectItem>
                 </SelectGroup>

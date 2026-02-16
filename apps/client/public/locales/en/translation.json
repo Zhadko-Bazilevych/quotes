@@ -10,10 +10,17 @@
   },
   "quote": {
     "newQuotePrompt": "Create new quote?",
+    "user": {
+      "label": "Uploaded by",
+      "select": {
+        "notFound": "No users found",
+        "placeholder": "Select a user"
+      }
+    },
     "visibility": {
       "label": "Visibility",
-      "private": "private",
-      "public": "public"
+      "private": "Private",
+      "public": "Public"
     }
   }
 }

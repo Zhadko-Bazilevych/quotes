@@ -5,6 +5,7 @@ import type {
   FieldPath,
   FieldValues,
 } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { keepPreviousData } from '@tanstack/react-query';
 
@@ -41,6 +42,7 @@ export function SelectUser<
     { q: debouncedQ, limit: 8 },
     { placeholderData: keepPreviousData },
   );
+  const { t } = useTranslation();
 
   const items = useMemo(() => {
     if (!selectedValue) {
@@ -65,9 +67,17 @@ export function SelectUser<
         field.onChange(user?.id ?? undefined);
       }}
     >
-      <ComboboxInput placeholder="Select a user" />
+      <ComboboxInput
+        placeholder={t(($) => $.quote.user.select.placeholder, {
+          defaultValue: 'Select a user',
+        })}
+      />
       <ComboboxContent>
-        <ComboboxEmpty>No users found.</ComboboxEmpty>
+        <ComboboxEmpty>
+          {t(($) => $.quote.user.select.notFound, {
+            defaultValue: 'No users found',
+          })}
+        </ComboboxEmpty>
         <ComboboxList>
           {(item: UserSearchItem) => (
             <ComboboxItem key={item.id} value={item}>

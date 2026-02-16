@@ -88,12 +88,12 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
                 <SelectGroup>
                   <SelectItem value="public">
                     {t(($) => $.quote.visibility.public, {
-                      defaultValue: 'public',
+                      defaultValue: 'Public',
                     })}
                   </SelectItem>
                   <SelectItem value="private">
                     {t(($) => $.quote.visibility.private, {
-                      defaultValue: 'private',
+                      defaultValue: 'Private',
                     })}
                   </SelectItem>
                 </SelectGroup>
