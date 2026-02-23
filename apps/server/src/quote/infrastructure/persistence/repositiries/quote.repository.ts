@@ -174,8 +174,8 @@ export class KyselyQuoteRepository implements QuoteRepository {
         }
 
         const { ability } = this.authStore.getStore();
-        const conditions = kyselyWhere(ability, 'read', 'Quote');
-        baseQuery = baseQuery.where(conditions);
+        const permissions = kyselyWhere(ability, 'read', 'Quote');
+        baseQuery = baseQuery.where(permissions);
 
         for (const { field, order } of sort) {
           baseQuery = baseQuery.orderBy(field, order);

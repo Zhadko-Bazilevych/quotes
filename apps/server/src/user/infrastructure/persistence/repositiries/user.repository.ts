@@ -26,8 +26,8 @@ export class KyselyUserRepository implements UserRepository {
         .where('name', 'like', `%${q}%`);
 
       const { ability } = this.authStore.getStore();
-      const conditions = kyselyWhere(ability, 'read', 'User');
-      baseQuery = baseQuery.where(conditions);
+      const permissions = kyselyWhere(ability, 'read', 'User');
+      baseQuery = baseQuery.where(permissions);
 
       return dbTry(
         baseQuery.select(['user.id', 'name']).limit(limit).execute(),

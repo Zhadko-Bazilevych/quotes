@@ -54,7 +54,8 @@ function getConditionSql<TTableName extends Table>(
         );
       }
     }
-  } else if (condition instanceof FieldCondition) {
+  }
+  if (condition instanceof FieldCondition) {
     switch (condition.operator) {
       case 'eq':
         return eb(
