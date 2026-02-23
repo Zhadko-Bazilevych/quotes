@@ -6,6 +6,8 @@ import { AbilityBuilder, createMongoAbility } from '@casl/ability';
 export function defineAbilityFor(user: AppUser | null): AppAbility {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
+  can('read', 'Quote', { visibility: 'public' });
+
   if (user?.role.includes('admin')) {
     can('manage', 'all');
   }
@@ -21,8 +23,6 @@ export function defineAbilityFor(user: AppUser | null): AppAbility {
 
     can('manage', 'User', { id: user.id });
   }
-
-  can('read', 'Quote', { visibility: 'public' });
 
   return build({
     detectSubjectType: (object) => object.__typename,
