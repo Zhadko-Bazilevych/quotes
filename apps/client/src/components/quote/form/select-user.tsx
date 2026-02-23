@@ -17,7 +17,7 @@ import {
   ComboboxItem,
   ComboboxList,
 } from '@/components/ui/combobox';
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useUserList } from '@/hooks/use-user-list';
 import type { UserSearchItem } from '@/types/user';
 
@@ -37,7 +37,7 @@ export function SelectUser<
     defaultValue ?? null,
   );
   const [q, setQ] = useState(defaultValue?.name ?? '');
-  const debouncedQ = useDebounce(q, 500);
+  const debouncedQ = useDebouncedValue(q, 500);
   const { data } = useUserList(
     { q: debouncedQ, limit: 8 },
     { placeholderData: keepPreviousData },

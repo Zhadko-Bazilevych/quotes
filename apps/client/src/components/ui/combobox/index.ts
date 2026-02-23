@@ -1,4 +1,4 @@
-export { useComboboxAnchor } from './combobox-anchor';
+export { useComboboxAnchor } from './use-combobox-anchor';
 export {
   Combobox,
   ComboboxInput,
