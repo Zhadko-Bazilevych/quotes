@@ -29,9 +29,7 @@ export class KyselyUserRepository implements UserRepository {
       const permissions = kyselyWhere(ability, 'read', 'User');
       baseQuery = baseQuery.where(permissions);
 
-      return dbTry(
-        baseQuery.select(['user.id', 'name']).limit(limit).execute(),
-      );
+      return dbTry(baseQuery.select(['id', 'name']).limit(limit).execute());
     });
   }
 }
