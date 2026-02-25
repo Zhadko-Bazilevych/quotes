@@ -61,10 +61,10 @@ export function SelectUser<
       filter={null}
       inputValue={q}
       onInputValueChange={setQ}
-      value={selectedValue ?? null}
+      value={selectedValue}
       onValueChange={(user) => {
         setSelectedValue(user);
-        field.onChange(user?.id ?? undefined);
+        field.onChange(user?.id);
       }}
     >
       <ComboboxInput
