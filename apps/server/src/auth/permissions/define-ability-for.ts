@@ -7,6 +7,7 @@ export function defineAbilityFor(user: AppUser | null): AppAbility {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
   can('read', 'Quote', { visibility: 'public' });
+  can('read', 'User');
 
   if (user?.role.includes('admin')) {
     can('manage', 'all');
