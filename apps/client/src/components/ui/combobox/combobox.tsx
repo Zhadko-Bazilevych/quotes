@@ -1,5 +1,3 @@
-'use client';
-
 import { CheckIcon, ChevronDownIcon, XIcon } from 'lucide-react';
 import type { JSX } from 'react';
 import * as React from 'react';
