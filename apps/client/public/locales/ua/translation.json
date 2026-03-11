@@ -18,9 +18,12 @@
       }
     },
     "visibility": {
+      "enum": {
+        "private": "Приватно",
+        "public": "Публічно"
+      },
       "label": "Приватність",
-      "private": "Приватно",
-      "public": "Публічно"
+      "selectPlaceholder": "Оберіть приватність цитати"
     }
   }
 }

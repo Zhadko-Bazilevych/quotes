@@ -18,9 +18,12 @@
       }
     },
     "visibility": {
+      "enum": {
+        "private": "Private",
+        "public": "Public"
+      },
       "label": "Visibility",
-      "private": "Private",
-      "public": "Public"
+      "selectPlaceholder": "Select a visibility option"
     }
   }
 }

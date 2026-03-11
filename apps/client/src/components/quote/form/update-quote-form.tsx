@@ -111,17 +111,21 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
           render={(field) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="Select visibility" />
+                <SelectValue
+                  placeholder={t(($) => $.quote.visibility.selectPlaceholder, {
+                    defaultValue: 'Select visibility',
+                  })}
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   <SelectItem value="public">
-                    {t(($) => $.quote.visibility.public, {
+                    {t(($) => $.quote.visibility.enum.public, {
                       defaultValue: 'Public',
                     })}
                   </SelectItem>
                   <SelectItem value="private">
-                    {t(($) => $.quote.visibility.private, {
+                    {t(($) => $.quote.visibility.enum.private, {
                       defaultValue: 'Private',
                     })}
                   </SelectItem>
