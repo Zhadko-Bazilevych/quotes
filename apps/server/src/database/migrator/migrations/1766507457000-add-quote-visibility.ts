@@ -15,6 +15,11 @@ export const addQuoteVisibility1766507457000: CustomMigration = {
         col.defaultTo(sql`'private'`).notNull(),
       )
       .execute();
+
+    await db.schema
+      .alterTable('quote')
+      .alterColumn('visibility', (col) => col.dropDefault())
+      .execute();
   },
 
   down: async (db: Kysely<unknown>): Promise<void> => {
