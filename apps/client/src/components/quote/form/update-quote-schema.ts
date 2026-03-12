@@ -8,4 +8,4 @@ export const updateQuoteSchema = z.object({
   visibility: z.enum(['public', 'private']).optional(),
 });
 
-export type QuoteSchema = z.infer<typeof updateQuoteSchema>;
+export type UpdateQuoteSchema = z.infer<typeof updateQuoteSchema>;
