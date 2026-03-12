@@ -7,4 +7,4 @@ export const createQuoteSchema = z.object({
   visibility: z.enum(['public', 'private']),
 });
 
-export type QuoteSchema = z.infer<typeof createQuoteSchema>;
+export type CreateQuoteSchema = z.infer<typeof createQuoteSchema>;
