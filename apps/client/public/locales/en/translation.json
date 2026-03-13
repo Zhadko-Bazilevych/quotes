@@ -10,7 +10,9 @@
   },
   "quote": {
     "fields": {
-      "user": { "label": "Uploaded by: {{username}}" },
+      "user": {
+        "label": "Uploaded by: {{username}}"
+      },
       "visibility": {
         "enum": {
           "private": "Private",
@@ -26,9 +28,6 @@
           "notFound": "No users found",
           "placeholder": "Select a user"
         }
-      },
-      "visibility": {
-        "selectPlaceholder": "Select a visibility option"
       }
     },
     "newQuotePrompt": "Create new quote?"

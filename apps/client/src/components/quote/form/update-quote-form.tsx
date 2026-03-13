@@ -114,14 +114,7 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
           render={(field) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger className="w-40">
-                <SelectValue
-                  placeholder={t(
-                    ($) => $.quote.form.visibility.selectPlaceholder,
-                    {
-                      defaultValue: 'Select a visibility option',
-                    },
-                  )}
-                />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>

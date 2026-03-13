@@ -84,14 +84,7 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
           render={(field) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger className="w-60">
-                <SelectValue
-                  placeholder={t(
-                    ($) => $.quote.form.visibility.selectPlaceholder,
-                    {
-                      defaultValue: 'Select a visibility option',
-                    },
-                  )}
-                />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>

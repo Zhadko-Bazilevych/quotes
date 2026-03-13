@@ -28,9 +28,6 @@
           "notFound": "Користувачів не знайдено",
           "placeholder": "Оберіть користувача"
         }
-      },
-      "visibility": {
-        "selectPlaceholder": "Оберіть приватність цитати"
       }
     },
     "newQuotePrompt": "Додати нову цитату?"
