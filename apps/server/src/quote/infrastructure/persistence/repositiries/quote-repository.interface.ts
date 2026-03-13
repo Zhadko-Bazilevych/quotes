@@ -27,8 +27,8 @@ export type GetQuoteListOptions = {
 
 export abstract class QuoteRepository {
   abstract create(
-    data: CreateQuoteDto,
     userId: UserId,
+    data: CreateQuoteDto,
   ): ResultAsync<Quote, CreateQuoteError>;
 
   abstract getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError>;

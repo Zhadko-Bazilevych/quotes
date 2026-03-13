@@ -5,7 +5,7 @@ import type { SearchQueryService } from 'src/search-query/search-query.service';
 import type { WithDefaultKeyword } from 'src/search-query/search-query.types';
 import type {
   ForbiddenError,
-  UnauthorizedError,
+  MissingUserError,
   UnexpectedError,
 } from 'src/utils/errors/app-errors';
 import type { ListResponse } from 'src/utils/types';
@@ -19,7 +19,7 @@ export type GetQuoteError =
 export type GetQuoteListError = UnexpectedError;
 export type CreateQuoteError =
   | UnexpectedError
-  | UnauthorizedError
+  | MissingUserError
   | ForbiddenError;
 export type UpdateQuoteError =
   | QuoteNotFoundError

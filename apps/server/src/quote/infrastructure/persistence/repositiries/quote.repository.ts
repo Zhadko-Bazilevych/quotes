@@ -38,8 +38,8 @@ export class KyselyQuoteRepository implements QuoteRepository {
   ) {}
 
   create(
-    data: CreateQuoteDto,
     userId: UserId,
+    data: CreateQuoteDto,
   ): ResultAsync<Quote, CreateQuoteError> {
     const { author, content, context, visibility } = data;
 

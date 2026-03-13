@@ -13,7 +13,7 @@ import {
   QuoteSearchQueryService,
   UpdateQuoteError,
 } from 'src/quote/quote.types';
-import { ForbiddenError, UnauthorizedError } from 'src/utils/errors/app-errors';
+import { ForbiddenError, MissingUserError } from 'src/utils/errors/app-errors';
 
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -61,13 +61,13 @@ export class QuoteService {
   createOwnQuote(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
     const { ability, user } = this.authStore.getStore();
     if (!user) {
-      return errAsync(new UnauthorizedError());
+      throw new MissingUserError();
     }
     if (!ability.can('create', 'Quote')) {
       return errAsync(new ForbiddenError());
     }
 
-    return this.quoteRepository.create(data, user.id);
+    return this.quoteRepository.create(user.id, data);
   }
 
   update(
