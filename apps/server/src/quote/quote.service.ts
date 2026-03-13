@@ -62,11 +62,18 @@ export class QuoteService {
     data: UpdateQuoteDto,
   ): ResultAsync<Quote, UpdateQuoteError> {
     const { ability } = this.authStore.getStore();
+    const canUpdateEveryField = Object.keys(data).every((k) =>
+      ability.can('update', 'Quote', k),
+    );
+    if (!canUpdateEveryField) {
+      return errAsync(new ForbiddenError());
+    }
+
     return this.quoteRepository.getOne(id).andThen((quote) => {
-      const canUpdateEveryField = Object.keys(data).every(k => ability.can('update', 'Quote', k));
-      if (!canUpdateEveryField) {
+      if (!ability.can('update', quote)) {
         return errAsync(new ForbiddenError());
       }
+
       return this.quoteRepository.update(id, data);
     });
   }
