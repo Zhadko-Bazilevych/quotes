@@ -48,16 +48,3 @@ export type GetQuotesQuery = {
   filter?: { q?: string };
   sort?: SortOption[];
 };
-export type CreateQuoteData = {
-  author: string;
-  content: string;
-  context: string;
-  visibility: QuoteVisibility;
-};
-export type UpdateQuoteData = {
-  author?: string;
-  userId?: number;
-  content?: string;
-  context?: string;
-  visibility?: QuoteVisibility;
-};

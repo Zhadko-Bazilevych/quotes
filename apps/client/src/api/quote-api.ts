@@ -1,12 +1,12 @@
+import type { CreateQuoteSchema } from '@/components/quote/form/create-quote-schema';
+import type { UpdateQuoteSchema } from '@/components/quote/form/update-quote-schema';
 import { QuoteMapper } from '@/mappers/quote';
 import {
-  type CreateQuoteData,
   type GetQuotesQuery,
   type Quote,
   type QuoteDto,
   type QuoteList,
   type QuoteListDto,
-  type UpdateQuoteData,
 } from '@/types/quote';
 
 import { BaseApi } from './base-api';
@@ -46,13 +46,13 @@ export class QuoteApi extends BaseApi {
     return QuoteMapper.toDomain(quote);
   }
 
-  async update(id: number, data: UpdateQuoteData): Promise<Quote> {
+  async update(id: number, data: Partial<UpdateQuoteSchema>): Promise<Quote> {
     const url = this.buildUrl('quotes', id);
     const quote = await Client.patch<QuoteDto>(url, { body: data });
     return QuoteMapper.toDomain(quote);
   }
 
-  async create(data: CreateQuoteData): Promise<Quote> {
+  async create(data: CreateQuoteSchema): Promise<Quote> {
     const url = this.buildUrl('quotes');
     const quote = await Client.post<QuoteDto>(url, { body: data });
     return QuoteMapper.toDomain(quote);

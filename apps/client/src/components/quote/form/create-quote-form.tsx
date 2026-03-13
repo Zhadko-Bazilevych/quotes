@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { createQuoteSchema } from '@/components/quote/form/create-quote-schema';
+import {
+  type CreateQuoteSchema,
+  createQuoteSchema,
+} from '@/components/quote/form/create-quote-schema';
 import { Button } from '@/components/ui/button';
 import { Form, FormField } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -18,7 +21,6 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateQuoteMutation } from '@/hooks/use-create-quote';
-import type { CreateQuoteData } from '@/types/quote';
 
 export type CreateQuoteFormProps = {
   onCancel: () => void;
@@ -27,7 +29,7 @@ export type CreateQuoteFormProps = {
 export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
   const { onCancel: toggleEdit } = props;
   const { t } = useTranslation();
-  const form = useForm<CreateQuoteData>({
+  const form = useForm<CreateQuoteSchema>({
     defaultValues: {
       author: '',
       content: '',
@@ -45,7 +47,7 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
     onSuccess: () => toggleEdit(),
   });
 
-  const onSubmit = (data: CreateQuoteData): void => {
+  const onSubmit = (data: CreateQuoteSchema): void => {
     mutation.mutate({ data });
   };
 
@@ -84,7 +86,7 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
               <SelectTrigger className="w-60">
                 <SelectValue
                   placeholder={t(($) => $.quote.visibility.selectPlaceholder, {
-                    defaultValue: 'Select visibility',
+                    defaultValue: 'Select a visibility option',
                   })}
                 />
               </SelectTrigger>

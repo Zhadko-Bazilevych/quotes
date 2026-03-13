@@ -5,17 +5,19 @@ import type {
   SignInWithEmailVariables,
   SignOutVariables,
 } from '@/api/auth-api';
-import type { CreateQuoteData, Quote, UpdateQuoteData } from '@/types/quote';
+import type { CreateQuoteSchema } from '@/components/quote/form/create-quote-schema';
+import type { UpdateQuoteSchema } from '@/components/quote/form/update-quote-schema';
+import type { Quote } from '@/types/quote';
 
 import type { Api } from './api';
 
 export type UpdateQuoteVariables = {
   id: number;
-  data: UpdateQuoteData;
+  data: Partial<UpdateQuoteSchema>;
 };
 
 export type CreateQuoteVariables = {
-  data: CreateQuoteData;
+  data: CreateQuoteSchema;
 };
 
 export type DeleteQuoteVariables = {

@@ -6,7 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { SelectUser } from '@/components/quote/form/select-user';
-import { updateQuoteSchema } from '@/components/quote/form/update-quote-schema';
+import {
+  type UpdateQuoteSchema,
+  updateQuoteSchema,
+} from '@/components/quote/form/update-quote-schema';
 import { Button } from '@/components/ui/button';
 import { Form, FormField } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -21,7 +24,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useUpdateQuoteMutation } from '@/hooks/use-update-quote';
 import { Can } from '@/lib/casl/permissions';
-import type { Quote, UpdateQuoteData } from '@/types/quote';
+import type { Quote } from '@/types/quote';
 import { getDirtyValues } from '@/utils/get-dirty-values';
 
 type UpdateQuoteFormProps = {
@@ -34,7 +37,7 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
 ): JSX.Element {
   const { quote, onCancel } = props;
   const { t } = useTranslation();
-  const form = useForm<UpdateQuoteData>({
+  const form = useForm<UpdateQuoteSchema>({
     defaultValues: {
       author: quote.author,
       content: quote.content,
@@ -57,7 +60,7 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
     onSuccess: () => onCancel(quote.id),
   });
 
-  const onSubmit = (data: UpdateQuoteData): void => {
+  const onSubmit = (data: UpdateQuoteSchema): void => {
     const dirtyValues = getDirtyValues(data, dirtyFields);
     mutation.mutate({ id: quote.id, data: dirtyValues });
   };
@@ -113,7 +116,7 @@ export const UpdateQuoteForm = React.memo(function UpdateQuoteForm(
               <SelectTrigger className="w-40">
                 <SelectValue
                   placeholder={t(($) => $.quote.visibility.selectPlaceholder, {
-                    defaultValue: 'Select visibility',
+                    defaultValue: 'Select a visibility option',
                   })}
                 />
               </SelectTrigger>
