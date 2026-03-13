@@ -68,13 +68,13 @@ export function SelectUser<
       }}
     >
       <ComboboxInput
-        placeholder={t(($) => $.quote.user.select.placeholder, {
+        placeholder={t(($) => $.quote.form.user.select.placeholder, {
           defaultValue: 'Select a user',
         })}
       />
       <ComboboxContent>
         <ComboboxEmpty>
-          {t(($) => $.quote.user.select.notFound, {
+          {t(($) => $.quote.form.user.select.notFound, {
             defaultValue: 'No users found',
           })}
         </ComboboxEmpty>

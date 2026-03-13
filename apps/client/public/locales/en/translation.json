@@ -9,21 +9,28 @@
     "authRequired": "You need to be signed in to perform this action."
   },
   "quote": {
-    "newQuotePrompt": "Create new quote?",
-    "user": {
-      "label": "Uploaded by",
-      "select": {
-        "notFound": "No users found",
-        "placeholder": "Select a user"
+    "fields": {
+      "user": { "label": "Uploaded by: {{username}}" },
+      "visibility": {
+        "enum": {
+          "private": "Private",
+          "public": "Public"
+        },
+        "label": "Visibility"
       }
     },
-    "visibility": {
-      "enum": {
-        "private": "Private",
-        "public": "Public"
+    "form": {
+      "user": {
+        "label": "Uploaded by",
+        "select": {
+          "notFound": "No users found",
+          "placeholder": "Select a user"
+        }
       },
-      "label": "Visibility",
-      "selectPlaceholder": "Select a visibility option"
-    }
+      "visibility": {
+        "selectPlaceholder": "Select a visibility option"
+      }
+    },
+    "newQuotePrompt": "Create new quote?"
   }
 }

@@ -9,21 +9,30 @@
     "authRequired": "Вам потрібно увійти в систему, щоб виконати цю дію."
   },
   "quote": {
-    "newQuotePrompt": "Додати нову цитату?",
-    "user": {
-      "label": "Опубліковано користувачем",
-      "select": {
-        "notFound": "Користувачів не знайдено",
-        "placeholder": "Оберіть користувача"
+    "fields": {
+      "user": {
+        "label": "Опубліковано користувачем: {{username}}"
+      },
+      "visibility": {
+        "enum": {
+          "private": "Приватно",
+          "public": "Публічно"
+        },
+        "label": "Приватність"
       }
     },
-    "visibility": {
-      "enum": {
-        "private": "Приватно",
-        "public": "Публічно"
+    "form": {
+      "user": {
+        "label": "Опубліковано користувачем",
+        "select": {
+          "notFound": "Користувачів не знайдено",
+          "placeholder": "Оберіть користувача"
+        }
       },
-      "label": "Приватність",
-      "selectPlaceholder": "Оберіть приватність цитати"
-    }
+      "visibility": {
+        "selectPlaceholder": "Оберіть приватність цитати"
+      }
+    },
+    "newQuotePrompt": "Додати нову цитату?"
   }
 }

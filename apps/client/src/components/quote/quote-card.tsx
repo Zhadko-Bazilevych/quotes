@@ -85,10 +85,10 @@ export const QuoteCard = React.memo(function QuoteCard(
               {quote.context}
             </p>
             <span>
-              {t(($) => $.quote.user.label, {
-                defaultValue: 'Uploaded by',
+              {t(($) => $.quote.fields.user.label, {
+                defaultValue: 'Uploaded by: {{username}}',
+                username: quote.user.name,
               })}
-              : {quote.user.name}
             </span>
           </div>
           <div>

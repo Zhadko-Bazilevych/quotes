@@ -78,27 +78,30 @@ export function CreateQuoteForm(props: CreateQuoteFormProps): JSX.Element {
         <FormField
           control={control}
           name="visibility"
-          label={t(($) => $.quote.visibility.label, {
+          label={t(($) => $.quote.fields.visibility.label, {
             defaultValue: 'Visibility',
           })}
           render={(field) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger className="w-60">
                 <SelectValue
-                  placeholder={t(($) => $.quote.visibility.selectPlaceholder, {
-                    defaultValue: 'Select a visibility option',
-                  })}
+                  placeholder={t(
+                    ($) => $.quote.form.visibility.selectPlaceholder,
+                    {
+                      defaultValue: 'Select a visibility option',
+                    },
+                  )}
                 />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   <SelectItem value="public">
-                    {t(($) => $.quote.visibility.enum.public, {
+                    {t(($) => $.quote.fields.visibility.enum.public, {
                       defaultValue: 'Public',
                     })}
                   </SelectItem>
                   <SelectItem value="private">
-                    {t(($) => $.quote.visibility.enum.private, {
+                    {t(($) => $.quote.fields.visibility.enum.private, {
                       defaultValue: 'Private',
                     })}
                   </SelectItem>
