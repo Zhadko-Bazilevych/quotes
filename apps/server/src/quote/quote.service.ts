@@ -58,7 +58,7 @@ export class QuoteService {
     });
   }
 
-  create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
+  createOwnQuote(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
     const { ability, user } = this.authStore.getStore();
     if (!user) {
       return errAsync(new UnauthorizedError());

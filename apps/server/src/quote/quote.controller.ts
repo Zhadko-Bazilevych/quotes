@@ -77,12 +77,12 @@ export class QuoteController {
   create(
     @Body(new ZodValidationPipe(createQuoteSchema)) body: CreateQuoteDto,
   ): Promise<Quote> {
-    return this.quotesService.create(body).match(
+    return this.quotesService.createOwnQuote(body).match(
       (quote) => quote,
       (err) =>
         matchError(err, {
           UnexpectedError: () => new UnexpectedException(),
-          UnauthorizedError: () => new UnauthorizedException(),
+          MissingUserError: () => new UnauthorizedException(),
           ForbiddenError: () => new ForbiddenException(),
         }),
     );
