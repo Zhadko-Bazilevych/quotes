@@ -12,14 +12,23 @@ import type { ListResponse } from 'src/utils/types';
 
 export type QuoteList = ListResponse<QuoteAggregate>;
 
-export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
+export type GetQuoteError =
+  | QuoteNotFoundError
+  | UnexpectedError
+  | ForbiddenError;
 export type GetQuoteListError = UnexpectedError;
-export type CreateQuoteError = UnexpectedError | UnauthorizedError;
+export type CreateQuoteError =
+  | UnexpectedError
+  | UnauthorizedError
+  | ForbiddenError;
 export type UpdateQuoteError =
   | QuoteNotFoundError
   | UnexpectedError
   | ForbiddenError;
-export type DeleteQuoteError = QuoteNotFoundError | UnexpectedError;
+export type DeleteQuoteError =
+  | QuoteNotFoundError
+  | UnexpectedError
+  | ForbiddenError;
 
 export type QuoteSearchQueryKeywords =
   (typeof QUOTE_SEARCH_QUERY_KEYWORDS)[keyof typeof QUOTE_SEARCH_QUERY_KEYWORDS];

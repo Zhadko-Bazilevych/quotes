@@ -1,5 +1,6 @@
-import { errAsync, ResultAsync } from 'neverthrow';
+import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 import { AuthStore } from 'src/auth/auth-als.module';
+import { KyselyService } from 'src/database/kysely.service';
 import { QuoteId } from 'src/database/tables/quote.tables';
 import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
 import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
@@ -28,10 +29,18 @@ export class QuoteService {
     @Inject(QUOTE_SEARCH_QUERY_SERVICE)
     private readonly quoteSearchQueryService: QuoteSearchQueryService,
     private readonly authStore: AuthStore,
+    private readonly db: KyselyService,
   ) {}
 
   getOne(id: QuoteId): ResultAsync<Quote, GetQuoteError> {
-    return this.quoteRepository.getOne(id);
+    const { ability } = this.authStore.getStore();
+    return this.quoteRepository.getOne(id).andThen((quote) => {
+      if (!ability.can('read', quote)) {
+        return errAsync(new ForbiddenError());
+      }
+
+      return okAsync(quote);
+    });
   }
 
   getList(
@@ -50,11 +59,15 @@ export class QuoteService {
   }
 
   create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
-    const { user } = this.authStore.getStore();
-    if (user) {
-      return this.quoteRepository.create(data, user.id);
+    const { ability, user } = this.authStore.getStore();
+    if (!user) {
+      return errAsync(new UnauthorizedError());
     }
-    return errAsync(new UnauthorizedError());
+    if (!ability.can('create', 'Quote')) {
+      return errAsync(new ForbiddenError());
+    }
+
+    return this.quoteRepository.create(data, user.id);
   }
 
   update(
@@ -69,16 +82,27 @@ export class QuoteService {
       return errAsync(new ForbiddenError());
     }
 
-    return this.quoteRepository.getOne(id).andThen((quote) => {
-      if (!ability.can('update', quote)) {
-        return errAsync(new ForbiddenError());
-      }
+    return this.db.withTransaction(() =>
+      this.quoteRepository.getOne(id).andThen((quote) => {
+        if (!ability.can('update', quote)) {
+          return errAsync(new ForbiddenError());
+        }
 
-      return this.quoteRepository.update(id, data);
-    });
+        return this.quoteRepository.update(id, data);
+      }),
+    );
   }
 
   delete(id: QuoteId): ResultAsync<Quote, DeleteQuoteError> {
-    return this.quoteRepository.delete(id);
+    const { ability } = this.authStore.getStore();
+    return this.db.withTransaction(() =>
+      this.quoteRepository.getOne(id).andThen((quote) => {
+        if (!ability.can('delete', quote)) {
+          return errAsync(new ForbiddenError());
+        }
+
+        return this.quoteRepository.delete(id);
+      }),
+    );
   }
 }

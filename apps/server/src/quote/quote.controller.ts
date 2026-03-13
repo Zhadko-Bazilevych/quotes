@@ -83,6 +83,7 @@ export class QuoteController {
         matchError(err, {
           UnexpectedError: () => new UnexpectedException(),
           UnauthorizedError: () => new UnauthorizedException(),
+          ForbiddenError: () => new ForbiddenException(),
         }),
     );
   }
@@ -113,6 +114,7 @@ export class QuoteController {
         matchError(err, {
           QuoteNotFoundError: ({ id }) => new QuoteNotFoundException(id),
           UnexpectedError: () => new UnexpectedException(),
+          ForbiddenError: () => new ForbiddenException(),
         }),
     );
   }
