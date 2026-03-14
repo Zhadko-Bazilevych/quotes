@@ -22,8 +22,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const store = this.authStore.getStore();
-    const user = store ? store.user : null;
+    const { user } = this.authStore.getStore();
 
     const isOptional = this.reflector.getAllAndOverride<boolean>('PUBLIC', [
       context.getHandler(),

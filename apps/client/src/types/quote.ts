@@ -1,6 +1,8 @@
 import type { SortOption } from '@/pages/quote-list-schema';
 import type { ListResponse, WithTypename } from '@/types';
 
+export type QuoteVisibility = 'public' | 'private';
+
 export type Quote = WithTypename<
   {
     id: number;
@@ -14,6 +16,7 @@ export type Quote = WithTypename<
     context: string;
     createdAt: Date;
     updatedAt: Date;
+    visibility: QuoteVisibility;
   },
   'Quote'
 >;
@@ -31,6 +34,7 @@ export type QuoteDto = WithTypename<
     context: string;
     createdAt: string;
     updatedAt: string;
+    visibility: QuoteVisibility;
   },
   'Quote'
 >;
@@ -43,16 +47,4 @@ export type GetQuotesQuery = {
   pagination: { page?: number; pageSize?: number };
   filter?: { q?: string };
   sort?: SortOption[];
-};
-export type CreateQuoteData = {
-  user: string;
-  author: string;
-  content: string;
-  context: string;
-};
-export type UpdateQuoteData = {
-  user: string;
-  author: string;
-  content: string;
-  context: string;
 };

@@ -11,7 +11,11 @@ import { QuoteService } from 'src/quote/quote.service';
 import { QuoteList } from 'src/quote/quote.types';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
 import { matchError } from 'src/utils/errors/match-error';
-import { UnexpectedException } from 'src/utils/exceptions';
+import {
+  ForbiddenException,
+  UnauthorizedException,
+  UnexpectedException,
+} from 'src/utils/exceptions';
 import { ZodValidationPipe } from 'src/utils/pipes/zod-validation-pipe';
 
 import {
@@ -20,8 +24,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 
@@ -30,11 +34,11 @@ import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
 import { QuoteIdDto, quoteIdSchema } from './dto/quote-id.dto';
 import { QuoteNotFoundException } from './quote.errors';
 
-@OptionalAuth()
 @Controller('quotes')
 export class QuoteController {
   constructor(private readonly quotesService: QuoteService) {}
 
+  @OptionalAuth()
   @Get(':id')
   getQuoteById(
     @Param(new ZodValidationPipe(quoteIdSchema)) { id }: QuoteIdDto,
@@ -54,6 +58,7 @@ export class QuoteController {
       );
   }
 
+  @OptionalAuth()
   @Get()
   getList(
     @Query(new ZodValidationPipe(quoteListQuerySchema))
@@ -72,16 +77,18 @@ export class QuoteController {
   create(
     @Body(new ZodValidationPipe(createQuoteSchema)) body: CreateQuoteDto,
   ): Promise<Quote> {
-    return this.quotesService.create(body).match(
+    return this.quotesService.createOwnQuote(body).match(
       (quote) => quote,
       (err) =>
         matchError(err, {
           UnexpectedError: () => new UnexpectedException(),
+          MissingUserError: () => new UnauthorizedException(),
+          ForbiddenError: () => new ForbiddenException(),
         }),
     );
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param(new ZodValidationPipe(quoteIdSchema)) { id }: QuoteIdDto,
     @Body(new ZodValidationPipe(updateQuoteSchema)) body: UpdateQuoteDto,
@@ -92,6 +99,7 @@ export class QuoteController {
         matchError(err, {
           QuoteNotFoundError: ({ id }) => new QuoteNotFoundException(id),
           UnexpectedError: () => new UnexpectedException(),
+          ForbiddenError: () => new ForbiddenException(),
         }),
     );
   }
@@ -106,6 +114,7 @@ export class QuoteController {
         matchError(err, {
           QuoteNotFoundError: ({ id }) => new QuoteNotFoundException(id),
           UnexpectedError: () => new UnexpectedException(),
+          ForbiddenError: () => new ForbiddenException(),
         }),
     );
   }

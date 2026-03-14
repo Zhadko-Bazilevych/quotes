@@ -3,15 +3,18 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { fromNodeHeaders } from 'better-auth/node';
 import type { NextFunction, Request, Response } from 'express';
 import { AuthProvider } from 'src/auth/auth.provider';
-import { AppUser, Role } from 'src/auth/auth.types';
-import { AppAbility, defineAbilityFor } from 'src/auth/permissions';
+import { AppUser, AuthStoreType, Role } from 'src/auth/auth.types';
+import { defineAbilityFor } from 'src/auth/permissions';
+import { UserId } from 'src/database/tables/user.tables';
 
 import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
-export class AuthStore extends AsyncLocalStorage<{
-  ability: AppAbility;
-  user: AppUser | null;
-}> {}
+export class AuthStore extends AsyncLocalStorage<AuthStoreType> {
+  override getStore(): AuthStoreType {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return super.getStore()!;
+  }
+}
 
 @Global()
 @Module({
@@ -40,7 +43,7 @@ export class AuthAlsModule implements NestModule {
         const user: AppUser | null = baseSession
           ? {
               ...baseSession.user,
-              id: Number(baseSession.user.id),
+              id: Number(baseSession.user.id) as UserId,
               role,
               __typename: 'User' as const,
             }

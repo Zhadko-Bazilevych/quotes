@@ -1,6 +1,7 @@
 import type { QueryFunction, QueryKey } from '@tanstack/react-query';
 
 import type { GetQuotesQuery, Quote, QuoteList } from '@/types/quote';
+import type { GetUsersQuery, UserList } from '@/types/user';
 
 import { type Api, api } from './api';
 
@@ -22,32 +23,48 @@ type WithDefaultKey<TFn extends (...params: any) => any> = {
 type QuotesGetListFn = (query?: GetQuotesQuery) => QueryDetails<QuoteList>;
 type QuotesGetOneByIdFn = (id: number) => QueryDetails<Quote>;
 
+type UsersGetListFn = (query: GetUsersQuery) => QueryDetails<UserList>;
+
 type Queries = {
   quotes: {
     _def: ['quotes'];
     getList: WithDefaultKey<QuotesGetListFn>;
     getOneById: WithDefaultKey<QuotesGetOneByIdFn>;
   };
+  users: {
+    _def: ['users'];
+    getList: WithDefaultKey<UsersGetListFn>;
+  };
 };
 
 export function createQueries(api: Api): Queries {
-  const getList: WithDefaultKey<QuotesGetListFn> = (query) => ({
+  const getQuoteList: WithDefaultKey<QuotesGetListFn> = (query) => ({
     queryFn: () => api.quotes.getList(query),
     queryKey: ['quotes', 'getList', query],
   });
-  getList._def = ['quotes', 'getList'];
+  getQuoteList._def = ['quotes', 'getList'];
 
-  const getOneById: WithDefaultKey<QuotesGetOneByIdFn> = (id) => ({
+  const getQuoteById: WithDefaultKey<QuotesGetOneByIdFn> = (id) => ({
     queryFn: () => api.quotes.getOneById(id),
     queryKey: ['quotes', 'getOneById', id],
   });
-  getOneById._def = ['quotes', 'getList'];
+  getQuoteById._def = ['quotes', 'getList'];
+
+  const getUserList: WithDefaultKey<UsersGetListFn> = (query) => ({
+    queryFn: () => api.users.getList(query),
+    queryKey: ['users', 'getList', query],
+  });
+  getUserList._def = ['users', 'getList'];
 
   return {
     quotes: {
       _def: ['quotes'],
-      getList,
-      getOneById,
+      getList: getQuoteList,
+      getOneById: getQuoteById,
+    },
+    users: {
+      _def: ['users'],
+      getList: getUserList,
     },
   };
 }

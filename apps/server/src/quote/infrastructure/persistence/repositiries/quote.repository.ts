@@ -1,5 +1,7 @@
-import { ExpressionWrapper, sql, SqlBool } from 'kysely';
+import { ExpressionWrapper, SqlBool } from 'kysely';
 import { err, ok, okAsync, type Result, ResultAsync } from 'neverthrow';
+import { AuthStore } from 'src/auth/auth-als.module';
+import { kyselyWhere } from 'src/auth/permissions';
 import { Database, KyselyService } from 'src/database/kysely.service';
 import type { QuoteId } from 'src/database/tables/quote.tables';
 import { UserId } from 'src/database/tables/user.tables';
@@ -18,7 +20,6 @@ import type {
   UpdateQuoteError,
 } from 'src/quote/quote.types';
 import { dbTry } from 'src/utils/db';
-import { UnexpectedError } from 'src/utils/errors/app-errors';
 import { getOffset, getTotalPages } from 'src/utils/query';
 
 import { Injectable } from '@nestjs/common';
@@ -31,42 +32,20 @@ import type {
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {
-  constructor(private readonly db: KyselyService) {}
+  constructor(
+    private readonly db: KyselyService,
+    private readonly authStore: AuthStore,
+  ) {}
 
-  private getOrCreateUserByName(
-    name: string,
-  ): ResultAsync<UserId, UnexpectedError> {
-    return dbTry(
-      this.db.ctx
-        .selectFrom('user')
-        .select('id')
-        .where('name', '=', name)
-        .executeTakeFirst(),
-    ).andThen((user) => {
-      if (user) {
-        return ok(user.id);
-      }
-
-      return dbTry(
-        this.db.ctx
-          .insertInto('user')
-          .values({
-            name,
-            email: sql`gen_random_uuid() || '@example.com'`,
-            emailVerified: false,
-          })
-          .returning('id')
-          .executeTakeFirstOrThrow(),
-      ).map((user) => user.id);
-    });
-  }
-
-  create(data: CreateQuoteDto): ResultAsync<Quote, CreateQuoteError> {
-    const { author, content, user, context } = data;
+  create(
+    userId: UserId,
+    data: CreateQuoteDto,
+  ): ResultAsync<Quote, CreateQuoteError> {
+    const { author, content, context, visibility } = data;
 
     return this.db
       .withTransaction(() => {
-        return this.getOrCreateUserByName(user).andThen((userId) =>
+        return okAsync(userId).andThen((userId) =>
           dbTry(
             this.db.ctx
               .insertInto('quote')
@@ -75,6 +54,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
                 content,
                 userId,
                 context,
+                visibility,
               })
               .returningAll()
               .executeTakeFirstOrThrow(),
@@ -106,34 +86,27 @@ export class KyselyQuoteRepository implements QuoteRepository {
     id: QuoteId,
     data: UpdateQuoteDto,
   ): ResultAsync<Quote, UpdateQuoteError> {
-    const { author, content, user, context } = data;
+    const { author, content, userId, context, visibility } = data;
 
     return this.db
       .withTransaction(() => {
-        return okAsync(user)
-          .andThen((user) => {
-            if (typeof user !== 'undefined') {
-              return this.getOrCreateUserByName(user);
-            }
-
-            return okAsync(undefined);
-          })
-          .andThen((userId) =>
-            dbTry(
-              this.db.ctx
-                .updateTable('quote')
-                .set({
-                  author,
-                  content,
-                  userId,
-                  context,
-                  updatedAt: new Date(),
-                })
-                .where('id', '=', id)
-                .returningAll()
-                .executeTakeFirst(),
-            ),
-          );
+        return okAsync(userId).andThen((userId) =>
+          dbTry(
+            this.db.ctx
+              .updateTable('quote')
+              .set({
+                author,
+                content,
+                userId,
+                context,
+                visibility,
+                updatedAt: new Date(),
+              })
+              .where('id', '=', id)
+              .returningAll()
+              .executeTakeFirst(),
+          ),
+        );
       })
       .andThen((quote) => {
         if (!quote) {
@@ -200,6 +173,10 @@ export class KyselyQuoteRepository implements QuoteRepository {
           });
         }
 
+        const { ability } = this.authStore.getStore();
+        const permissions = kyselyWhere(ability, 'read', 'Quote');
+        baseQuery = baseQuery.where(permissions);
+
         for (const { field, order } of sort) {
           baseQuery = baseQuery.orderBy(field, order);
         }
@@ -216,6 +193,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
                 'context',
                 'quote.createdAt',
                 'quote.updatedAt',
+                'visibility',
               ])
               .offset(offset)
               .limit(pageSize)

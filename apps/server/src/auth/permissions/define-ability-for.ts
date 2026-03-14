@@ -1,26 +1,27 @@
 import { type AppUser } from 'src/auth/auth.types';
-import { type Quote } from 'src/quote/domain/quote';
+import { type AppAbility } from 'src/auth/permissions/permission.types';
 
-import {
-  AbilityBuilder,
-  createMongoAbility,
-  type MongoAbility,
-} from '@casl/ability';
-
-type Actions = 'manage' | 'read' | 'update' | 'delete' | 'create';
-type Subjects = 'all' | Quote | 'Quote' | AppUser | 'User';
-
-export type AppAbility = MongoAbility<[Actions, Subjects]>;
+import { AbilityBuilder, createMongoAbility } from '@casl/ability';
 
 export function defineAbilityFor(user: AppUser | null): AppAbility {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
+
+  can('read', 'Quote', { visibility: 'public' });
+  can('read', 'User');
 
   if (user?.role.includes('admin')) {
     can('manage', 'all');
   }
 
   if (user?.role.includes('user')) {
-    can('manage', 'Quote', { userId: user.id });
+    can('create', 'Quote');
+    can(['read', 'delete'], 'Quote', {
+      userId: user.id,
+    });
+    can('update', 'Quote', ['author', 'content', 'context', 'visibility'], {
+      userId: user.id,
+    });
+
     can('manage', 'User', { id: user.id });
   }
 

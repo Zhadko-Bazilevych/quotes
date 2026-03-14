@@ -3,16 +3,32 @@ import type { QUOTE_SEARCH_QUERY_KEYWORDS } from 'src/quote/quote.constants';
 import type { QuoteNotFoundError } from 'src/quote/quote.errors';
 import type { SearchQueryService } from 'src/search-query/search-query.service';
 import type { WithDefaultKeyword } from 'src/search-query/search-query.types';
-import type { UnexpectedError } from 'src/utils/errors/app-errors';
+import type {
+  ForbiddenError,
+  MissingUserError,
+  UnexpectedError,
+} from 'src/utils/errors/app-errors';
 import type { ListResponse } from 'src/utils/types';
 
 export type QuoteList = ListResponse<QuoteAggregate>;
 
-export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
+export type GetQuoteError =
+  | QuoteNotFoundError
+  | UnexpectedError
+  | ForbiddenError;
 export type GetQuoteListError = UnexpectedError;
-export type CreateQuoteError = UnexpectedError;
-export type UpdateQuoteError = QuoteNotFoundError | UnexpectedError;
-export type DeleteQuoteError = QuoteNotFoundError | UnexpectedError;
+export type CreateQuoteError =
+  | UnexpectedError
+  | MissingUserError
+  | ForbiddenError;
+export type UpdateQuoteError =
+  | QuoteNotFoundError
+  | UnexpectedError
+  | ForbiddenError;
+export type DeleteQuoteError =
+  | QuoteNotFoundError
+  | UnexpectedError
+  | ForbiddenError;
 
 export type QuoteSearchQueryKeywords =
   (typeof QUOTE_SEARCH_QUERY_KEYWORDS)[keyof typeof QUOTE_SEARCH_QUERY_KEYWORDS];

@@ -1,5 +1,6 @@
 import { PencilIcon } from 'lucide-react';
 import React, { type JSX, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DeleteModal } from '@/components/quote/delete-quote-modal';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,8 @@ export const QuoteCard = React.memo(function QuoteCard(
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { isPending, mutate } = useDeleteQuoteMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { t } = useTranslation();
 
   const toggleDetails = (): void => setIsDetailsOpen((prev) => !prev);
 
@@ -81,7 +84,12 @@ export const QuoteCard = React.memo(function QuoteCard(
             <p className="wrap-break-word whitespace-pre-wrap">
               {quote.context}
             </p>
-            <span>Sender: {quote.user.name}</span>
+            <span>
+              {t(($) => $.quote.fields.user.label, {
+                defaultValue: 'Uploaded by: {{username}}',
+                username: quote.user.name,
+              })}
+            </span>
           </div>
           <div>
             <span className="block sm:hidden">

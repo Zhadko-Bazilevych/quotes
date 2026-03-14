@@ -9,6 +9,27 @@
     "authRequired": "You need to be signed in to perform this action."
   },
   "quote": {
+    "fields": {
+      "user": {
+        "label": "Uploaded by: {{username}}"
+      },
+      "visibility": {
+        "enum": {
+          "private": "Private",
+          "public": "Public"
+        },
+        "label": "Visibility"
+      }
+    },
+    "form": {
+      "user": {
+        "label": "Uploaded by",
+        "select": {
+          "notFound": "No users found",
+          "placeholder": "Select a user"
+        }
+      }
+    },
     "newQuotePrompt": "Create new quote?"
   }
 }
