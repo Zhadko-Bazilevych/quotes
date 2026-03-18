@@ -26,7 +26,7 @@
     "@nestjs/common": "^11.1.6",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.9",
-    "@nestjs/platform-express": "^11.1.6",
+    "@nestjs/platform-express": "^11.1.16",
     "better-auth": "^1.4.7",
     "kysely": "^0.28.9",
     "neverthrow": "^8.2.0",
