@@ -6,6 +6,7 @@ import { DialogTitle } from '@radix-ui/react-dialog';
 import { TabsContent } from '@radix-ui/react-tabs';
 
 import { type LoginSchema, loginSchema } from '@/components/auth/auth.schema';
+import { SignInWithGoogleButton } from '@/components/auth/sign-in-google-button';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -68,7 +69,7 @@ export function AuthModal(): JSX.Element {
               </TabsList>
             </DialogTitle>
           </DialogHeader>
-          <TabsContent value="signIn">
+          <TabsContent value="signIn" className="flex flex-col gap-1">
             <Form {...form}>
               <form
                 className="flex flex-col"
@@ -101,6 +102,8 @@ export function AuthModal(): JSX.Element {
                 </Button>
               </form>
             </Form>
+            <span className="text-center">or</span>
+            <SignInWithGoogleButton />
           </TabsContent>
           <TabsContent value="signUp">
             <p>Sorry, we don&#39;t support registering right now</p>
