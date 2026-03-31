@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { type LoginSchema, loginSchema } from '@/components/auth/auth.schema';
-import { SignInWithGoogleButton } from '@/components/auth/sign-in-google-button';
+import { GoogleSignInButton } from '@/components/auth/google-sign-in-button';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Form, FormField } from '@/components/ui/form';
@@ -97,7 +97,7 @@ export function AuthModal(): JSX.Element {
             defaultValue: 'or',
           })}
         </span>
-        <SignInWithGoogleButton />
+        <GoogleSignInButton />
       </DialogContent>
     </Dialog>
   );

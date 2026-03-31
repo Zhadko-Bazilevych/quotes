@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { GoogleIcon } from '@/icons';
 import { authClient } from '@/lib/auth-client';
 
-export function SignInWithGoogleButton(): JSX.Element {
+export function GoogleSignInButton(): JSX.Element {
   const { t } = useTranslation();
   return (
     <Button
