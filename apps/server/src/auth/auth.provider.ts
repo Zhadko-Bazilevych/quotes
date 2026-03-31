@@ -27,6 +27,13 @@ export class AuthProvider {
       emailAndPassword: {
         enabled: true,
       },
+      socialProviders: {
+        google: {
+          prompt: 'select_account',
+          clientId: config.get('auth.googleClientId', { infer: true }),
+          clientSecret: config.get('auth.googleClientSecret', { infer: true }),
+        },
+      },
       advanced: {
         database: {
           generateId: false,

@@ -112,6 +112,8 @@ jobs:
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
             echo "AUTH_BETTER_AUTH_SECRET=${{ secrets.AUTH_BETTER_AUTH_SECRET }}"
             echo "AUTH_BETTER_AUTH_URL=${{ vars.AUTH_BETTER_AUTH_URL }}"
+            echo "AUTH_GOOGLE_CLIENT_ID=${{ vars.AUTH_GOOGLE_CLIENT_ID }}"
+            echo "AUTH_GOOGLE_CLIENT_SECRET=${{ secrets.AUTH_GOOGLE_CLIENT_SECRET }}"
             echo "APP_CORS=${{ vars.APP_CORS }}"
           } > stack.env
 

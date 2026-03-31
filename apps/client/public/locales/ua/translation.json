@@ -1,4 +1,18 @@
 {
+  "auth": {
+    "button": {
+      "googleSignIn": "Увійти через Google",
+      "signIn": "Увійти"
+    },
+    "modal": {
+      "form": {
+        "email": "Електронна пошта",
+        "password": "Пароль",
+        "submit": "Увійти"
+      },
+      "separator": "або"
+    }
+  },
   "common": {
     "beta": "бета"
   },
