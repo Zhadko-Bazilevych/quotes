@@ -2,21 +2,13 @@ import { type JSX, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DialogTitle } from '@radix-ui/react-dialog';
-import { TabsContent } from '@radix-ui/react-tabs';
 
 import { type LoginSchema, loginSchema } from '@/components/auth/auth.schema';
 import { SignInWithGoogleButton } from '@/components/auth/sign-in-google-button';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Form, FormField } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSignInWithEmail } from '@/hooks/use-sign-in-with-email';
 
 export function AuthModal(): JSX.Element {
@@ -28,7 +20,7 @@ export function AuthModal(): JSX.Element {
       email: '',
       password: '',
     },
-    mode: 'onTouched',
+    mode: 'onSubmit',
     criteriaMode: 'all',
     resolver: zodResolver(loginSchema),
   });
@@ -59,56 +51,37 @@ export function AuthModal(): JSX.Element {
       <DialogTrigger asChild>
         <Button>Login</Button>
       </DialogTrigger>
-      <DialogContent aria-describedby={undefined} className="xs:w-fit">
-        <Tabs defaultValue="account">
-          <DialogHeader>
-            <DialogTitle asChild>
-              <TabsList>
-                <TabsTrigger value="signIn">Sign In</TabsTrigger>
-                <TabsTrigger value="signUp">Sing Up</TabsTrigger>
-              </TabsList>
-            </DialogTitle>
-          </DialogHeader>
-          <TabsContent value="signIn" className="flex flex-col gap-1">
-            <Form {...form}>
-              <form
-                className="flex flex-col"
-                onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  label="Email"
-                  render={(props) => <Input autoComplete="email" {...props} />}
+      <DialogContent aria-describedby={undefined} className="xs:w-fit py-8">
+        <Form {...form}>
+          <form
+            className="flex flex-col"
+            onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              label="Email"
+              render={(props) => <Input autoComplete="email" {...props} />}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              label="Password"
+              render={(props) => (
+                <Input
+                  type="password"
+                  autoComplete="current-password"
+                  {...props}
                 />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  label="Password"
-                  render={(props) => (
-                    <Input
-                      type="password"
-                      autoComplete="current-password"
-                      {...props}
-                    />
-                  )}
-                />
-                <Button
-                  className="mt-1 w-full"
-                  type="submit"
-                  disabled={isPending}
-                >
-                  Submit
-                </Button>
-              </form>
-            </Form>
-            <span className="text-center">or</span>
-            <SignInWithGoogleButton />
-          </TabsContent>
-          <TabsContent value="signUp">
-            <p>Sorry, we don&#39;t support registering right now</p>
-          </TabsContent>
-        </Tabs>
+              )}
+            />
+            <Button className="mt-1 w-full" type="submit" disabled={isPending}>
+              Submit
+            </Button>
+          </form>
+        </Form>
+        <span className="text-center">or</span>
+        <SignInWithGoogleButton />
       </DialogContent>
     </Dialog>
   );
