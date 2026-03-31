@@ -1,4 +1,18 @@
 {
+  "auth": {
+    "button": {
+      "googleSignIn": "Sign in with Google",
+      "signIn": "Sign in"
+    },
+    "modal": {
+      "form": {
+        "email": "Email",
+        "password": "Password",
+        "submit": "Sign in"
+      },
+      "separator": "or"
+    }
+  },
   "common": {
     "beta": "beta"
   },

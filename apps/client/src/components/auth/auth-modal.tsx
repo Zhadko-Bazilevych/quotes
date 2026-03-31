@@ -1,5 +1,6 @@
 import { type JSX, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -14,6 +15,7 @@ import { useSignInWithEmail } from '@/hooks/use-sign-in-with-email';
 export function AuthModal(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const { isPending, mutate } = useSignInWithEmail();
+  const { t } = useTranslation();
 
   const form = useForm({
     defaultValues: {
@@ -49,7 +51,11 @@ export function AuthModal(): JSX.Element {
   return (
     <Dialog open={isOpen} onOpenChange={onModalChange}>
       <DialogTrigger asChild>
-        <Button>Login</Button>
+        <Button>
+          {t(($) => $.auth.button.signIn, {
+            defaultValue: 'Sign in',
+          })}
+        </Button>
       </DialogTrigger>
       <DialogContent aria-describedby={undefined} className="xs:w-fit py-8">
         <Form {...form}>
@@ -60,13 +66,17 @@ export function AuthModal(): JSX.Element {
             <FormField
               control={form.control}
               name="email"
-              label="Email"
+              label={t(($) => $.auth.modal.form.email, {
+                defaultValue: 'Email',
+              })}
               render={(props) => <Input autoComplete="email" {...props} />}
             />
             <FormField
               control={form.control}
               name="password"
-              label="Password"
+              label={t(($) => $.auth.modal.form.password, {
+                defaultValue: 'Password',
+              })}
               render={(props) => (
                 <Input
                   type="password"
@@ -76,11 +86,17 @@ export function AuthModal(): JSX.Element {
               )}
             />
             <Button className="mt-1 w-full" type="submit" disabled={isPending}>
-              Submit
+              {t(($) => $.auth.modal.form.submit, {
+                defaultValue: 'Sign in',
+              })}
             </Button>
           </form>
         </Form>
-        <span className="text-center">or</span>
+        <span className="text-center">
+          {t(($) => $.auth.modal.separator, {
+            defaultValue: 'or',
+          })}
+        </span>
         <SignInWithGoogleButton />
       </DialogContent>
     </Dialog>
