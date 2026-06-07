@@ -21,6 +21,8 @@ export interface QuoteTable {
   createdAt: ColumnType<Date, never, never>;
   updatedAt: ColumnType<Date, never, Date>;
   visibility: QuoteVisibility;
+  likes: ColumnType<number, never, number>;
+  dislikes: ColumnType<number, never, number>;
 }
 
 export type Quote = Selectable<QuoteTable>;
