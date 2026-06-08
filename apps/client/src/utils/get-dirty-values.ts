@@ -11,7 +11,6 @@ export function getDirtyValues<T extends Record<string, unknown>>(
   values: T,
   dirtyFields: Partial<Record<keyof T, DirtyFieldsType>>,
 ): Partial<T> {
-  console.log('getDirtyValuesFn', dirtyFields, values);
   const dirtyValues = Object.keys(dirtyFields).reduce<Partial<T>>(
     (prev, key) => {
       const value = dirtyFields[key];
