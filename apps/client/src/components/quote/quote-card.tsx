@@ -1,4 +1,10 @@
-import { PencilIcon, ThumbsDownIcon, ThumbsUpIcon } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  PencilIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from 'lucide-react';
 import React, { type JSX, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -55,14 +61,6 @@ export const QuoteCard = React.memo(function QuoteCard(
       </div>
       <p className="wrap-break-word whitespace-pre-wrap">{quote.content}</p>
       <div className="flex justify-between">
-        <Button
-          className="self-start"
-          onClick={toggleDetails}
-          variant="outline"
-          size="sm"
-        >
-          Details
-        </Button>
         <div className="flex gap-1">
           <Button
             onClick={() => {
@@ -85,6 +83,14 @@ export const QuoteCard = React.memo(function QuoteCard(
             className="font-mono"
           >
             <ThumbsDownIcon /> {quote.dislikes}
+          </Button>
+          <Button
+            className="self-start"
+            onClick={toggleDetails}
+            variant="ghost"
+            size="sm"
+          >
+            {isDetailsOpen ? <ChevronUp /> : <ChevronDown />}
           </Button>
         </div>
         <div className="flex items-start gap-1">
