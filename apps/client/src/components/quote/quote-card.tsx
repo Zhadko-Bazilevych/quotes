@@ -10,6 +10,7 @@ import { useAbility } from '@casl/react';
 
 import { DeleteModal } from '@/components/quote/delete-quote-modal';
 import { Button } from '@/components/ui/button';
+import { AuthRequiredButton } from '@/components/ui/button/auth-required-button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -106,7 +107,7 @@ export const QuoteCard = React.memo(function QuoteCard(
           Details
         </Button>
         <div className="flex gap-1">
-          <Button
+          <AuthRequiredButton
             onClick={() => {
               mutateVote({ id: quote.id, value: 1 });
             }}
@@ -116,8 +117,8 @@ export const QuoteCard = React.memo(function QuoteCard(
             className="font-mono"
           >
             <ThumbsUpIcon /> {quote.likes}
-          </Button>
-          <Button
+          </AuthRequiredButton>
+          <AuthRequiredButton
             onClick={() => {
               mutateVote({ id: quote.id, value: -1 });
             }}
@@ -127,7 +128,7 @@ export const QuoteCard = React.memo(function QuoteCard(
             className="font-mono"
           >
             <ThumbsDownIcon /> {quote.dislikes}
-          </Button>
+          </AuthRequiredButton>
         </div>
       </div>
       {isDetailsOpen && (
