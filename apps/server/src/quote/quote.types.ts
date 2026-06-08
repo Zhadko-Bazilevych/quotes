@@ -26,6 +26,10 @@ export type DeleteQuoteError =
   | QuoteNotFoundError
   | UnexpectedError
   | ForbiddenError;
+export type VoteQuoteError =
+  | QuoteNotFoundError
+  | UnexpectedError
+  | MissingUserError;
 
 export type QuoteSearchQueryKeywords =
   (typeof QUOTE_SEARCH_QUERY_KEYWORDS)[keyof typeof QUOTE_SEARCH_QUERY_KEYWORDS];
