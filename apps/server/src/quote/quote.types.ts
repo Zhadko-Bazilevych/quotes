@@ -12,10 +12,7 @@ import type { ListResponse } from 'src/utils/types';
 
 export type QuoteList = ListResponse<QuoteAggregate>;
 
-export type GetQuoteError =
-  | QuoteNotFoundError
-  | UnexpectedError
-  | ForbiddenError;
+export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
 export type GetQuoteListError = UnexpectedError;
 export type CreateQuoteError =
   | UnexpectedError

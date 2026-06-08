@@ -36,7 +36,7 @@ export class QuoteService {
     const { ability } = this.authStore.getStore();
     return this.quoteRepository.getOne(id).andThen((quote) => {
       if (!ability.can('read', quote)) {
-        return errAsync(new ForbiddenError());
+        return errAsync(new QuoteNotFoundError({ id }));
       }
 
       return okAsync(quote);
