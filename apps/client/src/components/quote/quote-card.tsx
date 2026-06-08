@@ -1,4 +1,4 @@
-import { PencilIcon } from 'lucide-react';
+import { PencilIcon, ThumbsDownIcon, ThumbsUpIcon } from 'lucide-react';
 import React, { type JSX, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,6 +6,7 @@ import { DeleteModal } from '@/components/quote/delete-quote-modal';
 import { Button } from '@/components/ui/button';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { useDisclosure } from '@/hooks/use-disclosure';
+import { useVoteQuoteMutation } from '@/hooks/use-vote-quote';
 import { Can } from '@/lib/casl/permissions';
 import type { Quote } from '@/types/quote';
 import { formatDatetime } from '@/utils/formatters';
@@ -23,6 +24,7 @@ export const QuoteCard = React.memo(function QuoteCard(
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { isPending, mutate } = useDeleteQuoteMutation();
+  const { isPending: isVoting, mutate: mutateVote } = useVoteQuoteMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { t } = useTranslation();
@@ -61,6 +63,30 @@ export const QuoteCard = React.memo(function QuoteCard(
         >
           Details
         </Button>
+        <div className="flex gap-1">
+          <Button
+            onClick={() => {
+              mutateVote({ id: quote.id, value: 1 });
+            }}
+            variant={quote.vote === 1 ? 'default' : 'secondary'}
+            size="sm"
+            disabled={isVoting}
+            className="font-mono"
+          >
+            <ThumbsUpIcon /> {quote.likes}
+          </Button>
+          <Button
+            onClick={() => {
+              mutateVote({ id: quote.id, value: -1 });
+            }}
+            variant={quote.vote === -1 ? 'default' : 'secondary'}
+            size="sm"
+            disabled={isVoting}
+            className="font-mono"
+          >
+            <ThumbsDownIcon /> {quote.dislikes}
+          </Button>
+        </div>
         <div className="flex items-start gap-1">
           <Can I="update" this={quote}>
             <Button onClick={toggleEdit} variant="outline" size="icon">
