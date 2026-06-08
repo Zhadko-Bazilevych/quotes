@@ -15,6 +15,8 @@ export class QuoteMapper {
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
       visibility: raw.visibility,
+      likes: raw.likes,
+      dislikes: raw.dislikes,
       __typename: 'Quote',
     };
   }
@@ -33,6 +35,8 @@ export class QuoteMapper {
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
       visibility: raw.visibility,
+      likes: raw.likes,
+      dislikes: raw.dislikes,
       __typename: 'Quote',
     };
   }

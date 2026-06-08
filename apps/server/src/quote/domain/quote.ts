@@ -15,6 +15,8 @@ export type Quote = WithTypename<
     createdAt: Date;
     updatedAt: Date;
     visibility: QuoteVisibility;
+    likes: number;
+    dislikes: number;
   },
   'Quote'
 >;

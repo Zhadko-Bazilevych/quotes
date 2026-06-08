@@ -195,6 +195,8 @@ export class KyselyQuoteRepository implements QuoteRepository {
                 'context',
                 'quote.createdAt',
                 'quote.updatedAt',
+                'likes',
+                'dislikes',
                 'visibility',
               ])
               .offset(offset)

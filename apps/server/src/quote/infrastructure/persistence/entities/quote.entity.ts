@@ -12,5 +12,7 @@ export type QuoteEntity = {
   context: string;
   createdAt: Date;
   updatedAt: Date;
+  likes: number;
+  dislikes: number;
   visibility: QuoteVisibility;
 };
