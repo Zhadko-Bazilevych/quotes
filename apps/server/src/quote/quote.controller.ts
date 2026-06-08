@@ -124,9 +124,11 @@ export class QuoteController {
   vote(
     @Param(new ZodValidationPipe(quoteIdSchema)) { id }: QuoteIdDto,
     @Body(new ZodValidationPipe(voteQuoteSchema)) body: VoteQuoteDto,
-  ): Promise<void> {
+  ): Promise<{ ok: true }> {
     return this.quotesService.vote(id, body).match(
-      () => undefined,
+      () => ({
+        ok: true,
+      }),
       (err) =>
         matchError(err, {
           UnexpectedError: () => new UnexpectedException(),
