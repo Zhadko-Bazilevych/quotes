@@ -38,6 +38,7 @@
     "i18next-cli": "^1.32.0",
     "i18next-http-backend": "^3.0.5",
     "lucide-react": "^0.541.0",
+    "radix-ui": "^1.5.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-hook-form": "^7.72.0",
