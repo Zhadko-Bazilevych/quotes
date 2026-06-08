@@ -18,6 +18,7 @@ export type Quote = WithTypename<
     updatedAt: Date;
     likes: number;
     dislikes: number;
+    vote: number | null;
     visibility: QuoteVisibility;
   },
   'Quote'
@@ -38,6 +39,7 @@ export type QuoteDto = WithTypename<
     updatedAt: string;
     likes: number;
     dislikes: number;
+    vote: number | null;
     visibility: QuoteVisibility;
   },
   'Quote'
