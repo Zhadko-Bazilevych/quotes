@@ -1,14 +1,13 @@
 import type { Insertable, Selectable, Updateable } from 'kysely';
 import { type QuoteId } from 'src/database/tables/quote.tables';
 import type { UserId } from 'src/database/tables/user.tables';
-import type { Brand } from 'src/utils/types';
 
-export type VoteId = Brand<number, 'VoteId'>;
+export type VoteQuoteValue = 1 | -1;
 
 export interface VoteTable {
   userId: UserId;
   quoteId: QuoteId;
-  value: number;
+  value: VoteQuoteValue;
 }
 
 export type Vote = Selectable<VoteTable>;

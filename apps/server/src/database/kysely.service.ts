@@ -15,6 +15,7 @@ import { QuoteTable } from 'src/database/tables/quote.tables';
 import { SessionTable } from 'src/database/tables/session.tables';
 import { UserTable } from 'src/database/tables/user.tables';
 import { VerificationTable } from 'src/database/tables/verification.tables';
+import { VoteTable } from 'src/database/tables/vote.table';
 
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 
@@ -24,6 +25,7 @@ export interface Database {
   account: AccountTable;
   session: SessionTable;
   verification: VerificationTable;
+  vote: VoteTable;
 }
 
 types.setTypeParser(types.builtins.INT8, Number);
