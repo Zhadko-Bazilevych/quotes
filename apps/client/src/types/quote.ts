@@ -16,6 +16,8 @@ export type Quote = WithTypename<
     context: string;
     createdAt: Date;
     updatedAt: Date;
+    likes: number;
+    dislikes: number;
     visibility: QuoteVisibility;
   },
   'Quote'
@@ -34,6 +36,8 @@ export type QuoteDto = WithTypename<
     context: string;
     createdAt: string;
     updatedAt: string;
+    likes: number;
+    dislikes: number;
     visibility: QuoteVisibility;
   },
   'Quote'
