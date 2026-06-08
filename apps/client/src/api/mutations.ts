@@ -7,6 +7,7 @@ import type {
 } from '@/api/auth-api';
 import type { CreateQuoteSchema } from '@/components/quote/form/create-quote-schema';
 import type { UpdateQuoteSchema } from '@/components/quote/form/update-quote-schema';
+import type { SuccessResponse } from '@/types';
 import type { Quote } from '@/types/quote';
 
 import type { Api } from './api';
@@ -22,6 +23,11 @@ export type CreateQuoteVariables = {
 
 export type DeleteQuoteVariables = {
   id: number;
+};
+
+export type VoteQuoteVariables = {
+  id: number;
+  value: number;
 };
 
 export type SignInWithEmailData = Awaited<
@@ -40,6 +46,7 @@ type Mutations = {
     update: MutationDetails<Quote, UpdateQuoteVariables>;
     create: MutationDetails<Quote, CreateQuoteVariables>;
     delete: MutationDetails<Quote, DeleteQuoteVariables>;
+    vote: MutationDetails<SuccessResponse, VoteQuoteVariables>;
   };
   auth: {
     signInWithEmail: MutationDetails<
@@ -67,6 +74,14 @@ export const createMutations = (api: Api): Mutations => {
         mutationFn: ({ id }: DeleteQuoteVariables): Promise<Quote> =>
           api.quotes.delete(id),
         mutationKey: ['quotes', 'delete'],
+      },
+      vote: {
+        mutationFn: ({
+          id,
+          value,
+        }: VoteQuoteVariables): Promise<SuccessResponse> =>
+          api.quotes.vote(id, value),
+        mutationKey: ['quotes', 'vote'],
       },
     },
     auth: {

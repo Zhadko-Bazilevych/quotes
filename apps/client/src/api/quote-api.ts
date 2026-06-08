@@ -1,6 +1,7 @@
 import type { CreateQuoteSchema } from '@/components/quote/form/create-quote-schema';
 import type { UpdateQuoteSchema } from '@/components/quote/form/update-quote-schema';
 import { QuoteMapper } from '@/mappers/quote';
+import type { SuccessResponse } from '@/types';
 import {
   type GetQuotesQuery,
   type Quote,
@@ -62,5 +63,10 @@ export class QuoteApi extends BaseApi {
     const url = this.buildUrl('quotes', id);
     const quote = await Client.delete<QuoteDto>(url);
     return QuoteMapper.toDomain(quote);
+  }
+
+  async vote(id: number, value: number): Promise<SuccessResponse> {
+    const url = this.buildUrl('quotes', id, 'vote');
+    return Client.post<SuccessResponse>(url, { body: { value } });
   }
 }
