@@ -1,6 +1,7 @@
 import type { ResultAsync } from 'neverthrow';
 import type { QuoteId } from 'src/database/tables/quote.tables';
 import { type UserId } from 'src/database/tables/user.tables';
+import { type VoteQuoteValue } from 'src/database/tables/vote.table';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { QuoteListSortDto } from 'src/quote/dto/quote-list-query.dto';
@@ -13,6 +14,7 @@ import type {
   QuoteList,
   QuoteSearchQueryKeywords,
   UpdateQuoteError,
+  VoteQuoteError,
 } from 'src/quote/quote.types';
 import type { ParsedQuery } from 'src/search-query/search-query.types';
 import type { PaginationDto } from 'src/utils/dto/pagination.dto';
@@ -43,4 +45,10 @@ export abstract class QuoteRepository {
   ): ResultAsync<QuoteList, GetQuoteListError>;
 
   abstract delete(id: QuoteId): ResultAsync<Quote, DeleteQuoteError>;
+
+  abstract vote(
+    quoteId: QuoteId,
+    userId: UserId,
+    value: VoteQuoteValue,
+  ): ResultAsync<void, VoteQuoteError>;
 }

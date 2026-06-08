@@ -5,6 +5,7 @@ import { kyselyWhere } from 'src/auth/permissions';
 import { Database, KyselyService } from 'src/database/kysely.service';
 import type { QuoteId } from 'src/database/tables/quote.tables';
 import { UserId } from 'src/database/tables/user.tables';
+import { VoteQuoteValue } from 'src/database/tables/vote.table';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
@@ -18,6 +19,7 @@ import type {
   GetQuoteListError,
   QuoteList,
   UpdateQuoteError,
+  VoteQuoteError,
 } from 'src/quote/quote.types';
 import { dbTry } from 'src/utils/db';
 import { getOffset, getTotalPages } from 'src/utils/query';
@@ -235,5 +237,76 @@ export class KyselyQuoteRepository implements QuoteRepository {
         return ok(quote);
       })
       .map((quote) => QuoteMapper.entityToDomain(quote));
+  }
+
+  vote(
+    quoteId: QuoteId,
+    userId: UserId,
+    value: VoteQuoteValue,
+  ): ResultAsync<void, VoteQuoteError> {
+    return this.db.withTransaction(() =>
+      dbTry(
+        this.db.ctx
+          .selectFrom('vote')
+          .select('value')
+          .where('quoteId', '=', quoteId)
+          .where('userId', '=', userId)
+          .executeTakeFirst(),
+      )
+        .andThen((vote) => {
+          if (!vote) {
+            return dbTry(
+              this.db.ctx
+                .insertInto('vote')
+                .values({ quoteId, userId, value })
+                .execute(),
+            );
+          }
+
+          if (vote.value !== value) {
+            return dbTry(
+              this.db.ctx
+                .updateTable('vote')
+                .set({ value })
+                .where('quoteId', '=', quoteId)
+                .where('userId', '=', userId)
+                .execute(),
+            );
+          }
+
+          return dbTry(
+            this.db.ctx
+              .deleteFrom('vote')
+              .where('quoteId', '=', quoteId)
+              .where('userId', '=', userId)
+              .execute(),
+          );
+        })
+        .andThen(() => {
+          return dbTry(
+            this.db.ctx
+              .selectFrom('vote')
+              .select(({ fn }) => [
+                'value',
+                fn.count<number>('value').as('count'),
+              ])
+              .groupBy('value')
+              .execute(),
+          );
+        })
+        .andThen((votes) => {
+          const likes = votes.find((row) => row.value === 1)?.count ?? 0;
+          const dislikes = votes.find((row) => row.value === -1)?.count ?? 0;
+
+          return dbTry(
+            this.db.ctx
+              .updateTable('quote')
+              .set({ likes, dislikes })
+              .where('id', '=', quoteId)
+              .execute(),
+          );
+        })
+        .andThen(() => ok()),
+    );
   }
 }

@@ -4,6 +4,8 @@ import { KyselyService } from 'src/database/kysely.service';
 import { QuoteId } from 'src/database/tables/quote.tables';
 import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
 import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
+import { VoteQuoteDto } from 'src/quote/dto/vote.dto';
+import { QuoteNotFoundError } from 'src/quote/quote.errors';
 import {
   CreateQuoteError,
   DeleteQuoteError,
@@ -12,6 +14,7 @@ import {
   QuoteList,
   QuoteSearchQueryService,
   UpdateQuoteError,
+  VoteQuoteError,
 } from 'src/quote/quote.types';
 import { ForbiddenError, MissingUserError } from 'src/utils/errors/app-errors';
 
@@ -36,7 +39,7 @@ export class QuoteService {
     const { ability } = this.authStore.getStore();
     return this.quoteRepository.getOne(id).andThen((quote) => {
       if (!ability.can('read', quote)) {
-        return errAsync(new ForbiddenError());
+        return errAsync(new QuoteNotFoundError({ id }));
       }
 
       return okAsync(quote);
@@ -102,6 +105,21 @@ export class QuoteService {
         }
 
         return this.quoteRepository.delete(id);
+      }),
+    );
+  }
+
+  vote(
+    id: QuoteId,
+    { value }: VoteQuoteDto,
+  ): ResultAsync<void, VoteQuoteError> {
+    const { user } = this.authStore.getStore();
+    if (!user) {
+      throw new MissingUserError();
+    }
+    return this.db.withTransaction(() =>
+      this.quoteRepository.getOne(id).andThen(() => {
+        return this.quoteRepository.vote(id, user.id, value);
       }),
     );
   }

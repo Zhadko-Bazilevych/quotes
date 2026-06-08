@@ -7,6 +7,7 @@ import {
   UpdateQuoteDto,
   updateQuoteSchema,
 } from 'src/quote/dto/update-quote.dto';
+import { VoteQuoteDto, voteQuoteSchema } from 'src/quote/dto/vote.dto';
 import { QuoteService } from 'src/quote/quote.service';
 import { QuoteList } from 'src/quote/quote.types';
 import { UnexpectedError } from 'src/utils/errors/app-errors';
@@ -115,6 +116,22 @@ export class QuoteController {
           QuoteNotFoundError: ({ id }) => new QuoteNotFoundException(id),
           UnexpectedError: () => new UnexpectedException(),
           ForbiddenError: () => new ForbiddenException(),
+        }),
+    );
+  }
+
+  @Post(':id/vote')
+  vote(
+    @Param(new ZodValidationPipe(quoteIdSchema)) { id }: QuoteIdDto,
+    @Body(new ZodValidationPipe(voteQuoteSchema)) body: VoteQuoteDto,
+  ): Promise<void> {
+    return this.quotesService.vote(id, body).match(
+      () => undefined,
+      (err) =>
+        matchError(err, {
+          UnexpectedError: () => new UnexpectedException(),
+          MissingUserError: () => new UnauthorizedException(),
+          QuoteNotFoundError: () => new QuoteNotFoundException(id),
         }),
     );
   }
