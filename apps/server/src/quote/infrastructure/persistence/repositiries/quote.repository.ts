@@ -304,6 +304,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
                 'value',
                 fn.count<number>('value').as('count'),
               ])
+              .where('quoteId', '=', quoteId)
               .groupBy('value')
               .execute(),
           );
