@@ -66,6 +66,59 @@ export function QuoteListSection(): JSX.Element {
     [queryClient, quoteListParams],
   );
 
+  const onVote = useCallback(
+    (id: number, value: number) => {
+      queryClient.setQueryData<QuoteList>(
+        queries.quotes.getList(quoteListParams).queryKey,
+        (old) => {
+          if (!old) {
+            return old;
+          }
+
+          const newQuotes = structuredClone<QuoteList>(old);
+          const index = newQuotes.data.findIndex((quote) => quote.id === id);
+          if (index === -1) {
+            return old;
+          }
+
+          const currentVote = newQuotes.data[index].vote;
+
+          let likeDelta = 0;
+          let dislikeDelta = 0;
+          let newVote = 0;
+
+          if (currentVote === 1) {
+            likeDelta = -1;
+          } else if (value === 1) {
+            likeDelta = 1;
+            newVote = 1;
+          }
+
+          if (currentVote === -1) {
+            dislikeDelta = -1;
+          } else if (value === -1) {
+            dislikeDelta = 1;
+            newVote = -1;
+          }
+
+          const quote = newQuotes.data[index];
+          newQuotes.data[index] = {
+            ...quote,
+            vote: newVote,
+            likes: quote.likes + likeDelta,
+            dislikes: quote.dislikes + dislikeDelta,
+          };
+
+          return {
+            ...old,
+            data: [...newQuotes.data],
+          };
+        },
+      );
+    },
+    [queryClient, quoteListParams],
+  );
+
   useEffect(() => {
     if (isAnyModalOpen || !data) {
       return;
@@ -151,6 +204,7 @@ export function QuoteListSection(): JSX.Element {
               quote={quote}
               onEdit={toggleEdit}
               onDelete={onDelete}
+              onVote={onVote}
             />
           );
         })}

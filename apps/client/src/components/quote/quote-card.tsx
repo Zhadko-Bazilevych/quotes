@@ -28,12 +28,13 @@ export type QuoteCardProps = {
   quote: Quote;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
+  onVote: (id: number, value: number) => void;
 };
 
 export const QuoteCard = React.memo(function QuoteCard(
   props: QuoteCardProps,
 ): JSX.Element {
-  const { quote, onEdit, onDelete } = props;
+  const { quote, onEdit, onDelete, onVote } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { isPending, mutate } = useDeleteQuoteMutation();
@@ -58,6 +59,17 @@ export const QuoteCard = React.memo(function QuoteCard(
   };
 
   const toggleEdit = (): void => onEdit(quote.id);
+
+  const vote = (value: number): void => {
+    mutateVote(
+      { id: quote.id, value },
+      {
+        onSuccess() {
+          onVote(quote.id, value);
+        },
+      },
+    );
+  };
 
   return (
     <div className="bg-card flex flex-col gap-3 rounded border p-2">
@@ -109,7 +121,7 @@ export const QuoteCard = React.memo(function QuoteCard(
         <div className="flex gap-1">
           <AuthRequiredButton
             onClick={() => {
-              mutateVote({ id: quote.id, value: 1 });
+              vote(1);
             }}
             variant={quote.vote === 1 ? 'default' : 'secondary'}
             size="sm"
@@ -120,7 +132,7 @@ export const QuoteCard = React.memo(function QuoteCard(
           </AuthRequiredButton>
           <AuthRequiredButton
             onClick={() => {
-              mutateVote({ id: quote.id, value: -1 });
+              vote(-1);
             }}
             variant={quote.vote === -1 ? 'default' : 'secondary'}
             size="sm"
