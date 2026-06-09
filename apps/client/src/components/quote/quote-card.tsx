@@ -1,12 +1,26 @@
-import { PencilIcon } from 'lucide-react';
+import {
+  EllipsisVerticalIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from 'lucide-react';
 import React, { type JSX, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useAbility } from '@casl/react';
+
 import { DeleteModal } from '@/components/quote/delete-quote-modal';
 import { Button } from '@/components/ui/button';
+import { AuthRequiredButton } from '@/components/ui/button/auth-required-button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useDeleteQuoteMutation } from '@/hooks/use-delete-quote';
 import { useDisclosure } from '@/hooks/use-disclosure';
-import { Can } from '@/lib/casl/permissions';
+import { useVoteQuoteMutation } from '@/hooks/use-vote-quote';
+import { AbilityContext, Can } from '@/lib/casl/permissions';
 import type { Quote } from '@/types/quote';
 import { formatDatetime } from '@/utils/formatters';
 
@@ -14,18 +28,21 @@ export type QuoteCardProps = {
   quote: Quote;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
+  onVote: (id: number, value: number) => void;
 };
 
 export const QuoteCard = React.memo(function QuoteCard(
   props: QuoteCardProps,
 ): JSX.Element {
-  const { quote, onEdit, onDelete } = props;
+  const { quote, onEdit, onDelete, onVote } = props;
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { isPending, mutate } = useDeleteQuoteMutation();
+  const { isPending: isVoting, mutate: mutateVote } = useVoteQuoteMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { t } = useTranslation();
+  const ability = useAbility(AbilityContext);
 
   const toggleDetails = (): void => setIsDetailsOpen((prev) => !prev);
 
@@ -43,13 +60,53 @@ export const QuoteCard = React.memo(function QuoteCard(
 
   const toggleEdit = (): void => onEdit(quote.id);
 
+  const vote = (value: number): void => {
+    mutateVote(
+      { id: quote.id, value },
+      {
+        onSuccess() {
+          onVote(quote.id, value);
+        },
+      },
+    );
+  };
+
   return (
     <div className="bg-card flex flex-col gap-3 rounded border p-2">
       <div className="flex justify-between">
         <span className="truncate">{quote.author}</span>
-        <span className="hidden sm:block">
-          Created: {formatDatetime(quote.createdAt)}
-        </span>
+        <div className="flex items-center gap-1">
+          <span className="hidden sm:block">
+            Created: {formatDatetime(quote.createdAt)}
+          </span>
+          {(ability.can('delete', quote) || ability.can('update', quote)) && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <EllipsisVerticalIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-40" align="start">
+                <Can I="update" this={quote}>
+                  <DropdownMenuItem onClick={toggleEdit}>
+                    <span>Edit</span>
+                  </DropdownMenuItem>
+                </Can>
+                <Can I="delete" this={quote}>
+                  <DropdownMenuItem asChild>
+                    <DeleteModal
+                      isOpen={isOpen}
+                      onOpen={onOpen}
+                      onClose={onClose}
+                      onOk={deleteQuote}
+                      isDeleting={isPending}
+                    />
+                  </DropdownMenuItem>
+                </Can>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
       </div>
       <p className="wrap-break-word whitespace-pre-wrap">{quote.content}</p>
       <div className="flex justify-between">
@@ -61,21 +118,29 @@ export const QuoteCard = React.memo(function QuoteCard(
         >
           Details
         </Button>
-        <div className="flex items-start gap-1">
-          <Can I="update" this={quote}>
-            <Button onClick={toggleEdit} variant="outline" size="icon">
-              <PencilIcon />
-            </Button>
-          </Can>
-          <Can I="delete" this={quote}>
-            <DeleteModal
-              isOpen={isOpen}
-              onOpen={onOpen}
-              onClose={onClose}
-              onOk={deleteQuote}
-              isDeleting={isPending}
-            />
-          </Can>
+        <div className="flex gap-1">
+          <AuthRequiredButton
+            onClick={() => {
+              vote(1);
+            }}
+            variant={quote.vote === 1 ? 'default' : 'secondary'}
+            size="sm"
+            disabled={isVoting}
+            className="font-mono"
+          >
+            <ThumbsUpIcon /> {quote.likes}
+          </AuthRequiredButton>
+          <AuthRequiredButton
+            onClick={() => {
+              vote(-1);
+            }}
+            variant={quote.vote === -1 ? 'default' : 'secondary'}
+            size="sm"
+            disabled={isVoting}
+            className="font-mono"
+          >
+            <ThumbsDownIcon /> {quote.dislikes}
+          </AuthRequiredButton>
         </div>
       </div>
       {isDetailsOpen && (

@@ -6,6 +6,10 @@ export type ListResponse<T> = {
   totalPages: number;
 };
 
+export type SuccessResponse = {
+  ok: true;
+};
+
 export type WithTypename<T, Typename extends 'Quote' | 'User'> = T & {
   __typename: Typename;
 };

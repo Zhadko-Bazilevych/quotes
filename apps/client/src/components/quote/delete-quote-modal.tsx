@@ -1,4 +1,3 @@
-import { Trash2Icon } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -54,9 +53,9 @@ export function DeleteModal(props: DeleteQuoteModalProps): JSX.Element {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Trash2Icon className="text-destructive" />
-        </Button>
+        <span className="text-destructive focus:bg-accent focus:text-accent-foreground hover:bg-accent relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden">
+          Delete
+        </span>
       </DialogTrigger>
       <DialogContent className="xs:w-fit">
         <DialogHeader>

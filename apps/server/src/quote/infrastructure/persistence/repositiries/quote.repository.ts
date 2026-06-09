@@ -1,4 +1,4 @@
-import { ExpressionWrapper, SqlBool } from 'kysely';
+import { ExpressionWrapper, sql, SqlBool } from 'kysely';
 import { err, ok, okAsync, type Result, ResultAsync } from 'neverthrow';
 import { AuthStore } from 'src/auth/auth-als.module';
 import { kyselyWhere } from 'src/auth/permissions';
@@ -128,6 +128,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
       pagination: { page, pageSize },
       filter,
       sort = [{ field: 'id', order: 'desc' }],
+      userId,
     } = options;
 
     return this.db
@@ -136,7 +137,15 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         let baseQuery = this.db.ctx
           .selectFrom('quote')
-          .innerJoin('user', 'user.id', 'quote.userId');
+          .innerJoin('user', 'user.id', 'quote.userId')
+          .$if(!!userId, (qb) =>
+            qb.leftJoin('vote', (join) =>
+              join
+                .onRef('vote.quoteId', '=', 'quote.id')
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                .on('vote.userId', '=', userId!),
+            ),
+          );
         if (filter) {
           const { common, ...restFilters } = filter;
           const keys = Object.keys(restFilters) as Exclude<
@@ -189,14 +198,19 @@ export class KyselyQuoteRepository implements QuoteRepository {
               .select([
                 'quote.id',
                 'author',
-                'userId',
+                'quote.userId',
                 'user.name',
                 'content',
                 'context',
                 'quote.createdAt',
                 'quote.updatedAt',
+                'likes',
+                'dislikes',
                 'visibility',
               ])
+              .$if(!!userId, (qb) =>
+                qb.select(sql<VoteQuoteValue>`vote.value`.as('vote')),
+              )
               .offset(offset)
               .limit(pageSize)
               .execute(),
@@ -290,6 +304,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
                 'value',
                 fn.count<number>('value').as('count'),
               ])
+              .where('quoteId', '=', quoteId)
               .groupBy('value')
               .execute(),
           );

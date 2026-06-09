@@ -14,40 +14,56 @@ import { rulesToAST } from '@casl/ability/extra';
 import { CompoundCondition, type Condition, FieldCondition } from '@ucast/core';
 
 type Table = keyof Database;
+type SubjectWithoutAll = Exclude<
+  Parameters<ReturnType<typeof defineAbilityFor>['rulesFor']>[1],
+  'all'
+>;
 
 type Expression<T extends keyof Database> = (
   eb: ExpressionBuilder<Database, T>,
 ) => ExpressionWrapper<Database, T, SqlBool>;
 
+const subjectToEntity: Record<SubjectWithoutAll, string> = {
+  Quote: 'quote',
+  User: 'user',
+};
+
 export function kyselyWhere<TTable extends Table>(
   ability: AppAbility,
   action: Parameters<ReturnType<typeof defineAbilityFor>['rulesFor']>[0],
-  subject: Parameters<ReturnType<typeof defineAbilityFor>['rulesFor']>[1],
+  subject: SubjectWithoutAll,
 ): Expression<TTable> | RawBuilder<boolean> {
   const ast = rulesToAST<AppAbility>(ability, action, subject);
   if (ast === null) {
     return sql<boolean>`false`;
   }
 
-  return (eb) => getConditionSql<TTable>(ast, eb);
+  return (eb) => getConditionSql<TTable>(ast, eb, subject);
 }
 
 function getConditionSql<TTableName extends Table>(
   condition: Condition,
   eb: ExpressionBuilder<Database, TTableName>,
+  subject: SubjectWithoutAll,
 ): ExpressionWrapper<Database, TTableName, SqlBool> {
   if (condition instanceof CompoundCondition) {
     switch (condition.operator) {
       case 'and':
         return eb.and(
-          condition.value.map((cond: Condition) => getConditionSql(cond, eb)),
+          condition.value.map((cond: Condition) =>
+            getConditionSql(cond, eb, subject),
+          ),
         );
       case 'or':
         return eb.or(
-          condition.value.map((cond: Condition) => getConditionSql(cond, eb)),
+          condition.value.map((cond: Condition) =>
+            getConditionSql(cond, eb, subject),
+          ),
         );
       case 'not':
-        return eb.not(getConditionSql(condition.value[0] as Condition, eb));
+        return eb.not(
+          getConditionSql(condition.value[0] as Condition, eb, subject),
+        );
       default: {
         throw new Error(
           `Unsupported compound condition operator: ${condition.operator}`,
@@ -59,7 +75,12 @@ function getConditionSql<TTableName extends Table>(
     switch (condition.operator) {
       case 'eq':
         return eb(
-          eb.ref(condition.field as StringReference<Database, TTableName>),
+          eb.ref(
+            `${subjectToEntity[subject]}.${condition.field}` as StringReference<
+              Database,
+              TTableName
+            >,
+          ),
           '=',
           condition.value,
         );

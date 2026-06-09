@@ -25,6 +25,7 @@ export type GetQuoteListOptions = {
   pagination: PaginationDto;
   filter?: QuoteListFilter;
   sort?: QuoteListSortDto;
+  userId: UserId | undefined;
 };
 
 export abstract class QuoteRepository {

@@ -53,11 +53,13 @@ export class QuoteService {
     const parsedSearchQuery = this.quoteSearchQueryService.parse(
       filter?.q ?? '',
     );
+    const { user } = this.authStore.getStore();
 
     return this.quoteRepository.getList({
       pagination,
       sort,
       filter: parsedSearchQuery,
+      userId: user?.id,
     });
   }
 
