@@ -27,6 +27,7 @@
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.1.24",
     "@nestjs/platform-express": "^11.1.16",
+    "@querylang/core": "file:vendor/querylang-core-0.0.0.tgz",
     "better-auth": "^1.6.11",
     "kysely": "^0.28.14",
     "neverthrow": "^8.2.0",
