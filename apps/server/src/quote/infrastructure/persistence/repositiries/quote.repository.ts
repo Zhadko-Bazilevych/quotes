@@ -44,6 +44,8 @@ const sortAliases: Record<
   updatedAt: '"sq"."updated_at"',
   'user.name': '"sq"."name"',
   author: '"sq"."author"',
+  likes: '"sq"."likes"',
+  dislikes: '"sq"."dislikes"',
 };
 
 @Injectable()
@@ -176,7 +178,10 @@ export class KyselyQuoteRepository implements QuoteRepository {
               eb('visibility', '=', 'private').as('is_private'),
               eb.fn
                 .coalesce(eb('vote.value', '=', 1), sql.lit(false))
-                .as('is_liked'),
+                .as('liked'),
+              eb.fn
+                .coalesce(eb('vote.value', '=', -1), sql.lit(false))
+                .as('disliked'),
             ])
             .where(permissions)
             .as('sq'),

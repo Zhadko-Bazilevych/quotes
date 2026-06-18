@@ -31,7 +31,8 @@ export const quoteSearchParser = createQlParser({
   context: { type: 'string', aliases: { ctx: true, cx: true } },
   likes: { type: 'number' },
   dislikes: { type: 'number' },
-  is_liked: { type: 'boolean' },
+  liked: { type: 'boolean' },
+  disliked: { type: 'boolean' },
   is_private: { type: 'boolean' },
 });
 

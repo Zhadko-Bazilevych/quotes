@@ -15,6 +15,8 @@ const quoteListSortSchema = buildSortSchema([
   'user.name',
   'createdAt',
   'updatedAt',
+  'likes',
+  'dislikes',
   'id',
 ]);
 
