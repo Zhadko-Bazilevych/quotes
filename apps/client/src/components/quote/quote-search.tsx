@@ -7,14 +7,14 @@ import { Input } from '@/components/ui/input';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { quoteListRoute } from '@/routes/route-tree';
 
-export type SearchProps = {} & Omit<
-  React.ComponentProps<'input'>,
-  'onChange' | 'value'
->;
+export type SearchProps = {
+  errors?: { message: string }[];
+} & Omit<React.ComponentProps<'input'>, 'onChange' | 'value'>;
 
-export const QuoteSearch = React.memo(function QuoteSearch(
-  props: SearchProps,
-): JSX.Element {
+export const QuoteSearch = React.memo(function QuoteSearch({
+  errors,
+  ...rest
+}: SearchProps): JSX.Element {
   const navigate = quoteListRoute.useNavigate();
   const initialQ = quoteListRoute.useSearch({
     select: ({ q }) => q,
@@ -35,15 +35,22 @@ export const QuoteSearch = React.memo(function QuoteSearch(
   return (
     <div className="flex gap-3">
       <div className="relative flex-1">
-        <Input
-          onChange={(e) => {
-            setQ(e.target.value);
-            debouncedChange(e.target.value);
-          }}
-          value={q}
-          name="quoteSearchInput"
-          {...props}
-        />
+        <div className="flex flex-col gap-1">
+          <Input
+            onChange={(e) => {
+              setQ(e.target.value);
+              debouncedChange(e.target.value);
+            }}
+            value={q}
+            name="quoteSearchInput"
+            {...rest}
+          />
+          {errors?.map((e, i) => (
+            <span key={i} className="text-destructive">
+              {e.message}
+            </span>
+          ))}
+        </div>
         <div className="bg-background absolute top-0 right-0 rounded-r-md">
           <Button
             className="bg-input/30 border-input rounded-l-none border"
