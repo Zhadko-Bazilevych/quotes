@@ -185,14 +185,13 @@ export function QuoteListSection(): JSX.Element {
     });
   }, [setEditingIds, isAnyModalOpen]);
 
-  if (error && !isParsingError(error)) {
-    return <UnexpectedError />;
-  }
+  const parsignErrors = isParsingError(error) ? error.errors : [];
 
   return (
     <section className="flex flex-col gap-3">
-      <QuoteSearch placeholder="Search quotes..." errors={error?.errors} />
+      <QuoteSearch placeholder="Search quotes..." errors={parsignErrors} />
       <QuoteOrder />
+      {error && !isParsingError(error) && <UnexpectedError />}
       {isFetchingNewData && <QuoteListSkeleton pageSize={pageSize} />}
       {!isFetchingNewData &&
         data?.data.map((quote) => {
