@@ -1,9 +1,9 @@
-import { ExpressionBuilder, ExpressionWrapper, sql, SqlBool } from 'kysely';
+import { sql } from 'kysely';
 import { CompiledQuery } from 'kysely';
 import { err, ok, okAsync, type Result, ResultAsync } from 'neverthrow';
 import { AuthStore } from 'src/auth/auth-als.module';
 import { kyselyWhere } from 'src/auth/permissions';
-import { Database, KyselyService } from 'src/database/kysely.service';
+import { KyselyService } from 'src/database/kysely.service';
 import type { QuoteId } from 'src/database/tables/quote.tables';
 import { UserId } from 'src/database/tables/user.tables';
 import { VoteQuoteValue } from 'src/database/tables/vote.table';
@@ -12,6 +12,7 @@ import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import { QuoteListSortDto } from 'src/quote/dto/quote-list-query.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
 import { QuoteEntity } from 'src/quote/infrastructure/persistence/entities/quote.entity';
+import type { QuoteAggregateEntity } from 'src/quote/infrastructure/persistence/entities/quote-read.entity';
 import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
 import { QuoteNotFoundError } from 'src/quote/quote.errors';
 import type {
@@ -163,6 +164,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         let baseQuery = this.db.ctx
           .selectFrom('quote')
+
           .innerJoin('user', 'user.id', 'quote.userId')
           .$if(!!userId, (qb) =>
             qb.leftJoin('vote', (join) =>
@@ -178,6 +180,9 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         const filters = toSql(parser.parse(q).ast, {
           parameterOffset: compiledQuery.parameters.length,
+          fieldOverrides: {
+            user: '"user"."name"',
+          },
         });
 
         baseQuery = baseQuery.where(sql.raw<boolean>(filters.sql));
@@ -200,9 +205,9 @@ export class KyselyQuoteRepository implements QuoteRepository {
             qb.select(sql<VoteQuoteValue>`vote.value`.as('vote')),
           );
 
-        const totalQuery = baseQuery.select((eb) =>
+        const totalQuery = baseQuery.select((eb) => [
           eb.fn.countAll<number>().as('total'),
-        );
+        ]);
 
         const compiledQuotesQuery = quotesQuery.compile();
         const compiledTotalQuery = totalQuery.compile();
@@ -210,7 +215,6 @@ export class KyselyQuoteRepository implements QuoteRepository {
         const sortSql = sort
           .map(({ field, order }) => `${sortAliases[field]} ${order}`)
           .join(', ');
-        console.log(sortSql);
 
         const rawQuotesSql = `${compiledQuotesQuery.sql} order by ${sortSql} limit ${pageSize} offset ${offset}`;
 
@@ -224,23 +228,19 @@ export class KyselyQuoteRepository implements QuoteRepository {
           compiledTotalQuery.sql,
           sqlParameters,
         );
-
         console.log(totalRawQuery.sql);
+        console.log(totalRawQuery.parameters);
 
         return ResultAsync.combine([
-          dbTry(
-            this.db.ctx
-              .executeQuery(quotesRawQuery)
-              .then((a) => a.rows) as ReturnType<typeof quotesQuery.execute>,
-          ),
-          dbTry(
-            this.db.ctx
-              .executeQuery(totalRawQuery)
-              .then((a) => a.rows[0]) as Promise<number>,
-          ),
+          dbTry(this.db.ctx.executeQuery<QuoteAggregateEntity>(quotesRawQuery)),
+          dbTry(this.db.ctx.executeQuery<{ total: number }>(totalRawQuery)),
         ]);
       })
-      .map(([data, total]) => {
+      .map(([dataResult, totalResult]) => ({
+        data: dataResult.rows,
+        total: totalResult.rows[0].total,
+      }))
+      .map(({ data, total }) => {
         const totalPages = getTotalPages(total, pageSize);
 
         return {
