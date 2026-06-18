@@ -40,10 +40,10 @@ const sortAliases: Record<
   string
 > = {
   id: '"id"',
-  createdAt: '"created_at"',
-  updatedAt: '"updated_at"',
-  'user.name': '"user"."name"',
-  author: '"author"',
+  createdAt: '"sq"."created_at"',
+  updatedAt: '"sq"."updated_at"',
+  'user.name': '"sq"."name"',
+  author: '"sq"."author"',
 };
 
 @Injectable()
@@ -151,19 +151,36 @@ export class KyselyQuoteRepository implements QuoteRepository {
         const { ability } = this.authStore.getStore();
         const permissions = kyselyWhere(ability, 'read', 'Quote');
 
-        let baseQuery = this.db.ctx
-          .selectFrom('quote')
-
-          .innerJoin('user', 'user.id', 'quote.userId')
-          .$if(!!userId, (qb) =>
-            qb.leftJoin('vote', (join) =>
+        let baseQuery = this.db.ctx.selectFrom((eb) =>
+          eb
+            .selectFrom('quote')
+            .innerJoin('user', 'user.id', 'quote.userId')
+            .leftJoin('vote', (join) =>
               join
                 .onRef('vote.quoteId', '=', 'quote.id')
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                .on('vote.userId', '=', userId!),
-            ),
-          )
-          .where(permissions);
+                .on('vote.userId', '=', userId ?? (-1 as UserId)),
+            )
+            .select((eb) => [
+              'quote.id',
+              'author',
+              'quote.userId',
+              'user.name',
+              'content',
+              'context',
+              'quote.createdAt',
+              'quote.updatedAt',
+              'likes',
+              'dislikes',
+              'visibility',
+              'vote.value as vote',
+              eb('visibility', '=', 'private').as('is_private'),
+              eb.fn
+                .coalesce(eb('vote.value', '=', 1), sql.lit(false))
+                .as('is_liked'),
+            ])
+            .where(permissions)
+            .as('sq'),
+        );
 
         const compiledQuery = baseQuery.compile();
 
@@ -176,23 +193,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         baseQuery = baseQuery.where(sql.raw<boolean>(filters.sql));
 
-        const quotesQuery = baseQuery
-          .select([
-            'quote.id',
-            'author',
-            'quote.userId',
-            'user.name',
-            'content',
-            'context',
-            'quote.createdAt',
-            'quote.updatedAt',
-            'likes',
-            'dislikes',
-            'visibility',
-          ])
-          .$if(!!userId, (qb) =>
-            qb.select(sql<VoteQuoteValue>`vote.value`.as('vote')),
-          );
+        const quotesQuery = baseQuery.selectAll();
 
         const totalQuery = baseQuery.select((eb) => [
           eb.fn.countAll<number>().as('total'),
@@ -217,8 +218,8 @@ export class KyselyQuoteRepository implements QuoteRepository {
           compiledTotalQuery.sql,
           sqlParameters,
         );
-        console.log(totalRawQuery.sql);
-        console.log(totalRawQuery.parameters);
+        console.log(quotesRawQuery.sql);
+        console.log(quotesRawQuery.parameters);
 
         return ResultAsync.combine([
           dbTry(this.db.ctx.executeQuery<QuoteAggregateEntity>(quotesRawQuery)),
