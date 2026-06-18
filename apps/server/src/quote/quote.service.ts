@@ -50,15 +50,13 @@ export class QuoteService {
     quoteListQueryDto: QuoteListQueryDto,
   ): ResultAsync<QuoteList, GetQuoteListError> {
     const { pagination, filter, sort } = quoteListQueryDto;
-    const parsedSearchQuery = this.quoteSearchQueryService.parse(
-      filter?.q ?? '',
-    );
+
     const { user } = this.authStore.getStore();
 
     return this.quoteRepository.getList({
       pagination,
       sort,
-      filter: parsedSearchQuery,
+      q: filter?.q,
       userId: user?.id,
     });
   }

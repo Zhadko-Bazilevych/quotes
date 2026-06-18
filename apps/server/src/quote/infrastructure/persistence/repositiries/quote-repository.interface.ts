@@ -23,7 +23,7 @@ export type QuoteListFilter = ParsedQuery<QuoteSearchQueryKeywords>;
 
 export type GetQuoteListOptions = {
   pagination: PaginationDto;
-  filter?: QuoteListFilter;
+  q?: string;
   sort?: QuoteListSortDto;
   userId: UserId | undefined;
 };

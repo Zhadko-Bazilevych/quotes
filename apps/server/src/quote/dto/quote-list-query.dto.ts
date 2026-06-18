@@ -15,6 +15,7 @@ const quoteListSortSchema = buildSortSchema([
   'user.name',
   'createdAt',
   'updatedAt',
+  'id',
 ]);
 
 export const quoteListQuerySchema = z.object({
