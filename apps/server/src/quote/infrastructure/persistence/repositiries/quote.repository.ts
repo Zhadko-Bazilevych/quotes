@@ -223,8 +223,6 @@ export class KyselyQuoteRepository implements QuoteRepository {
           compiledTotalQuery.sql,
           sqlParameters,
         );
-        console.log(quotesRawQuery.sql);
-        console.log(quotesRawQuery.parameters);
 
         return ResultAsync.combine([
           dbTry(this.db.ctx.executeQuery<QuoteAggregateEntity>(quotesRawQuery)),
