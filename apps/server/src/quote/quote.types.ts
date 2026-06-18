@@ -1,6 +1,6 @@
 import type { QuoteAggregate } from 'src/quote/domain/quote-aggregate';
 import type { QUOTE_SEARCH_QUERY_KEYWORDS } from 'src/quote/quote.constants';
-import type { QuoteNotFoundError } from 'src/quote/quote.errors';
+import type { ParsingError, QuoteNotFoundError } from 'src/quote/quote.errors';
 import type { SearchQueryService } from 'src/search-query/search-query.service';
 import type { WithDefaultKeyword } from 'src/search-query/search-query.types';
 import type {
@@ -13,7 +13,7 @@ import type { ListResponse } from 'src/utils/types';
 export type QuoteList = ListResponse<QuoteAggregate>;
 
 export type GetQuoteError = QuoteNotFoundError | UnexpectedError;
-export type GetQuoteListError = UnexpectedError;
+export type GetQuoteListError = UnexpectedError | ParsingError;
 export type CreateQuoteError =
   | UnexpectedError
   | MissingUserError

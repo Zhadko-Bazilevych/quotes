@@ -5,32 +5,41 @@ import { QuoteId } from 'src/database/tables/quote.tables';
 import { QuoteListQueryDto } from 'src/quote/dto/quote-list-query.dto';
 import { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
 import { VoteQuoteDto } from 'src/quote/dto/vote.dto';
-import { QuoteNotFoundError } from 'src/quote/quote.errors';
+import { ParsingError, QuoteNotFoundError } from 'src/quote/quote.errors';
 import {
   CreateQuoteError,
   DeleteQuoteError,
   GetQuoteError,
   GetQuoteListError,
   QuoteList,
-  QuoteSearchQueryService,
   UpdateQuoteError,
   VoteQuoteError,
 } from 'src/quote/quote.types';
 import { ForbiddenError, MissingUserError } from 'src/utils/errors/app-errors';
 
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { createQlParser } from '@querylang/core';
 
 import { Quote } from './domain/quote';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { QuoteRepository } from './infrastructure/persistence/repositiries/quote-repository.interface';
-import { QUOTE_SEARCH_QUERY_SERVICE } from './quote.constants';
+
+export const quoteSearchParser = createQlParser({
+  author: { type: 'string', aliases: { a: true } },
+  user: { type: 'string', aliases: { u: true } },
+  content: { type: 'string', aliases: { cnt: true, cn: true } },
+  context: { type: 'string', aliases: { ctx: true, cx: true } },
+  likes: { type: 'number' },
+  dislikes: { type: 'number' },
+  liked: { type: 'boolean' },
+  disliked: { type: 'boolean' },
+  is_private: { type: 'boolean' },
+});
 
 @Injectable()
 export class QuoteService {
   constructor(
     private readonly quoteRepository: QuoteRepository,
-    @Inject(QUOTE_SEARCH_QUERY_SERVICE)
-    private readonly quoteSearchQueryService: QuoteSearchQueryService,
     private readonly authStore: AuthStore,
     private readonly db: KyselyService,
   ) {}
@@ -50,15 +59,18 @@ export class QuoteService {
     quoteListQueryDto: QuoteListQueryDto,
   ): ResultAsync<QuoteList, GetQuoteListError> {
     const { pagination, filter, sort } = quoteListQueryDto;
-    const parsedSearchQuery = this.quoteSearchQueryService.parse(
-      filter?.q ?? '',
-    );
+
     const { user } = this.authStore.getStore();
+    const { ast, errors } = quoteSearchParser.parse(filter?.q ?? '');
+
+    if (errors.length) {
+      return errAsync(new ParsingError({ errors }));
+    }
 
     return this.quoteRepository.getList({
       pagination,
       sort,
-      filter: parsedSearchQuery,
+      filtersAst: ast,
       userId: user?.id,
     });
   }

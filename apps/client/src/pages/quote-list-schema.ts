@@ -7,6 +7,8 @@ export const sortFields = [
   'user.name',
   'createdAt',
   'updatedAt',
+  'likes',
+  'dislikes',
 ] as const;
 export type SortField = (typeof sortFields)[number];
 

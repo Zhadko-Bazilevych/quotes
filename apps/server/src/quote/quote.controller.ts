@@ -33,7 +33,7 @@ import {
 import { Quote } from './domain/quote';
 import { CreateQuoteDto, createQuoteSchema } from './dto/create-quote.dto';
 import { QuoteIdDto, quoteIdSchema } from './dto/quote-id.dto';
-import { QuoteNotFoundException } from './quote.errors';
+import { ParsingException, QuoteNotFoundException } from './quote.errors';
 
 @Controller('quotes')
 export class QuoteController {
@@ -70,6 +70,7 @@ export class QuoteController {
       (err) =>
         matchError(err, {
           UnexpectedError: () => new UnexpectedException(),
+          ParsingError: ({ errors }) => new ParsingException(errors),
         }),
     );
   }

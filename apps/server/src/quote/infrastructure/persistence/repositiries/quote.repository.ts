@@ -1,15 +1,18 @@
-import { ExpressionWrapper, sql, SqlBool } from 'kysely';
+import { sql } from 'kysely';
+import { CompiledQuery } from 'kysely';
 import { err, ok, okAsync, type Result, ResultAsync } from 'neverthrow';
 import { AuthStore } from 'src/auth/auth-als.module';
 import { kyselyWhere } from 'src/auth/permissions';
-import { Database, KyselyService } from 'src/database/kysely.service';
+import { KyselyService } from 'src/database/kysely.service';
 import type { QuoteId } from 'src/database/tables/quote.tables';
 import { UserId } from 'src/database/tables/user.tables';
 import { VoteQuoteValue } from 'src/database/tables/vote.table';
 import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
+import { QuoteListSortDto } from 'src/quote/dto/quote-list-query.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
 import { QuoteEntity } from 'src/quote/infrastructure/persistence/entities/quote.entity';
+import type { QuoteAggregateEntity } from 'src/quote/infrastructure/persistence/entities/quote-read.entity';
 import { QuoteMapper } from 'src/quote/infrastructure/persistence/mappers/quote.mapper';
 import { QuoteNotFoundError } from 'src/quote/quote.errors';
 import type {
@@ -25,12 +28,25 @@ import { dbTry } from 'src/utils/db';
 import { getOffset, getTotalPages } from 'src/utils/query';
 
 import { Injectable } from '@nestjs/common';
+import { toSql } from '@querylang/core';
 
 import type {
   GetQuoteListOptions,
-  QuoteListFilter,
   QuoteRepository,
 } from './quote-repository.interface';
+
+const sortAliases: Record<
+  Exclude<QuoteListSortDto, undefined>[number]['field'],
+  string
+> = {
+  id: '"id"',
+  createdAt: '"sq"."created_at"',
+  updatedAt: '"sq"."updated_at"',
+  'user.name': '"sq"."name"',
+  author: '"sq"."author"',
+  likes: '"sq"."likes"',
+  dislikes: '"sq"."dislikes"',
+};
 
 @Injectable()
 export class KyselyQuoteRepository implements QuoteRepository {
@@ -123,10 +139,9 @@ export class KyselyQuoteRepository implements QuoteRepository {
   getList(
     options: GetQuoteListOptions,
   ): ResultAsync<QuoteList, GetQuoteListError> {
-    type BoolExpression = ExpressionWrapper<Database, 'quote', SqlBool>;
     const {
       pagination: { page, pageSize },
-      filter,
+      filtersAst,
       sort = [{ field: 'id', order: 'desc' }],
       userId,
     } = options;
@@ -135,95 +150,90 @@ export class KyselyQuoteRepository implements QuoteRepository {
       .withTransaction(() => {
         const offset = getOffset(page, pageSize);
 
-        let baseQuery = this.db.ctx
-          .selectFrom('quote')
-          .innerJoin('user', 'user.id', 'quote.userId')
-          .$if(!!userId, (qb) =>
-            qb.leftJoin('vote', (join) =>
-              join
-                .onRef('vote.quoteId', '=', 'quote.id')
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                .on('vote.userId', '=', userId!),
-            ),
-          );
-        if (filter) {
-          const { common, ...restFilters } = filter;
-          const keys = Object.keys(restFilters) as Exclude<
-            keyof QuoteListFilter,
-            'common'
-          >[];
-          baseQuery = baseQuery.where((eb) => {
-            const expressions: BoolExpression[] = [];
-            for (const key of keys) {
-              const { include, exclude } = restFilters[key];
-              for (const value of exclude) {
-                expressions.push(eb(key, 'not ilike', `%${value}%`));
-              }
-              const includeExpressions: BoolExpression[] = [];
-              for (const value of include) {
-                includeExpressions.push(eb(key, 'ilike', `%${value}%`));
-              }
-              if (includeExpressions.length) {
-                expressions.push(eb.or(includeExpressions));
-              }
-            }
-            const { include, exclude } = common;
-            for (const key of keys) {
-              for (const value of exclude) {
-                expressions.push(eb(key, 'not ilike', `%${value}%`));
-              }
-            }
-            for (const value of include) {
-              const includeExpressions: BoolExpression[] = [];
-              for (const key of keys) {
-                includeExpressions.push(eb(key, 'ilike', `%${value}%`));
-              }
-              expressions.push(eb.or(includeExpressions));
-            }
-            return eb.and(expressions);
-          });
-        }
-
         const { ability } = this.authStore.getStore();
         const permissions = kyselyWhere(ability, 'read', 'Quote');
-        baseQuery = baseQuery.where(permissions);
 
-        for (const { field, order } of sort) {
-          baseQuery = baseQuery.orderBy(field, order);
-        }
+        let baseQuery = this.db.ctx.selectFrom((eb) =>
+          eb
+            .selectFrom('quote')
+            .innerJoin('user', 'user.id', 'quote.userId')
+            .leftJoin('vote', (join) =>
+              join
+                .onRef('vote.quoteId', '=', 'quote.id')
+                .on('vote.userId', '=', userId ?? (-1 as UserId)),
+            )
+            .select((eb) => [
+              'quote.id',
+              'author',
+              'quote.userId',
+              'user.name',
+              'content',
+              'context',
+              'quote.createdAt',
+              'quote.updatedAt',
+              'likes',
+              'dislikes',
+              'visibility',
+              'vote.value as vote',
+              eb('visibility', '=', 'private').as('is_private'),
+              eb.fn
+                .coalesce(eb('vote.value', '=', 1), sql.lit(false))
+                .as('liked'),
+              eb.fn
+                .coalesce(eb('vote.value', '=', -1), sql.lit(false))
+                .as('disliked'),
+            ])
+            .where(permissions)
+            .as('sq'),
+        );
+
+        const compiledQuery = baseQuery.compile();
+
+        const filters = toSql(filtersAst, {
+          parameterOffset: compiledQuery.parameters.length,
+          fieldOverrides: {
+            user: '"sq"."name"',
+          },
+        });
+
+        baseQuery = baseQuery.where(sql.raw<boolean>(filters.sql));
+
+        const quotesQuery = baseQuery.selectAll();
+
+        const totalQuery = baseQuery.select((eb) => [
+          eb.fn.countAll<number>().as('total'),
+        ]);
+
+        const compiledQuotesQuery = quotesQuery.compile();
+        const compiledTotalQuery = totalQuery.compile();
+
+        const sortSql = sort
+          .map(({ field, order }) => `${sortAliases[field]} ${order}`)
+          .join(', ');
+
+        const rawQuotesSql = `${compiledQuotesQuery.sql} order by ${sortSql} limit ${pageSize} offset ${offset}`;
+
+        const sqlParameters = [
+          ...compiledQuery.parameters,
+          ...filters.parameters,
+        ];
+
+        const quotesRawQuery = CompiledQuery.raw(rawQuotesSql, sqlParameters);
+        const totalRawQuery = CompiledQuery.raw(
+          compiledTotalQuery.sql,
+          sqlParameters,
+        );
 
         return ResultAsync.combine([
-          dbTry(
-            baseQuery
-              .select([
-                'quote.id',
-                'author',
-                'quote.userId',
-                'user.name',
-                'content',
-                'context',
-                'quote.createdAt',
-                'quote.updatedAt',
-                'likes',
-                'dislikes',
-                'visibility',
-              ])
-              .$if(!!userId, (qb) =>
-                qb.select(sql<VoteQuoteValue>`vote.value`.as('vote')),
-              )
-              .offset(offset)
-              .limit(pageSize)
-              .execute(),
-          ),
-          dbTry(
-            baseQuery
-              .clearOrderBy()
-              .select((eb) => eb.fn.countAll<number>().as('total'))
-              .executeTakeFirstOrThrow(),
-          ).map((count) => count.total),
+          dbTry(this.db.ctx.executeQuery<QuoteAggregateEntity>(quotesRawQuery)),
+          dbTry(this.db.ctx.executeQuery<{ total: number }>(totalRawQuery)),
         ]);
       })
-      .map(([data, total]) => {
+      .map(([dataResult, totalResult]) => ({
+        data: dataResult.rows,
+        total: totalResult.rows[0].total,
+      }))
+      .map(({ data, total }) => {
         const totalPages = getTotalPages(total, pageSize);
 
         return {
