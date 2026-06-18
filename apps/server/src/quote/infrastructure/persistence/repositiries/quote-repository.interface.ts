@@ -6,6 +6,7 @@ import type { Quote } from 'src/quote/domain/quote';
 import type { CreateQuoteDto } from 'src/quote/dto/create-quote.dto';
 import type { QuoteListSortDto } from 'src/quote/dto/quote-list-query.dto';
 import type { UpdateQuoteDto } from 'src/quote/dto/update-quote.dto';
+import { type quoteSearchParser } from 'src/quote/quote.service';
 import type {
   CreateQuoteError,
   DeleteQuoteError,
@@ -23,7 +24,7 @@ export type QuoteListFilter = ParsedQuery<QuoteSearchQueryKeywords>;
 
 export type GetQuoteListOptions = {
   pagination: PaginationDto;
-  q?: string;
+  filtersAst: ReturnType<typeof quoteSearchParser.parse>['ast'];
   sort?: QuoteListSortDto;
   userId: UserId | undefined;
 };

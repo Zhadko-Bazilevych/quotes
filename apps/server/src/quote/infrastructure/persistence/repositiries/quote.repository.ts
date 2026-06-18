@@ -28,7 +28,7 @@ import { dbTry } from 'src/utils/db';
 import { getOffset, getTotalPages } from 'src/utils/query';
 
 import { Injectable } from '@nestjs/common';
-import { createQlParser, toSql } from '@querylang/core';
+import { toSql } from '@querylang/core';
 
 import type {
   GetQuoteListOptions,
@@ -139,21 +139,10 @@ export class KyselyQuoteRepository implements QuoteRepository {
   ): ResultAsync<QuoteList, GetQuoteListError> {
     const {
       pagination: { page, pageSize },
-      q = '',
+      filtersAst,
       sort = [{ field: 'id', order: 'desc' }],
       userId,
     } = options;
-
-    const parser = createQlParser({
-      author: { type: 'string', aliases: { a: true } },
-      user: { type: 'string', aliases: { u: true } },
-      content: { type: 'string', aliases: { cnt: true, cn: true } },
-      context: { type: 'string', aliases: { ctx: true, cx: true } },
-      likes: { type: 'number' },
-      dislikes: { type: 'number' },
-      is_liked: { type: 'boolean' },
-      is_private: { type: 'boolean' },
-    });
 
     return this.db
       .withTransaction(() => {
@@ -178,7 +167,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
 
         const compiledQuery = baseQuery.compile();
 
-        const filters = toSql(parser.parse(q).ast, {
+        const filters = toSql(filtersAst, {
           parameterOffset: compiledQuery.parameters.length,
           fieldOverrides: {
             user: '"user"."name"',

@@ -39,7 +39,7 @@ export function QuoteListSection(): JSX.Element {
   );
   const { data, error, isFetching, isPlaceholderData, isLoading } = useQuotes(
     quoteListParams,
-    { placeholderData: keepPreviousData },
+    { retry: false, placeholderData: keepPreviousData },
   );
   const isFetchingNewData = isLoading || (isFetching && isPlaceholderData);
 
