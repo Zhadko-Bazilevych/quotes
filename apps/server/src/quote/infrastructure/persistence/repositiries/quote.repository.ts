@@ -187,7 +187,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
         const filters = toSql(filtersAst, {
           parameterOffset: compiledQuery.parameters.length,
           fieldOverrides: {
-            user: '"user"."name"',
+            user: '"sq"."name"',
           },
         });
 
