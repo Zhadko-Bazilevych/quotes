@@ -9,13 +9,21 @@ import { QuotePaginationBar } from '@/components/quote/quote-pagination-bar';
 import { QuoteSearch } from '@/components/quote/quote-search';
 import { QuoteListSkeleton } from '@/components/quote/skeleton/quote-list-skeleton';
 import { UnexpectedError } from '@/components/ui/unexpected-error';
-import { useQuotes } from '@/hooks/use-quotes';
+import {
+  type ParsingError,
+  type QuoteListError,
+  useQuotes,
+} from '@/hooks/use-quotes';
 import { quoteListRoute } from '@/routes/route-tree';
 import { useModalStore } from '@/stores/modal-store';
 import type { QuoteList } from '@/types/quote';
 import { addEventListenerWithCleaup } from '@/utils/add-event-listener';
 
 import { QuoteOrder } from './quote-order';
+
+function isParsingError(e: QuoteListError | null): e is ParsingError {
+  return !!e && e.type === 'parsingError';
+}
 
 export function QuoteListSection(): JSX.Element {
   const navigate = quoteListRoute.useNavigate();
@@ -29,7 +37,7 @@ export function QuoteListSection(): JSX.Element {
     }),
     [pageSize, page, q, sort],
   );
-  const { data, isError, isFetching, isPlaceholderData, isLoading } = useQuotes(
+  const { data, error, isFetching, isPlaceholderData, isLoading } = useQuotes(
     quoteListParams,
     { placeholderData: keepPreviousData },
   );
@@ -177,13 +185,13 @@ export function QuoteListSection(): JSX.Element {
     });
   }, [setEditingIds, isAnyModalOpen]);
 
-  if (isError) {
+  if (error && !isParsingError(error)) {
     return <UnexpectedError />;
   }
 
   return (
     <section className="flex flex-col gap-3">
-      <QuoteSearch placeholder="Search quotes..." />
+      <QuoteSearch placeholder="Search quotes..." errors={error?.errors} />
       <QuoteOrder />
       {isFetchingNewData && <QuoteListSkeleton pageSize={pageSize} />}
       {!isFetchingNewData &&
