@@ -28,6 +28,8 @@ const namesMap: Record<SortField, string> = {
   'user.name': 'User',
   createdAt: 'Created At',
   updatedAt: 'UpdatedAt',
+  likes: 'Likes',
+  dislikes: 'Dislikes',
 };
 
 export const QuoteOrder = React.memo(function QuoteOrder(): JSX.Element {
