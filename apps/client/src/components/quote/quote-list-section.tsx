@@ -1,4 +1,13 @@
-import { type JSX, useCallback, useEffect, useMemo, useState } from 'react';
+// TODO: is this possible to do without crutches?
+/* eslint-disable react-hooks/refs */
+import {
+  type JSX,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { keepPreviousData, useQueryClient } from '@tanstack/react-query';
 
@@ -37,11 +46,16 @@ export function QuoteListSection(): JSX.Element {
     }),
     [pageSize, page, q, sort],
   );
-  const { data, error, isFetching, isPlaceholderData, isLoading } = useQuotes(
-    quoteListParams,
-    { retry: false, placeholderData: keepPreviousData },
-  );
+  const { data, isSuccess, error, isFetching, isPlaceholderData, isLoading } =
+    useQuotes(quoteListParams, {
+      retry: false,
+      placeholderData: keepPreviousData,
+    });
   const isFetchingNewData = isLoading || (isFetching && isPlaceholderData);
+  const errorRef = useRef(error);
+  if (error || isSuccess) {
+    errorRef.current = error;
+  }
 
   const [editingIds, setEditingIds] = useState<number[]>([]);
   const queryClient = useQueryClient();
@@ -185,13 +199,15 @@ export function QuoteListSection(): JSX.Element {
     });
   }, [setEditingIds, isAnyModalOpen]);
 
-  const parsignErrors = isParsingError(error) ? error.errors : [];
+  const parsignErrors = isParsingError(errorRef.current)
+    ? errorRef.current.errors
+    : [];
 
   return (
     <section className="flex flex-col gap-3">
       <QuoteSearch placeholder="Search quotes..." errors={parsignErrors} />
       <QuoteOrder />
-      {error && !isParsingError(error) && <UnexpectedError />}
+      {error && !isParsingError(errorRef.current) && <UnexpectedError />}
       {isFetchingNewData && <QuoteListSkeleton pageSize={pageSize} />}
       {!isFetchingNewData &&
         data?.data.map((quote) => {
