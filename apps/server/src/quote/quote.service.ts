@@ -27,13 +27,13 @@ import { QuoteRepository } from './infrastructure/persistence/repositiries/quote
 export const quoteSearchParser = createQlParser({
   author: { type: 'string', aliases: { a: true } },
   user: { type: 'string', aliases: { u: true } },
-  content: { type: 'string', aliases: { cnt: true, cn: true } },
+  content: { type: 'string', aliases: { ctn: true, cn: true } },
   context: { type: 'string', aliases: { ctx: true, cx: true } },
   likes: { type: 'number' },
   dislikes: { type: 'number' },
   liked: { type: 'boolean' },
   disliked: { type: 'boolean' },
-  is_private: { type: 'boolean' },
+  private: { type: 'boolean' },
 });
 
 @Injectable()
