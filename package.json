@@ -11,7 +11,7 @@
     "code:lint:autofix": "turbo run code:lint:autofix",
     "i18n:lint": "turbo run --filter=./apps/client i18n:lint",
     "i18n:sync": "turbo run --filter=./apps/client i18n:sync",
-    "seed": "turbo run seed"
+    "db:seed": "turbo run db:seed"
   },
   "devDependencies": {
     "turbo": "^2.9.14"

@@ -12,7 +12,7 @@
     },
     "code:lint:autofix": {},
     "check-types": {},
-    "seed": {},
+    "db:seed": {},
     "test": {},
     "code:check": {
       "dependsOn": ["code:lint", "i18n:lint", "check-types"]
