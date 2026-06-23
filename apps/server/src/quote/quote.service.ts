@@ -33,7 +33,7 @@ export const quoteSearchParser = createQlParser({
   dislikes: { type: 'number' },
   liked: { type: 'boolean' },
   disliked: { type: 'boolean' },
-  is_private: { type: 'boolean' },
+  private: { type: 'boolean' },
 });
 
 @Injectable()

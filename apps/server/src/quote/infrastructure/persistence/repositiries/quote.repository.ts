@@ -175,7 +175,7 @@ export class KyselyQuoteRepository implements QuoteRepository {
               'dislikes',
               'visibility',
               'vote.value as vote',
-              eb('visibility', '=', 'private').as('is_private'),
+              eb('visibility', '=', 'private').as('private'),
               eb.fn
                 .coalesce(eb('vote.value', '=', 1), sql.lit(false))
                 .as('liked'),
