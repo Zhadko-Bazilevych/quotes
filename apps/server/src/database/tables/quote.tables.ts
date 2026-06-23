@@ -14,7 +14,7 @@ export type QuoteVisibility = 'public' | 'private';
 
 export interface QuoteTable {
   id: Generated<QuoteId>;
-  userId: Generated<UserId>;
+  userId: UserId;
   author: string;
   content: string;
   context: string;
